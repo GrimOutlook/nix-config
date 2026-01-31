@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./neovim.nix
     ./starship.nix
   ];
 
@@ -15,11 +16,10 @@
     dive # Tool for exploring each layer in a docker image
     fd # Simple, fast and user-friendly alternative to find
     hexyl # Command-line hex viewer
-    neovim # Vim text editor fork focused on extensibility and agility
     ripgrep # Utility that combines the usability of The Silver Searcher with the raw speed of grep
     sd # Intuitive find & replace CLI (sed alternative)
     tmux # Terminal multiplexer
-    # dust # du, but more intuitive
+    dust # du, but more intuitive
     duf # Disk Usage/Free Utility
     eza # Modern, maintained replacement for ls
     sad # CLI tool to search and replace
@@ -28,7 +28,7 @@
     skim # Command-line fuzzy finder written in Rust
     procs # Modern replacement for ps written in Rust
     hyperfine # Command-line benchmarking tool
-    # rip2 # Safe and ergonomic alternative to rm
+    rip2 # Safe and ergonomic alternative to rm
     navi # Interactive cheatsheet tool for the command-line and application launchers
     broot # Interactive tree view, a fuzzy search, a balanced BFS descent and customizable commands
     fclones # Efficient Duplicate File Finder and Remover
@@ -57,7 +57,7 @@
     rsync # Fast incremental file transfer utility
     sysz # Fzf terminal UI for systemctl
     tealdeer # Very fast implementation of tldr in Rust
-    # wikiman # Offline search engine for manual pages, Arch Wiki, Gentoo Wiki and other documentation
+    wikiman # Offline search engine for manual pages, Arch Wiki, Gentoo Wiki and other documentation
     xcp # Extended cp(1)
     watchexec # Executes commands in response to file modifications
     pastel # Command-line tool to generate, analyze, convert and manipulate colors

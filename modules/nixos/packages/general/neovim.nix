@@ -285,4 +285,11 @@
       ];
     };
   };
+
+
+  environment.shellAliases = {
+    e = "$EDITOR";
+    edit = "$EDITOR";
+    v = "nvim";
+  };
 }

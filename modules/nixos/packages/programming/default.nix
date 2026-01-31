@@ -4,6 +4,7 @@
 {
   imports = [
     ./git/default.nix
+    ./dotnet.nix
   ];
 
   environment.systemPackages = with pkgs; [
@@ -20,4 +21,10 @@
     ripsecrets # Command-line tool to prevent committing secret keys into your source code
     tokei # Count your code, quickly
   ];
+
+  # NOTE: This module requires `fd`/`fdfind` to work fully but that isn't made explicit anywhere.
+  # TODO: Make it explicit.
+  environment.shellAliases = {
+    lf="fd -t f -x dos2unix {} \;";
+  };
 }

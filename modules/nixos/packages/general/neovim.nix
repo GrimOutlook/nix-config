@@ -275,13 +275,35 @@
 
       packages.all.start = with pkgs.vimPlugins; [
         (nvim-treesitter.withPlugins (ps: [ ps.nix ]))
+        blink-cmp
+        blink-cmp-conventional-commits
+        blink-cmp-env
+        blink-cmp-git
+        blink-emoji-nvim
+        blink-nerdfont-nvim
+        conform-nvim
+        diffview-nvim
+        flash-nvim
+        gitsigns-nvim
+        grug-far-nvim
         gruvbox-material
         guess-indent-nvim
         lualine-nvim
+        marks-nvim
+        mini-move
         mini-pairs
         mini-surround
         noice-nvim
         nvim-lspconfig
+        oil-nvim
+        overseer-nvim
+        persistence-nvim
+        project-nvim
+        snacks-nvim
+        tiny-inline-diagnostic-nvim
+        todo-comments-nvim
+        vim-suda
+        which-key-nvim
       ];
     };
   };

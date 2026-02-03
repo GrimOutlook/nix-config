@@ -5,7 +5,7 @@
     ./eza.nix
     ./neovim.nix
     ./starship.nix
-    ./tmux.nix
+    ./tmux/default.nix
   ];
 
   environment.systemPackages = with pkgs; [

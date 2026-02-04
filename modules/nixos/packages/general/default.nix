@@ -27,6 +27,7 @@
     fclones # Efficient Duplicate File Finder and Remover
     fd # Simple, fast and user-friendly alternative to find
     glances # Cross-platform curses-based monitoring tool
+    grex # Command-line tool for generating regular expressions from user-provided test cases
     gnupg # Modern release of the GNU Privacy Guard, a GPL OpenPGP implementation
     hexyl # Command-line hex viewer
     htmlq # Like jq, but for HTML.
@@ -70,6 +71,7 @@
   ];
   
   environment.shellAliases = {
+    benchmark = "hyperfine";
     cp = "xcp";
     docker = "podman";
     log = "lnav";

@@ -1,4 +1,3 @@
-
 { inputs, lib, config, pkgs, ... }:
 
 {
@@ -138,8 +137,7 @@
       };
       
       commit = {
-        # TODO: Add this back in
-        # template = ./commit-template;
+        template = builtins.path { path = ./commit-template; };
       };
 
       alias = {

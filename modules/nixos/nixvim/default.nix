@@ -66,7 +66,6 @@
             conform-nvim.enable = true;
             crates.enable = true;
             cursorline.enable = true;
-            nvim-dbee.enable = true;
             dressing.enable = true;
             flash.enable = true;
             flit.enable = true;
@@ -76,9 +75,55 @@
             gitblame.enable = true;
             gitsigns.enable = true;
             grug-far.enable = true;
-            guess-indent.enable = true;
-            # TODO: Start from H
-            
+            helpview.enable = true;
+            highlight-colors.enable = true;
+            illuminate.enable = true;
+            jdtls.enable = true;
+            lspconfig.enable = true;
+            lspkind = true;
+            lualine = true;
+            luasnip = true;
+            marks.enable = true;
+            mini-icons.enable = true;
+            mini-move.enable = true;
+            mini-pairs.enable = true;
+            mini-surround.enable = true;
+            navic.enable = true;
+            neogen.enable = true;
+            nix.enable = true;
+            noice.enable = true;
+            nvim-bqf.enable = true;
+            nvim-lightbulb.enable = true;
+            nvim-ufo.enable = true;
+            oil.enable = true;
+            oil-git-status.enable = true;
+            overseer.enable = true;
+            package-info.enable = true;
+            project-nvim.enable = true;
+            qmk.enable = true;
+            refactoring.enable = true;
+            render-markdown.enable = true;
+            rustaceanvim.enable = true;
+            sleuth.enable = true;
+            snacks.enable = true;
+            spider.enable = true;
+            tiny-inline-diagnostic.enable = true;
+            tmux-navigator.enable = true;
+            todo-comments.enable = true;
+            toggleterm.enable = true;
+            treesitter = {
+                enable = true;
+                highlight.enable = true;
+                indent.enable = true;
+                folding.enable = true;
+            };
+            treesitter-context.enable = true;
+            ts-comments.enable = true;
+            ts-context-commentstring.enable = true;
+            vim-dadbod.enable = true;
+            vim-suda.enable = true;
+            web-devicons.enable = true;
+            which-key.enable = true;
         }
     };
 }

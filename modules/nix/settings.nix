@@ -29,11 +29,6 @@
       homeManager.base.nix = {
         inherit (config.nix) settings;
       };
-
-      nixOnDroid.base.nix.extraOptions =
-        config.nix.settings
-        |> lib.mapAttrsToList (name: value: "${name} = ${toString value}")
-        |> lib.concatLines;
     };
   };
 }

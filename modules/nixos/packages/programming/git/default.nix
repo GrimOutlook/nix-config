@@ -22,8 +22,9 @@
         # Treat spaces before tabs, and all kinds of trailing whitespace as an error
         whitespace = "space-before-tab,trailing-space";
 
-        logallrefupdates = true;
-        excludesfile = builtins.path { path = ./gitignore; };
+        logAllRefUpdates = true;
+        attributesFile = builtins.path { path = ./gitattributes; };
+        excludesFile = builtins.path { path = ./gitignore; };
       };
 
       interactive = {

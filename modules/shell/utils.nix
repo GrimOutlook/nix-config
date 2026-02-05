@@ -45,6 +45,5 @@
         log = "lnav";
         mkdir = "mkdir -p";
       };
-
     };
 }

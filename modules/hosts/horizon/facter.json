@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "system": "x86_64-linux",
+  "virtualisation": "wsl",
+  "hardware": {
+    "system": {
+      "form_factor": "desktop"
+    }
+  }
+}

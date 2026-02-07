@@ -44,6 +44,7 @@
     };
 
     nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixos-wsl.url = "github:nix-community/nixos-wsl";
 
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";

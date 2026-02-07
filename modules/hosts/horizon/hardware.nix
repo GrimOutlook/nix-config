@@ -11,7 +11,11 @@
     {
       imports = [
         (modulesPath + "/installer/scan/not-detected.nix")
+        inputs.nixos-facter-modules.nixosModules.facter
       ];
+
+
+      facter.reportPath = ./facter.json;
 
       boot = {
         # Use latest linux kernel

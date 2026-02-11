@@ -39,7 +39,6 @@
         claude-code.enable = true;
         comment.enable = true;
         comment-box.enable = true;
-        conform-nvim.enable = true;
         cursorline.enable = true;
         dressing.enable = true;
         flash.enable = true;

@@ -11,7 +11,6 @@
       rm = "rm -iv";
       mkd = "mkdir -pv";
       f = "fg";
-      cat = "bat -p";
 
       ########
       # Misc #

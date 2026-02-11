@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# ---------------------------------------------------------------------------- #
+# -- Bash Options ------------------------------------------------------------ #
+# ---------------------------------------------------------------------------- #
+# If set, a command name that is the name of a directory is executed as if it
+# were the argument to the cd command.
+shopt -s autocd
+
+# If set, minor errors in the spelling of a directory component in a cd command
+# will be corrected. The errors checked for are transposed characters, a missing
+# character, and a character too many. If a correction is found, the corrected
+# path is printed, and the command proceeds. This option is only used by
+# interactive shells.
+shopt -s cdspell
+
+# If set, Bash lists the status of any stopped and running jobs before exiting
+# an interactive shell. If any jobs are running, this causes the exit to be
+# deferred until a second exit is attempted without an intervening command (see
+# Job Control). The shell always postpones exiting if any jobs are stopped.
+shopt -s checkjobs
+
+# If set, Bash attempts spelling correction on directory names during word
+# completion if the directory name initially supplied does not exist.
+shopt -s dirspell
+
+# If set, the history list is appended to the file named by the value of the
+# HISTFILE variable when the shell exits, rather than overwriting the file.
+shopt -s histappend
+
+# If set, and Readline is being used, a user is given the opportunity to re-edit
+# a failed history substitution.
+shopt -s histreedit
+
+# If set, and Readline is being used, the results of history substitution are
+# not immediately passed to the shell parser. Instead, the resulting line is
+# loaded into the Readline editing buffer, allowing further modification.
+shopt -s histverify

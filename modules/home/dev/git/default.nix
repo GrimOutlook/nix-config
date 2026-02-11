@@ -1,54 +1,59 @@
-{config, ...}:
 {
-  flake.modules.homeManager.dev = {
-    programs = {
-      git = {
-        enable = true;
+  flake.modules.homeManager.dev = 
+    {config, pkgs, ...}:
+    {
+      home.packages = with pkgs; [
+        git-filter-repo # Quickly rewrite git repository history
+      ];
 
-        settings = {
-          user = {
-            email = "dev@grimoutlook.dev";
-            name = "Dominic Grimaldi";
-          };
-        };
-      };
+      programs = {
+        git = {
+          enable = true;
 
-      gh = {
-        enable = true;
-
-        settings = {
-          git_protocol = "ssh";
-        };
-      };
-
-      lazygit = {
-        enable = true;
-        settings = {
-          gui = {
-            theme = {
-              activeBorderColor = [
-                "blue"
-                "bold"
-              ];
-              selectedLineBgColor = [ "white" ];
+          settings = {
+            user = {
+              email = "dev@grimoutlook.dev";
+              name = "Dominic Grimaldi";
             };
           };
-          git = {
-            # Improves performance
-            # https://github.com/jesseduffield/lazygit/issues/2875#issuecomment-1665376437
-            log.order = "default";
+        };
 
-            fetchAll = false;
+        gh = {
+          enable = true;
+
+          settings = {
+            git_protocol = "ssh";
+          };
+        };
+
+        lazygit = {
+          enable = true;
+          settings = {
+            gui = {
+              theme = {
+                activeBorderColor = [
+                  "blue"
+                  "bold"
+                ];
+                selectedLineBgColor = [ "white" ];
+              };
+            };
+            git = {
+              # Improves performance
+              # https://github.com/jesseduffield/lazygit/issues/2875#issuecomment-1665376437
+              log.order = "default";
+
+              fetchAll = false;
+            };
           };
         };
       };
-    };
 
-    home.shellAliases = {
-      push = "git push";
-      pull = "git pull";
-      add = "git add -Av";
-      status = "git status";
+      home.shellAliases = {
+        push = "git push";
+        pull = "git pull";
+        add = "git add -Av";
+        status = "git status";
+      };
     };
-  };
 }

@@ -73,6 +73,23 @@
         refactoring.enable = true;
         render-markdown.enable = true;
         sleuth.enable = true;
+        snacks = {
+          enable = true;
+          settings = {
+            bigfile.enable = true;
+            git.enable = true;
+            indent.enable = true;
+            input.enable = true;
+            notifier.enable = true;
+            quickfile.enable = true;
+            rename.enable = true;
+            scope.enable = true;
+            scroll.enable = true;
+            statuscolumn.enable = true;
+            words.enable = true;
+            styles.notifications.wo.wrap = true;
+          };
+        };
         spider.enable = true;
         tiny-inline-diagnostic.enable = true;
         tmux-navigator.enable = true;

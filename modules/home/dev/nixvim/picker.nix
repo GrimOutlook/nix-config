@@ -4,7 +4,11 @@
     {
       plugins.snacks = {
         enable = true;
-        settings.picker.enable = true;
+        settings.picker = {
+          enable = true;
+          focus = "list";
+          win.preview.wo.wrap = true;
+        };
       };
 
       keymaps = [

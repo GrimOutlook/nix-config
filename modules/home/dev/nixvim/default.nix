@@ -130,7 +130,23 @@
         {
           mode = "n";
           key = "<leader>q";
-          action = "<cmd>lua Snacks.bufdelete()<cr>";
+          action = #lua 
+            ''
+              function()
+                if vim.bo.filetype == "snacks_dashboard"  then
+                  vim.cmd("qa")
+                end
+
+                local num_listed_buffers = #vim.tbl_filter(function(bufnr)
+                  return vim.api.nvim_buf_get_option(bufnr, "buflisted")
+                end, vim.api.nvim_list_bufs())
+                if num_listed_buffers <= 0 then
+                  require("snacks").dashboard()
+                else
+                  require("snacks").bufdelete()
+                end
+              end
+            '';
           options = {
             desc = "Close Buffer";
           };

@@ -10,7 +10,8 @@
           core = {
             filemode = false;
             editor = "nvim";
-            autocrlf = false;
+            # Always change CRLF to LF.
+            autocrlf = "input";
             eol = "lf";
 
             # Treat spaces before tabs, and all kinds of trailing whitespace as an error

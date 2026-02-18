@@ -4,6 +4,7 @@
     {
       home.shellAliases = {
         u = nhSwitchCommand;
+        nix-collect-garbage = "echo 'Use `nh clean` instead!'";
       };
 
       programs.nh = {

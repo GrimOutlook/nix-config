@@ -27,9 +27,13 @@
         plugins = with pkgs.tmuxPlugins; [
           gruvbox
           sensible
-          tmux-powerline
           tmux-which-key
-          vim-tmux-navigator
+          {
+            plugin = vim-tmux-navigator;
+            extraConfig = ''
+              set -g @vim_navigator_prefix_mapping_clear_screen ""
+            '';
+          }
           yank
         ];
         # Additional contents of /etc/tmux.conf, to be run after sourcing plugins.
@@ -45,7 +49,7 @@
       };
 
       
-      programs.bash.initExtra = builtins.readFile ./config.sh + builtins.readFile ./theme.sh + ''
+      programs.bash.initExtra = ''
         # Verify that:
         # 1. TMUX command exists
         # 2. PS1 string is set and isn't ""

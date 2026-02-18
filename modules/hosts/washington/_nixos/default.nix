@@ -4,9 +4,20 @@
   pkgs,
   ...
 } @ args:
+let
+  ports = {
+    vaultwarden = "50001";
+  };
+in
 {
+  _module.args = {
+    inherit ports;
+  };
+
   imports = [
+    ./caddy.nix
     ./hardware.nix
+    ./vaultwarden.nix
   ];
 
   environment.systemPackages = map lib.lowPrio [

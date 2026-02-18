@@ -4,7 +4,6 @@
     inputs.disko.nixosModules.disko
 
     agenix
-    bootloader
     nix
     security
     ssh-server

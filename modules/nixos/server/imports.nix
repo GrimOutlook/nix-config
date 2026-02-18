@@ -4,6 +4,7 @@
     {pkgs, ...}:
     {
       imports = with config.flake.modules.nixos; [
+        bootloader
       ];
 
       environment.systemPackages = with pkgs; [

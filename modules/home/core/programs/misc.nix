@@ -13,20 +13,14 @@
         packages = with pkgs; [
           # Rust implementations of linux commands
           dust # du
-          dua # du
           dysk # df
           duf # df
           procs # ps
 
           # Other utils
           mprocs
-          ncdu
           nixos-anywhere
-          tealdeer
           wget
-
-          # Network
-          dig
         ];
       };
     };

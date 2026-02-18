@@ -123,7 +123,7 @@
         {
           mode = "n";
           key = "<leader>W";
-          action = "<cmd>writeall<cr>";
+          action = "<cmd>wall<cr>";
           options = {
             desc = "Save All";
           };
@@ -131,7 +131,7 @@
         {
           mode = "n";
           key = "<leader>q";
-          action = #lua 
+          action.__raw = #lua 
             ''
               function()
                 if vim.bo.filetype == "snacks_dashboard"  then
@@ -141,7 +141,7 @@
                 local num_listed_buffers = #vim.tbl_filter(function(bufnr)
                   return vim.api.nvim_buf_get_option(bufnr, "buflisted")
                 end, vim.api.nvim_list_bufs())
-                if num_listed_buffers <= 0 then
+                if num_listed_buffers <= 1 then
                   require("snacks").dashboard()
                 else
                   require("snacks").bufdelete()

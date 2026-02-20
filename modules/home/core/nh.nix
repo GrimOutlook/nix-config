@@ -1,7 +1,6 @@
-{ config, ... }:
 {
   flake.modules.homeManager.nh =
-    { nhSwitchCommand, ... }:
+    { nhSwitchCommand, nhFlake, ... }:
     {
       home.shellAliases = {
         u = nhSwitchCommand;
@@ -11,7 +10,7 @@
       programs.nh = {
         enable = true;
 
-        flake = config.host-info.flake;
+        flake = nhFlake;
 
         clean = {
           enable = true;

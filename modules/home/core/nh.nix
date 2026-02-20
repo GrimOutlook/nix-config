@@ -1,3 +1,4 @@
+{inputs, ...}:
 {
   flake.modules.homeManager.nh =
     { nhSwitchCommand, ... }:
@@ -10,7 +11,7 @@
       programs.nh = {
         enable = true;
 
-        flake = "github:GrimOutlook/nix-config";
+        flake = inputs.flake-source or "";
 
         clean = {
           enable = true;

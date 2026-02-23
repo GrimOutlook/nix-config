@@ -36,6 +36,9 @@
                 return { timeout_ms = 200, lsp_fallback = true }, on_format
                end
             '';
+          # NOTE: This is required so that `autoInstall.enable = true` doesn't
+          # cause a nix build failure.
+          formatters_by_ft = {};
         };
       };
 

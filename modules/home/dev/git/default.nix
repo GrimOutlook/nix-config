@@ -54,6 +54,11 @@
         pull = "git pull";
         add = "git add -Av";
         status = "git status";
+
+        s = "git diff HEAD --stat";
+        aa = "git add-all";
+        send = "git send";
+        sp = "git send-please";
       };
     };
 }

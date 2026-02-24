@@ -3,16 +3,20 @@
     services.openssh = {
       enable = true;
 
-      settings.PasswordAuthentication = false;
+      settings = {
+        PermitRootLogin = "no";
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+      };
     };
 
     users.users =
       let
-        # FIXME: Change to  a valid key
-        key = "ssh-ed25519 CHANGEME";
+        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBshpqm8SogcHSuol7cFNLi9R+WJR8XoWXpM6gmxLWb1 grim@taipei";
       in
       {
         root.openssh.authorizedKeys.keys = [ key ];
+        grim.openssh.authorizedKeys.keys = [ key ];
       };
   };
 }

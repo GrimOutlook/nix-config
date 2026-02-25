@@ -33,9 +33,6 @@
       };
 
       plugins = {
-        blink-cmp.enable = true;
-        blink-cmp-git.enable = true;
-        blink-emoji.enable = true;
         claude-code.enable = true;
         comment.enable = true;
         comment-box.enable = true;

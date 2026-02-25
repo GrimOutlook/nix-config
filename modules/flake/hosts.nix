@@ -71,12 +71,25 @@ let
       # Extract freeform config (everything except our managed options)
       extractPassthruConfig = hostConfig:
         lib.filterAttrs (name: _: !lib.elem name hostModuleOptions) hostConfig;
+
+      # Resolve a module name to an actual module if it exists in the given module set
+      resolveModule = moduleSet: moduleName:
+        if moduleSet ? ${moduleName} then moduleSet.${moduleName} else null;
+
+      # Get all resolved modules from a list of module names for a given module set
+      resolveModules = moduleSet: moduleNames:
+        lib.filter (m: m != null) (map (resolveModule moduleSet) moduleNames);
     in
     {
       options = {
-        name = mkOption {
-          type = types.str;
-          description = "Configuration name (used as hostname for NixOS and config name for home-manager)";
+        modules = mkOption {
+          type = with types; listOf str;
+          default = [ ];
+          description = ''
+            List of module names to apply to both nixos and home configurations.
+            Each name is checked against ncModules.nixos and ncModules.homeManager.
+            If a module exists in either, it is automatically included in that configuration.
+          '';
         };
         nixos = mkOption {
           type = types.nullOr nixosHostType;
@@ -90,28 +103,33 @@ let
 
       config.flake = {
         nixosConfigurations = lib.mkIf (config.nixos != null) {
-          ${config.name} =
+          ${config.host-info.name} =
             let
               passthruConfig = extractPassthruConfig config.nixos;
+              # Resolve top-level modules for nixos
+              resolvedNixosModules = resolveModules ncModules.nixos config.modules;
             in
             config.nixos.nixpkgs.lib.nixosSystem {
               system = config.nixos.arch;
               modules =
                 [
                   ncModules.nixos.core
-                  { networking.hostName = config.name; }
+                  { networking.hostName = config.host-info.name; }
                   passthruConfig
                 ]
+                ++ resolvedNixosModules
                 ++ config.nixos.modules;
               specialArgs.inputs = ncInputs;
             };
         };
 
         homeConfigurations = lib.mkIf (config.home != null) {
-          ${config.name} =
+          ${config.host-info.name} =
             let
               passthruConfig = extractPassthruConfig config.home;
-              configName = config.name;
+              configName = config.host-info.name;
+              # Resolve top-level modules for homeManager
+              resolvedHomeModules = resolveModules ncModules.homeManager config.modules;
             in
             ncInputs.home-manager.lib.homeManagerConfiguration {
               extraSpecialArgs = {
@@ -133,14 +151,15 @@ let
                   )
                   passthruConfig
                 ]
+                ++ resolvedHomeModules
                 ++ config.home.modules;
             };
         };
 
         # Generate checks for home configuration
         checks = lib.mkIf (config.home != null) {
-          ${config.home.arch}."home-${config.name}" =
-            config.flake.homeConfigurations.${config.name}.activationPackage;
+          ${config.home.arch}."home-${config.host-info.name}" =
+            config.flake.homeConfigurations.${config.host-info.name}.activationPackage;
         };
       };
     };

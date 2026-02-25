@@ -23,24 +23,14 @@
           plugins = {
             rustaceanvim = {
               enable = true;
-              settings.server = {
-                default_settings = {
-                  rust-analyzer = {
-                    check = {
-                      command = "clippy";
-                    };
-                    inlayHints = {
-                      lifetimeElisionHints = {
-                        enable = "always";
-                      };
-                    };
-                  };
-                };
+              settings.server.default_settings.rust-analyzer = {
+                check.command = "clippy";
+                inlayHints.lifetimeElisionHints.enable = "always";
               };
             };
             conform-nvim = {
               settings.formatters_by_ft = {
-                "rust" = "rustfmt";
+                rust = ["rustfmt"];
               };
             };
           };

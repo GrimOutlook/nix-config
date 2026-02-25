@@ -14,8 +14,8 @@
         packages = with pkgs; [
           gcc
         ] ++ (with fenix-toolchain; [
-            # Install all nightly tools that exist in the selected toolchain
-            toolchain
+          # Install all nightly tools that exist in the selected toolchain
+          toolchain
         ]);
 
         # By default, it is in ~/.cargo
@@ -27,6 +27,7 @@
       programs = {
         nixvim = {
           plugins = {
+            crates.enable = true;
             rustaceanvim = {
               enable = true;
               settings.server.default_settings.rust-analyzer = {

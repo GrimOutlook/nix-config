@@ -13,7 +13,7 @@
         };
 
         settings = {
-          log_level = "warn";
+          log_level = "debug";
           notify_on_error = true;
           notify_no_formatters = true;
 
@@ -52,12 +52,7 @@
           #   '';
           # NOTE: This is required to exist even if empty to prevent
           # `autoInstall.enable = true` from causing a nix build failure.
-          formatters_by_ft = {
-            "_" = [
-              "trim_whitespace"
-              "trim_newlines"
-            ];
-          };
+          formatters_by_ft = {};
         };
       };
 

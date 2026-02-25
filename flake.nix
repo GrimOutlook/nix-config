@@ -5,7 +5,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-
     devshell = {
       url = "github:numtide/devshell";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,18 +15,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
-
-    # Seamless integration of git hooks with Nix
-    git-hooks = {
-      url = "github:cachix/git-hooks.nix";
-      inputs = {
-        flake-compat.follows = "dedupe_flake-compat";
-        nixpkgs.follows = "nixpkgs";
-      };
     };
 
     home-manager = {
@@ -53,27 +48,40 @@
       url = "github:nix-community/nixvim/nixos-25.11";
     };
 
-    # Jump to next/previous LSP reference in the current buffer for the item
-    # under the cursor with `]r`/`[r`.
-    refjump-nvim = {
-      flake = false;
-      url = "github:mawkler/refjump.nvim";
-    };
-
-    # Smart scroll is a plugin that enables you to control the scrolloff
-    # setting using percentages instead of static line numbers. This is a more
-    # intuitive way to handle scrolling, especially as you move between
-    # laptops, monitors, and resized windows and font sizes. Smart scrolloff
-    # will always keep your scrolling experience consistent.
-    smart-scrolloff-nvim = {
-      flake = false;
-      url = "github:tonymajestro/smart-scrolloff.nvim";
-    };
-
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # TODO: Determine if I actually want these. They're cool but I just
+    # inherited them from the initial flake I copied
+    #
+    # Seamless integration of git hooks with Nix
+    # git-hooks = {
+    #   url = "github:cachix/git-hooks.nix";
+    #   inputs = {
+    #     flake-compat.follows = "dedupe_flake-compat";
+    #     nixpkgs.follows = "nixpkgs";
+    #   };
+    # };
+    #
+    # # Jump to next/previous LSP reference in the current buffer for the item
+    # # under the cursor with `]r`/`[r`.
+    # refjump-nvim = {
+    #   flake = false;
+    #   url = "github:mawkler/refjump.nvim";
+    # };
+    #
+    # # Smart scroll is a plugin that enables you to control the scrolloff
+    # # setting using percentages instead of static line numbers. This is a more
+    # # intuitive way to handle scrolling, especially as you move between
+    # # laptops, monitors, and resized windows and font sizes. Smart scrolloff
+    # # will always keep your scrolling experience consistent.
+    # smart-scrolloff-nvim = {
+    #   flake = false;
+    #   url = "github:tonymajestro/smart-scrolloff.nvim";
+    # };
+
   };
 
   # TODO: Check if this is actually needed.

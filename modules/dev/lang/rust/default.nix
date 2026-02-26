@@ -14,7 +14,18 @@
         packages =
           with pkgs;
           [
+            # Cryptographically verifiable code review system for the cargo (Rust) package manager
+            # https://github.com/crev-dev/cargo-crev
+            cargo-crev
+
+            # Cargo subcommand to show result of macro expansion
+            # https://github.com/dtolnay/cargo-expand
             cargo-expand
+
+            # Find unused dependencies in Cargo.toml
+            # https://github.com/est31/cargo-udeps
+            cargo-udeps
+
             gcc
           ]
           ++ (with fenix-toolchain; [

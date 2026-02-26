@@ -45,7 +45,14 @@
         friendly-snippets.enable = true;
         fugitive.enable = true;
         git-conflict.enable = true;
-        gitblame.enable = true;
+        gitblame = {
+          enable = true;
+          settings = {
+            set_extmark_options = {
+              priority = 100;
+            };
+          };
+        };
         gitsigns.enable = true;
         grug-far.enable = true;
         helpview.enable = true;
@@ -67,7 +74,6 @@
         nvim-lightbulb.enable = true;
         nvim-ufo.enable = true;
         overseer.enable = true;
-        package-info.enable = true;
         persistence.enable = true;
         project-nvim.enable = true;
         refactoring.enable = true;
@@ -91,7 +97,6 @@
           };
         };
         spider.enable = true;
-        tiny-inline-diagnostic.enable = true;
         tmux-navigator.enable = true;
         todo-comments.enable = true;
         toggleterm.enable = true;
@@ -107,7 +112,6 @@
         ts-context-commentstring.enable = true;
         vim-suda.enable = true;
         web-devicons.enable = true;
-        which-key.enable = true;
       };
 
       keymaps = [

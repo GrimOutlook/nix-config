@@ -1,4 +1,4 @@
-{inputs, ...}:
+{ inputs, ... }:
 {
   flake.modules.homeManager.nixvim = {
     imports = [
@@ -26,13 +26,15 @@
       dependencies = {
         tree-sitter.enable = true;
       };
-      
+
       lsp.servers = {
         # Typos
         typos.enable = true;
       };
 
       plugins = {
+        # TODO: Maybe add `colorful-menu`?
+
         claude-code.enable = true;
         comment.enable = true;
         comment-box.enable = true;
@@ -128,7 +130,7 @@
         {
           mode = "n";
           key = "<leader>q";
-          action.__raw = #lua 
+          action.__raw = # lua
             ''
               function()
                 if vim.bo.filetype == "snacks_dashboard"  then
@@ -165,44 +167,6 @@
           action = "<cmd>nohlsearch<cr>";
           options = {
             desc = "Clear Search Highlighting";
-          };
-        }
-
-        # Make normal j and k presses work with wrapped words
-        {
-          mode = ["n" "x"];
-          key = "j";
-          action = "v:count == 0 ? 'gj' : 'j'";
-          options = {
-            desc = "Down";
-            expr = true;
-          };
-        }
-        {
-          mode = ["n" "x"];
-          key = "<Down>";
-          action = "v:count == 0 ? 'gj' : 'j'";
-          options = {
-            desc = "Down";
-            expr = true;
-          };
-        }
-        {
-          mode = ["n" "x"];
-          key = "k";
-          action = "v:count == 0 ? 'gk' : 'k'";
-          options = {
-            desc = "Up";
-            expr = true;
-          };
-        }
-        {
-          mode = ["n" "x"];
-          key = "<Up>";
-          action = "v:count == 0 ? 'gk' : 'k'";
-          options = {
-            desc = "Up";
-            expr = true;
           };
         }
       ];

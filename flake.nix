@@ -64,6 +64,29 @@
     #     nixpkgs.follows = "nixpkgs";
     #   };
     # };
+  };
+
+  # Neovim plugins that aren't included in the `nixvim` standard yet.
+  inputs = {
+    # Neovim Lua plugin to improve register handling with delete, cut and yank
+    # mappings.
+    karen-yank-nvim = {
+      flake = false;
+      url = "github:tenxsoydev/karen-yank.nvim";
+    };
+
+    # Smart scroll is a plugin that enables you to control the scrolloff
+    # setting using percentages instead of static line numbers. This is a more
+    # intuitive way to handle scrolling, especially as you move between
+    # laptops, monitors, and resized windows and font sizes. Smart scrolloff
+    # will always keep your scrolling experience consistent.
+    smart-scrolloff-nvim = {
+      flake = false;
+      url = "github:tonymajestro/smart-scrolloff.nvim";
+    };
+
+    # TODO: Determine if I actually want these. They're cool but I just
+    # inherited them from the initial flake I copied
     #
     # # Jump to next/previous LSP reference in the current buffer for the item
     # # under the cursor with `]r`/`[r`.
@@ -71,17 +94,6 @@
     #   flake = false;
     #   url = "github:mawkler/refjump.nvim";
     # };
-    #
-    # # Smart scroll is a plugin that enables you to control the scrolloff
-    # # setting using percentages instead of static line numbers. This is a more
-    # # intuitive way to handle scrolling, especially as you move between
-    # # laptops, monitors, and resized windows and font sizes. Smart scrolloff
-    # # will always keep your scrolling experience consistent.
-    # smart-scrolloff-nvim = {
-    #   flake = false;
-    #   url = "github:tonymajestro/smart-scrolloff.nvim";
-    # };
-
   };
 
   # TODO: Check if this is actually needed.

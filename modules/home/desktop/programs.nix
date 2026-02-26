@@ -7,6 +7,10 @@
         discord
         signal-desktop
 
+        # TODO: Add `zen-browser` to `nixpkgs`
+        # zen-browser
+        alacritty
+
         # Misc
         spotify
       ];

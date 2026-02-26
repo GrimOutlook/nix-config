@@ -1,11 +1,11 @@
-{config, ...}:
+{ config, ... }:
 {
   flake.modules.homeManager.dev =
-    {pkgs, ...}: 
+    { pkgs, ... }:
     {
-       programs.git = {
+      programs.git = {
         settings = {
-          merge ={
+          merge = {
             conflictstyle = "zdiff3";
             tool = "diffview";
           };
@@ -26,7 +26,7 @@
 
           rebase = {
             autoStash = true;
-            autosquash =  true;
+            autosquash = true;
             forkpoint = false;
           };
         };

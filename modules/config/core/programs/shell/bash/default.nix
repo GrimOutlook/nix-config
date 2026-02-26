@@ -13,7 +13,8 @@
 
         initExtra = ''
           ${lib.getExe pkgs.pfetch}
-        '' + builtins.readFile ./bashrc.interactive;
+        ''
+        + builtins.readFile ./bashrc.interactive;
       };
 
       home.sessionVariables = {

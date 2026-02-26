@@ -1,6 +1,6 @@
 {
   flake.modules.homeManager.dev.programs.nixvim =
-    {lib, pkgs, ...}:
+    { lib, pkgs, ... }:
     {
       plugins.conform-nvim = {
         enable = true;
@@ -52,13 +52,13 @@
           #   '';
           # NOTE: This is required to exist even if empty to prevent
           # `autoInstall.enable = true` from causing a nix build failure.
-          formatters_by_ft = {};
+          formatters_by_ft = { };
         };
       };
 
       keymaps = [
         {
-          mode = ["n"];
+          mode = [ "n" ];
           key = "<leader>F";
           action = "<CMD>lua require('conform').format()<CR>";
           options = {

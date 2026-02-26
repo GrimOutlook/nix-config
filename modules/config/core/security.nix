@@ -6,7 +6,10 @@
         extraRules = [
           # Allow execution of any command by all users in group sudo,
           # requiring a password.
-          { groups = [ "sudo" ]; commands = [ "ALL" ]; }
+          {
+            groups = [ "sudo" ];
+            commands = [ "ALL" ];
+          }
         ];
       };
     };

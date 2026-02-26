@@ -16,9 +16,9 @@
       home.shellAliases = {
         # NOTE: This module requires `fd`/`fdfind` to work fully but that isn't made explicit anywhere.
         # TODO: Make it explicit.
-        lf="fd -t f -x dos2unix {} \;";
+        lf = "fd -t f -x dos2unix {} \;";
 
-        j="just";
+        j = "just";
       };
 
       programs.bash.initExtra = ''

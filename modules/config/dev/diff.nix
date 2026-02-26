@@ -1,12 +1,12 @@
 {
   flake.modules.homeManager.dev =
-    {pkgs, ...}: 
+    { pkgs, ... }:
     {
       programs.difftastic = {
         enable = true;
         git = {
           # Whether to enable git integration for difftastic.
-          # 
+          #
           # When enabled, difftastic will be configured as git's external diff
           # tool or difftool depending on the value of
           # {option}`programs.difftastic.git.diffToolMode`.
@@ -22,8 +22,8 @@
       programs.git = {
         settings = {
           delta = {
-            navigate = true;  # use n and N to move between diff sections
-            dark = true;      # or light = true, or omit for auto-detection
+            navigate = true; # use n and N to move between diff sections
+            dark = true; # or light = true, or omit for auto-detection
           };
 
           diff = {

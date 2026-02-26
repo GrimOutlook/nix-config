@@ -60,25 +60,38 @@ let
         freeformType = types.attrsOf types.anything;
       };
 
-      nixosHostType = types.submodule [ baseHostModule freeformHostModule ];
-      homeHostType = types.submodule [ baseHostModule freeformHostModule ];
+      nixosHostType = types.submodule [
+        baseHostModule
+        freeformHostModule
+      ];
+      homeHostType = types.submodule [
+        baseHostModule
+        freeformHostModule
+      ];
 
     in
     let
       # Options managed by the hosts module itself (not passed through to NixOS/home-manager)
-      hostModuleOptions = [ "name" "arch" "unstable" "modules" "nixpkgs" "pkgs" ];
+      hostModuleOptions = [
+        "name"
+        "arch"
+        "unstable"
+        "modules"
+        "nixpkgs"
+        "pkgs"
+      ];
 
       # Extract freeform config (everything except our managed options)
-      extractPassthruConfig = hostConfig:
-        lib.filterAttrs (name: _: !lib.elem name hostModuleOptions) hostConfig;
+      extractPassthruConfig =
+        hostConfig: lib.filterAttrs (name: _: !lib.elem name hostModuleOptions) hostConfig;
 
       # Resolve a module name to an actual module if it exists in the given module set
-      resolveModule = moduleSet: moduleName:
-        if moduleSet ? ${moduleName} then moduleSet.${moduleName} else null;
+      resolveModule =
+        moduleSet: moduleName: if moduleSet ? ${moduleName} then moduleSet.${moduleName} else null;
 
       # Get all resolved modules from a list of module names for a given module set
-      resolveModules = moduleSet: moduleNames:
-        lib.filter (m: m != null) (map (resolveModule moduleSet) moduleNames);
+      resolveModules =
+        moduleSet: moduleNames: lib.filter (m: m != null) (map (resolveModule moduleSet) moduleNames);
     in
     {
       options = {
@@ -111,14 +124,13 @@ let
             in
             config.nixos.nixpkgs.lib.nixosSystem {
               system = config.nixos.arch;
-              modules =
-                [
-                  ncModules.nixos.core
-                  { networking.hostName = config.host-info.name; }
-                  passthruConfig
-                ]
-                ++ resolvedNixosModules
-                ++ config.nixos.modules;
+              modules = [
+                ncModules.nixos.core
+                { networking.hostName = config.host-info.name; }
+                passthruConfig
+              ]
+              ++ resolvedNixosModules
+              ++ config.nixos.modules;
               specialArgs.inputs = ncInputs;
             };
         };
@@ -139,20 +151,19 @@ let
                 nhFlake = config.host-info.flake;
               };
               inherit (config.home) pkgs;
-              modules =
-                [
-                  ncModules.homeManager.core
-                  (
-                    { pkgs, config, ... }:
-                    {
-                      nix.package = pkgs.nix;
-                      age.identityPaths = [ "${config.home.homeDirectory}/.ssh/agenix" ];
-                    }
-                  )
-                  passthruConfig
-                ]
-                ++ resolvedHomeModules
-                ++ config.home.modules;
+              modules = [
+                ncModules.homeManager.core
+                (
+                  { pkgs, config, ... }:
+                  {
+                    nix.package = pkgs.nix;
+                    age.identityPaths = [ "${config.home.homeDirectory}/.ssh/agenix" ];
+                  }
+                )
+                passthruConfig
+              ]
+              ++ resolvedHomeModules
+              ++ config.home.modules;
             };
         };
 

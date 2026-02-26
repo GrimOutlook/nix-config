@@ -1,6 +1,6 @@
 {
-  flake.modules.homeManager.git = 
-    {config, pkgs, ...}:
+  flake.modules.homeManager.git =
+    { config, pkgs, ... }:
     {
       home.packages = with pkgs; [
         git-filter-repo # Quickly rewrite git repository history

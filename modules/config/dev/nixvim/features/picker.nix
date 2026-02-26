@@ -1,6 +1,6 @@
 {
-  flake.modules.homeManager.dev.programs.nixvim = 
-    {pkgs, ...}:
+  flake.modules.homeManager.dev.programs.nixvim =
+    { pkgs, ... }:
     {
       plugins.snacks = {
         enable = true;

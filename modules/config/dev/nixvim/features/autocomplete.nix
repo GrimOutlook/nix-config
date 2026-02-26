@@ -1,8 +1,8 @@
 {
   flake.modules.homeManager.dev.programs.nixvim =
-    {lib, pkgs, ...}:
+    { lib, pkgs, ... }:
     {
-      plugins= {
+      plugins = {
         blink-emoji.enable = true;
         blink-cmp = {
           enable = true;
@@ -65,7 +65,7 @@
                 # emoji = {
                 #   module = "blink-emoji";
                 #   name = "Emoji";
-                #   score_offset = -15;  
+                #   score_offset = -15;
                 #   opts = lib.nixvim.mkRaw ''
                 #     insert = true -- Insert emoji (default) or complete its name
                 #     ---@type string|table|fun():table

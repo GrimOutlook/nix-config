@@ -1,7 +1,7 @@
 { config, ... }:
 {
-  flake.modules.nixos.server = 
-    {pkgs, ...}:
+  flake.modules.nixos.server =
+    { pkgs, ... }:
     {
       imports = with config.flake.modules.nixos; [
         bootloader

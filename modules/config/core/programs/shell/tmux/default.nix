@@ -48,7 +48,6 @@
         tmk = "tmux kill-session -t";
       };
 
-      
       programs.bash.initExtra = ''
         # Verify that:
         # 1. TMUX command exists

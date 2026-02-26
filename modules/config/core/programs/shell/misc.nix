@@ -1,6 +1,6 @@
 {
   flake.modules.homeManager.core =
-    {pkgs, ...}:
+    { pkgs, ... }:
     {
       programs = {
         # Shell extension that manages your environment
@@ -40,7 +40,7 @@
         # https://github.com/YS-L/csvlens
         csvlens
 
-        fastmod # A find and replace tool 
+        fastmod # A find and replace tool
         fd # Simple, fast and user-friendly alternative to find
         grex # Command-line tool for generating regular expressions from user-provided test cases
         hexyl # Command-line hex viewer
@@ -54,7 +54,7 @@
         navi # Interactive cheatsheet tool for the command-line and application launchers
         neofetch # Fast, highly customizable system info script
         openssl # Cryptographic library that implements the SSL and TLS protocols
-        
+
         # Painless compression and decompression in the terminal
         # https://github.com/ouch-org/ouch
         ouch

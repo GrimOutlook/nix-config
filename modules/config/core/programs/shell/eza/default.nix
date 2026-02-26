@@ -4,7 +4,7 @@
 
     let
       eza_config_file = ./theme.yml;
-      EZA_DEFAULT_OPTIONS="--header --long --time-style long-iso --git-repos --git --icons --octal-permissions --classify --hyperlink --group --mounts --extended";
+      EZA_DEFAULT_OPTIONS = "--header --long --time-style long-iso --git-repos --git --icons --octal-permissions --classify --hyperlink --group --mounts --extended";
     in
     {
       # Modern, maintained replacement for ls
@@ -12,7 +12,7 @@
         enable = true;
         enableBashIntegration = true;
       };
-      
+
       home.shellAliases = {
         l = "eza ${EZA_DEFAULT_OPTIONS}";
         ls = "eza ${EZA_DEFAULT_OPTIONS}";

@@ -1,9 +1,9 @@
-{config, ...}:
+{ config, ... }:
 {
   flake.modules.homeManager.dev =
-    {pkgs, ...}: 
+    { pkgs, ... }:
     {
-       programs.git = {
+      programs.git = {
         lfs.enable = true;
 
         settings = {
@@ -40,8 +40,8 @@
           color = {
             "branch" = {
               current = "green";
-              local   = "yellow";
-              remote  = "yellow reverse";
+              local = "yellow";
+              remote = "yellow reverse";
             };
 
             "diff" = {
@@ -52,9 +52,9 @@
             };
 
             "status" = {
-               added = "yellow";
-               changed = "green";
-               untracked = "cyan";
+              added = "yellow";
+              changed = "green";
+              untracked = "cyan";
             };
           };
 
@@ -70,7 +70,7 @@
           clean = {
             requireForce = true;
           };
-          
+
           commit = {
             template = builtins.path { path = ./commit-template; };
           };

@@ -1,7 +1,7 @@
-{config, ...}:
+{ config, ... }:
 {
   flake.modules.homeManager.dev =
-    {pkgs, ...}: 
+    { pkgs, ... }:
     {
       programs.git = {
         settings = {

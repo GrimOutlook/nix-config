@@ -1,6 +1,6 @@
 {
-  flake.modules.homeManager.core = 
-    {pkgs, ...}:
+  flake.modules.homeManager.core =
+    { pkgs, ... }:
     let
       alias = prg: "echo 'Using `${prg}`' && ${prg}";
     in
@@ -8,7 +8,7 @@
       home.packages = with pkgs; [
         # CLI utility for displaying current network utilization
         # https://github.com/imsnif/bandwhich
-        bandwhich 
+        bandwhich
 
         # A minimal, fast alternative to 'du -sh'
         # https://github.com/sharkdp/diskus
@@ -24,7 +24,7 @@
 
         # Fzf terminal UI for systemctl
         # https://github.com/joehillen/sysz
-        sysz 
+        sysz
 
         # A cli system trash manager, alternative to rm and trash-cli
         # https://github.com/oberblastmeister/trashy

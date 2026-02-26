@@ -1,7 +1,7 @@
-{config, ...}:
+{ config, ... }:
 {
-  flake.modules.homeManager.dev.programs.nixvim = 
-    {pkgs, ...}:
+  flake.modules.homeManager.dev.programs.nixvim =
+    { pkgs, ... }:
     {
       plugins = {
         oil.enable = true;

@@ -1,6 +1,6 @@
 {
-  flake.modules.homeManager.dev.programs.nixvim = 
-    {pkgs, ...}:
+  flake.modules.homeManager.dev.programs.nixvim =
+    { pkgs, ... }:
     {
       plugins = {
         grug-far.enable = true;
@@ -28,7 +28,10 @@
           };
         }
         {
-          mode = ["v" "x"];
+          mode = [
+            "v"
+            "x"
+          ];
           key = "<leader>/";
           action = "<cmd>lua require(\"snacks\").picker.grep({ search = vim.fn.exand(\"<cword>\"), dirs = { vim.fn.expand(\"%\") } }<cr>";
           options = {
@@ -44,7 +47,10 @@
           };
         }
         {
-          mode = ["v" "x"];
+          mode = [
+            "v"
+            "x"
+          ];
           key = "<leader>/r";
           action = "<cmd>lua require('grug-far').with_visual_selection({ prefills = { paths = vim.fn.expand(\"%\") } })<cr>";
           options = {
@@ -60,7 +66,10 @@
           };
         }
         {
-          mode = ["v" "x"];
+          mode = [
+            "v"
+            "x"
+          ];
           key = "<leader>/?";
           action = "<cmd>lua require(\"snacks\").picker.grep_word()<cr>";
           options = {
@@ -76,7 +85,10 @@
           };
         }
         {
-          mode = ["v" "x"];
+          mode = [
+            "v"
+            "x"
+          ];
           key = "<leader>/R";
           action = "<cmd>lua require(\"grug-far\").open({ prefills = { search = vim.fn.expand(\"<cword>\") } })<cr>";
           options = {

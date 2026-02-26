@@ -73,6 +73,12 @@
       url = "github:tenxsoydev/karen-yank.nvim";
     };
 
+    # NOTE: Dependency for `tiny-code-action-nvim`
+    plenary-nvim = {
+      flake = false;
+      url = "github:nvim-lua/plenary.nvim";
+    };
+
     # Smart scroll is a plugin that enables you to control the scrolloff
     # setting using percentages instead of static line numbers. This is a more
     # intuitive way to handle scrolling, especially as you move between
@@ -81,6 +87,13 @@
     smart-scrolloff-nvim = {
       flake = false;
       url = "github:tonymajestro/smart-scrolloff.nvim";
+    };
+
+    # A Neovim plugin that provides a simple way to run and visualize code
+    # actions
+    tiny-code-action-nvim = {
+      flake = false;
+      url = "github:rachartier/tiny-code-action.nvim";
     };
 
     # TODO: Determine if I actually want these. They're cool but I just

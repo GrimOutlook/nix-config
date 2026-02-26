@@ -14,6 +14,7 @@
         packages =
           with pkgs;
           [
+            cargo-expand
             gcc
           ]
           ++ (with fenix-toolchain; [

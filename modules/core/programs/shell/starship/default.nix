@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.core =
+  flake.modules.nixos.core =
     { lib, pkgs, ... }:
     {
       programs.starship = {

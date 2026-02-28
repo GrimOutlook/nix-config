@@ -1,27 +1,23 @@
 {
-  flake.modules.homeManager.core =
+  flake.modules.nixos.core =
     { pkgs, ... }:
     {
-      programs = {
-        bat.enable = true;
-        fd.enable = true;
-        jq.enable = true;
-        ripgrep.enable = true;
-      };
+      environment.systemPackages = with pkgs; [
+        # Rust implementations of linux commands
+        dust # du
+        dysk # df
+        duf # df
+        procs # ps
 
-      home = {
-        packages = with pkgs; [
-          # Rust implementations of linux commands
-          dust # du
-          dysk # df
-          duf # df
-          procs # ps
+        # Other utils
+        mprocs
+        nixos-anywhere
+        wget
 
-          # Other utils
-          mprocs
-          nixos-anywhere
-          wget
-        ];
-      };
+        fd
+        jq
+        ripgrep
+      ];
+
     };
 }

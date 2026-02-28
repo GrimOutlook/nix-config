@@ -1,16 +1,16 @@
 {
-  flake.modules.homeManager.core = {
+  flake.modules.nixos.core = {
     # Fast cd command that learns your habits
     programs.zoxide = {
       enable = true;
       enableBashIntegration = true;
     };
 
-    home.sessionVariables = {
+    environment.sessionVariables = {
       _ZO_ECHO = 1;
     };
 
-    home.shellAliases = {
+    environment.shellAliases = {
       cd = "z";
     };
   };

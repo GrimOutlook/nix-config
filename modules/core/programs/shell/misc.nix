@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.core =
+  flake.modules.nixos.core =
     { pkgs, ... }:
     {
       programs = {
@@ -18,21 +18,17 @@
         # https://github.com/skim-rs/skim
         skim = {
           enable = true;
-          enableBashIntegration = true;
-        };
-
-        # Interactive tree view, a fuzzy search, a balanced BFS descent and customizable commands
-        # https://dystroy.org/broot/
-        broot = {
-          enable = true;
-          enableBashIntegration = true;
         };
       };
 
-      home.packages = with pkgs; [
+      environment.systemPackages = with pkgs; [
         age # Modern encryption tool with small explicit keys
         bingrep # Greps through binaries from various OSs and architectures, and colors them
-        broot # Interactive tree view, a fuzzy search, a balanced BFS descent and customizable commands
+
+        # Interactive tree view, a fuzzy search, a balanced BFS descent and customizable commands
+        # https://dystroy.org/broot/
+        broot
+
         choose # Human-friendly and fast alternative to cut and (sometimes) awk
         coreutils-full # GNU Core Utilities
 
@@ -74,7 +70,7 @@
         xcp # Extended cp(1)
       ];
 
-      home.shellAliases = {
+      environment.shellAliases = {
         benchmark = "hyperfine";
         cp = "xcp --verbose";
         log = "lnav";

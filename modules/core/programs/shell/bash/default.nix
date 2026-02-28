@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.core =
+  flake.modules.nixos.core =
     {
       pkgs,
       lib,
@@ -11,13 +11,13 @@
       programs.bash = {
         enable = true;
 
-        initExtra = ''
+        interactiveShellInit = ''
           ${lib.getExe pkgs.pfetch}
         ''
         + builtins.readFile ./bashrc.interactive;
       };
 
-      home.sessionVariables = {
+      environment.sessionVariables = {
         HISTCONTROL = "ignoreboth:erasedups";
         HISTSIZE = 10000;
         HISTFILESIZE = 10000;

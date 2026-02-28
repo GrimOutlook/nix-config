@@ -1,13 +1,12 @@
 {
-  flake.modules.homeManager.core =
+  flake.modules.nixos.core =
     { pkgs, ... }:
     {
-      programs = {
-        # Very fast implementation of tldr in Rust
-        tealdeer = {
-          enable = true;
-          enableAutoUpdates = true;
-        };
+      environment.systemPackages = with pkgs; [
+        tealdeer
+        man
+      ];
+      documentation = {
         # GNU Info
         info.enable = true;
 

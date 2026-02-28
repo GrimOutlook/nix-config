@@ -1,14 +1,16 @@
 {
-  flake.modules.homeManager.core =
+  flake.modules.nixos.core =
     { pkgs, ... }:
     let
       alias = prg: "echo 'Using `${prg}`' && ${prg}";
     in
     {
-      home.packages = with pkgs; [
+      environment.systemPackages = with pkgs; [
         # CLI utility for displaying current network utilization
         # https://github.com/imsnif/bandwhich
         bandwhich
+
+        btop
 
         # A minimal, fast alternative to 'du -sh'
         # https://github.com/sharkdp/diskus
@@ -30,24 +32,8 @@
         # https://github.com/oberblastmeister/trashy
         trashy
       ];
-      programs = {
-        # Monitor of resources
-        # https://github.com/aristocratos/btop
-        btop = {
-          enable = true;
 
-          settings = {
-            color_theme = "gruvbox_dark";
-            vim_keys = true;
-            update_ms = 1000;
-            disks_filter = "";
-            mem_graphs = false;
-            proc_per_core = true;
-          };
-        };
-      };
-
-      home.shellAliases = {
+      environment.shellAliases = {
         du = alias "diskus";
 
         ncdu = alias "dua";

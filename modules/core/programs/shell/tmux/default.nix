@@ -1,6 +1,6 @@
 {
-  flake.modules.homeManager.core =
-    { pkgs, ... }:
+  flake.modules.nixos.core =
+    { lib, pkgs, ... }:
     {
       programs.tmux = {
         enable = true;
@@ -20,27 +20,20 @@
         aggressiveResize = true;
         # Allows for faster key repetition
         escapeTime = 50;
-        # On supported terminals, request focus events and pass them through to
-        # applications running in tmux.
-        focusEvents = true;
         # List of plugins to install.
         plugins = with pkgs.tmuxPlugins; [
           gruvbox
           sensible
           tmux-which-key
-          {
-            plugin = vim-tmux-navigator;
-            extraConfig = ''
-              set -g @vim_navigator_prefix_mapping_clear_screen ""
-            '';
-          }
+          vim-tmux-navigator
           yank
         ];
         # Additional contents of /etc/tmux.conf, to be run after sourcing plugins.
-        extraConfig = builtins.readFile ./tmux.conf;
+        extraConfig =
+          builtins.readFile ./tmux.conf + "\n" + ''set -g @vim_navigator_prefix_mapping_clear_screen ""'';
       };
 
-      home.shellAliases = {
+      environment.shellAliases = {
         tm = "tmux";
         tms = "tmux new -s";
         tml = "tmux list-sessions";
@@ -48,7 +41,7 @@
         tmk = "tmux kill-session -t";
       };
 
-      programs.bash.initExtra = ''
+      programs.bash.interactiveShellInit = ''
         # Verify that:
         # 1. TMUX command exists
         # 2. PS1 string is set and isn't ""

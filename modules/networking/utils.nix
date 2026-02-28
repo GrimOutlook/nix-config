@@ -3,18 +3,9 @@
     { config, pkgs, ... }:
     {
       home.packages = with pkgs; [
-        # Command-line DNS client
-        # https://github.com/ogham/dog
-        # NOTE: Appears unmaintained and was last updated 5 years ago.
-        dogdns
-
         # API for GeoIP/Geolocation databases
         # https://www.maxmind.com/
         geoip
-
-        # Ping, but with a graph
-        # https://github.com/orf/gping
-        gping
 
         # Network scanner with features like WiFi scanning, packetdump and more
         # https://github.com/Chleba/netscanner
@@ -42,19 +33,12 @@
         # NOTE: Still need `nmap` for deep inspection since this tool only does
         # port scans.
         rustscan
-
-        # A network diagnostic tool
-        # https://github.com/fujiapple852/trippy
-        trippy
       ];
 
       home.shellAliases = {
-        dig = "dog";
         nc = "rcat";
         netcat = "rcat";
-        ping = "gping";
         scan = "rustscan";
-        traceroute = "trippy";
       };
     };
 }

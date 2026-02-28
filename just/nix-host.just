@@ -2,12 +2,16 @@ export NH_FLAKE := "github:GrimOutlook/nix-host-{{hostname}}"
 DEFAULT_HOST := 'grim@' + hostname
 
 alias us := update-switch
-# Update flake.nix inputs and reconfigure system to new homeConfiguration
+# Update flake.nix inputs and reconfigure system
 [group('switch')]
 [group('update')]
-update-switch: update home
+update-switch: update switch
 
-alias switch := home
+# Reconfigure both nixos and home-manager
+[group('switch')]
+switch *args:
+  just os {{args}}
+  just home {{args}}
 
 # Reconfigure system to new homeConfiguration
 [group('switch')]

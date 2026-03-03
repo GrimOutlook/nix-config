@@ -19,7 +19,6 @@
 
       environment.shellAliases = {
         dig = "dog";
-        ping = "gping";
         traceroute = "trippy";
       };
     };

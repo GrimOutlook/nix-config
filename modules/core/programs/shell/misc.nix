@@ -67,6 +67,11 @@
         rsync # Fast incremental file transfer utility
         sad # CLI tool to search and replace
         sd # Intuitive find & replace CLI (sed alternative)
+
+        # A cli system trash manager, alternative to rm and trash-cli
+        # https://github.com/oberblastmeister/trashy
+        trashy
+
         xcp # Extended cp(1)
       ];
 
@@ -77,6 +82,11 @@
         mkdir = "mkdir --parents";
         replace = "fastmod --multiline";
         replace-all = "fastmod --accept-all --print-changed-files --multiline";
+
+        # NOTE: Don't make an `rm` alias. Moving to a new system that doesn't
+        # have trashy would result in unintended unrecoverable deletes.
+        rt = "trash put";
+        tp = "trash put";
       };
     };
 }

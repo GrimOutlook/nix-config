@@ -27,10 +27,6 @@
         # Fzf terminal UI for systemctl
         # https://github.com/joehillen/sysz
         sysz
-
-        # A cli system trash manager, alternative to rm and trash-cli
-        # https://github.com/oberblastmeister/trashy
-        trashy
       ];
 
       environment.shellAliases = {
@@ -41,11 +37,6 @@
         kill = alias "pik";
         pkill = alias "pik";
         killall = alias "pik";
-
-        # NOTE: Don't make an `rm` alias. Moving to a new system that doesn't
-        # have trashy would result in unintended unrecoverable deletes.
-        rt = "trashy put";
-        tp = "trashy put";
       };
     };
 }

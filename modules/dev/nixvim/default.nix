@@ -112,7 +112,11 @@
               indent.enable = true;
             };
           };
-          treesitter-context.enable = true;
+          treesitter-context = {
+            enable = true;
+            # Tired of context taking up half my screen
+            settings.max_lines = 3;
+          };
           ts-comments.enable = true;
           ts-context-commentstring.enable = true;
           vim-suda.enable = true;

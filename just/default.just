@@ -3,12 +3,13 @@ JUSTFILE_BASE_URL := \
 JUST_EXT := "just"
 JUST_DIR := ".just"
 
+# It appears that variables in the import path is not supported
+import? ".just/nix.just"
+import? ".just/host.just"
+
 # List recipes
 default:
   just --list
-
-import? "{{JUST_DIR}}/nix.just"
-import? "{{JUST_DIR}}/host.just"
 
 # Fetch the all justfiles
 [group('just')]

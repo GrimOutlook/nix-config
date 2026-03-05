@@ -13,6 +13,7 @@
 
       environment.shellAliases = {
         j = "just";
+        nix-init-just = "curl https://raw.githubusercontent.com/GrimOutlook/nix-config/main/just/default.just > .justfile";
       };
 
       programs.bash.interactiveShellInit = ''

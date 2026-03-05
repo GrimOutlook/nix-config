@@ -114,8 +114,12 @@
           };
           treesitter-context = {
             enable = true;
-            # Tired of context taking up half my screen
-            settings.max_lines = 3;
+            settings = {
+              # Tired of context taking up half my screen
+              max_lines = 3;
+              # Fix only outer scope being shown
+              trim_scope = "inner";
+            };
           };
           ts-comments.enable = true;
           ts-context-commentstring.enable = true;

@@ -2,11 +2,11 @@
 {
   flake.modules.nixos.core = {
     networking = {
-      networkmanager.enable = true;
+      networkmanager.enable = lib.mkDefault true;
       nftables.enable = lib.mkDefault true;
       firewall = {
-        enable = true;
-        logRefusedConnections = true;
+        enable = lib.mkDefault true;
+        logRefusedConnections = lib.mkDefault true;
       };
     };
   };

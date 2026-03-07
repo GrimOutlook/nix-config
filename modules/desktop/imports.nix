@@ -2,7 +2,7 @@
 {
   flake.modules = {
     nixos.desktop.imports = with config.flake.modules.nixos; [
-      bootloader
+      physical
       display-manager
       sound
     ];

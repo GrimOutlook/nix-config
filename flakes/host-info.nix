@@ -1,7 +1,3 @@
-{
-  lib,
-  ...
-}:
 let
   hostInfoModule =
     { lib, ... }:

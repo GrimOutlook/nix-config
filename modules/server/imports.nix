@@ -1,14 +1,22 @@
-{ config, ... }:
+{ config, inputs, ... }:
 {
   flake.modules.nixos.server =
-    { pkgs, ... }:
+    { lib, pkgs, ... }:
     {
-      imports = with config.flake.modules.nixos; [
-        bootloader
-      ];
+      imports =
+        with config.flake.modules.nixos;
+        [
+          physical
+        ]
+        // [
+          inputs.microvm.nixosModules.host
+        ];
 
       environment.systemPackages = with pkgs; [
         podman
       ];
+
+      # A Rust based QEMU alternative.
+      microvm.hypervisor = lib.mkDefault "cloud-hypervisor";
     };
 }

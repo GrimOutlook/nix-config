@@ -13,7 +13,7 @@
       wslConf.interop.appendWindowsPath = false;
     };
 
-    # nftables seeems to fail to start in WSL
+    # nftables seems to fail to start in WSL
     networking.nftables.enable = false;
   };
 }

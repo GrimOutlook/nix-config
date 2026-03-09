@@ -14,12 +14,50 @@
             hy3
           ];
           settings = {
+            # Refer to the wiki for more information.
+            # https://wiki.hyprland.org/Configuring/
+
+            # Please note not all available settings / options are set here.
+            # For a full list, see the wiki
+
+            # You can split this configuration into multiple files
+            # Create your files separately and then link them to this file like this:
+            # source = ~/.config/hypr/myColors.conf
 
             ################
             ### PROGRAMS ###
             ################
-            "$terminal" = "alacritty";
+            "$fileManager" = "thunar";
             "$menu" = "rofi -show run";
+            "$terminal" = "alacritty";
+
+            #################
+            ### AUTOSTART ###
+            #################
+
+            # Autostart necessary processes (like notifications daemons, status bars, etc.)
+            # Or execute your favorite apps at launch like this:
+
+            exec-once = [
+              "$terminal"
+              "nm-applet &" # Start the NetworkManager tray applet
+              "hyprpaper"
+              "dunst # Start the notification service"
+              "systemctl --user start hyprpolkitagent"
+              "wl-paste --type text --watch cliphist store"
+              "wl-paste --type image --watch cliphist store"
+            ];
+
+            #############################
+            ### ENVIRONMENT VARIABLES ###
+            #############################
+
+            # See https://wiki.hyprland.org/Configuring/Environment-variables/
+
+            env = [
+              "XCURSOR_SIZE,24"
+              "HYPRCURSOR_SIZE,24"
+            ];
 
             #####################
             ### LOOK AND FEEL ###

@@ -3,14 +3,23 @@
     { pkgs, ... }:
     {
       home.packages = with pkgs; [
+        # Terminal
+        alacritty
+
+        # File Manager
+        xfce.thunar
+
         # IM
         discord
-        signal-desktop
 
+        # Browser
         # TODO: Add `zen-browser` to `nixpkgs`
         # zen-browser
-	firefox
-        alacritty
+        firefox
+
+        # Video
+        mpv
+        vlc
 
         # Misc
         #spotify

@@ -14,19 +14,7 @@ switch local-nix-config="" *args="":
     args="$args --override-input nix-config path:{{local-nix-config}}"
   fi
 
-  just os $args
-  just home $args
-
-# Reconfigure system to new homeConfiguration
-[group('switch')]
-home *args:
-  nh home switch . -c {{NIX_REPO_HOST}} {{args}}
-
-# Reconfigure system to new nixosConfiguration
-[group('switch')]
-os *args:
   nh os switch . -H {{NIX_REPO_HOST}} {{args}}
-
 # Deploy this host flake to a remote system
 [group('deploy')]
 deploy mode='' host=DEFAULT_CONNECTION local-nix-config="" *args="":
@@ -42,7 +30,7 @@ deploy mode='' host=DEFAULT_CONNECTION local-nix-config="" *args="":
       --flake .#{{NIX_REPO_HOST}} \
       {{host}}
   else
-    just os --target-host {{host}} --build-host {{host}} $args
+    just switch --target-host {{host}} --build-host {{host}} $args
   fi
   just connect
 

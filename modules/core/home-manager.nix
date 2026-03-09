@@ -1,27 +1,33 @@
-topLevel@{ config, inputs, ... }:
+topLevel@{ config, lib, inputs, ... }:
 let
   username = config.meta.owner.username;
 in
 {
   flake.modules = {
     nixos.homeManager =
-      { config, ... }:
+      { config, lib, ... }:
       let
         inherit (config.networking) hostName;
       in
       {
+        options.home-manager.extraModules = lib.mkOption {
+          type = lib.types.listOf lib.types.deferredModule;
+          default = [ ];
+          description = "Additional home-manager modules to import";
+        };
+
         imports = [
           inputs.home-manager.nixosModules.home-manager
         ];
 
-        home-manager = {
+        config.home-manager = {
           useGlobalPkgs = true;
           useUserPackages = true;
 
           users.${username}.imports = [
             topLevel.config.flake.modules.homeManager.core
             (topLevel.config.flake.modules.homeManager."host_${hostName}" or { })
-          ];
+          ] ++ config.home-manager.extraModules;
 
           extraSpecialArgs = {
             inputs = inputs;

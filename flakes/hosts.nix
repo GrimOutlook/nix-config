@@ -121,12 +121,15 @@ let
               passthruConfig = extractPassthruConfig config.nixos;
               # Resolve top-level modules for nixos
               resolvedNixosModules = resolveModules ncModules.nixos config.modules;
+              # Resolve top-level modules for homeManager
+              resolvedHomeModules = resolveModules ncModules.homeManager config.modules;
             in
             config.nixos.nixpkgs.lib.nixosSystem {
               system = config.nixos.arch;
               modules = [
                 ncModules.nixos.core
                 { networking.hostName = config.host-info.name; }
+                { home-manager.extraModules = resolvedHomeModules; }
                 passthruConfig
               ]
               ++ resolvedNixosModules

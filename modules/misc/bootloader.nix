@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.physical =
+  flake.modules.nixos.bootloader =
     { lib, ... }:
     {
       boot = {

@@ -6,7 +6,7 @@
       imports =
         with config.flake.modules.nixos;
         [
-          physical
+          bootloader
         ]
         // [
           inputs.microvm.nixosModules.host

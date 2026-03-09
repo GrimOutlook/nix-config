@@ -9,10 +9,11 @@
 
         # TODO: Add `zen-browser` to `nixpkgs`
         # zen-browser
+	firefox
         alacritty
 
         # Misc
-        spotify
+        #spotify
       ];
     };
 }

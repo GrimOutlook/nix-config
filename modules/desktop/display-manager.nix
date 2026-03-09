@@ -8,7 +8,6 @@
         enable = true;
         wayland.enable = true;
         autoNumlock = true;
-        theme = "Elegant";
       };
     };
 }

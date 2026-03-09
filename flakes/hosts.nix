@@ -52,6 +52,8 @@ let
               system = config.arch;
               config.allowUnfree = true;
             };
+            # Make pkgs available as a module argument so host configs can use { pkgs, ... }: { ... }
+            _module.args.pkgs = config.pkgs;
           };
         };
 
@@ -126,14 +128,18 @@ let
             in
             config.nixos.nixpkgs.lib.nixosSystem {
               system = config.nixos.arch;
-              modules = [
-                ncModules.nixos.core
-                { networking.hostName = config.host-info.name; }
-                { home-manager.extraModules = resolvedHomeModules; }
-                passthruConfig
-              ]
-              ++ resolvedNixosModules
-              ++ config.nixos.modules;
+              modules =
+                let
+                  homePassthru = lib.optionals (config.home != null) [ (extractPassthruConfig config.home) ];
+                in
+                [
+                  ncModules.nixos.core
+                  { networking.hostName = config.host-info.name; }
+                  { home-manager.extraModules = resolvedHomeModules ++ homePassthru; }
+                  passthruConfig
+                ]
+                ++ resolvedNixosModules
+                ++ config.nixos.modules;
               specialArgs.inputs = ncInputs;
             };
         };

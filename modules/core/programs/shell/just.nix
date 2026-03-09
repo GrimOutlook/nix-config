@@ -13,7 +13,7 @@
 
       environment.shellAliases = {
         j = "just";
-        nix-just-init = "curl https://raw.githubusercontent.com/GrimOutlook/nix-config/main/just/default.just > .justfile && echo \"NIX_REPO_HOST='$(basename $(pwd))'\" >> .env";
+        nix-just-init = "curl https://raw.githubusercontent.com/GrimOutlook/nix-config/main/just/default.just > JUSTFILE && echo \"NIX_REPO_HOST='$(basename $(pwd))'\" >> .env";
       };
 
       programs.bash.interactiveShellInit = ''

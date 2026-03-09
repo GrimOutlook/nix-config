@@ -13,21 +13,21 @@ default:
 
 # Fetch the all justfiles
 [group('just')]
-fetch-justfiles: fetch-justfile-nix fetch-justfile-host
+fetch-justfile: fetch-justfile-nix fetch-justfile-host
 
 # Fetch the latest `host` justfile
 [group('just')]
 fetch-justfile-host:
-  just fetch-justfile "host"
+  just _fetch-justfile "host"
 
 # Fetch the latest `nix` justfile
 [group('just')]
 fetch-justfile-nix:
-  just fetch-justfile "nix"
+  just _fetch-justfile "nix"
 
 # Fetch the latest justfile with the given name
 [private]
-fetch-justfile config:
+_fetch-justfile config:
   #!/usr/bin/env bash
   set -euo pipefail
   [ `grep -E '^{{JUST_DIR}}/$' .gitignore` ] || echo "{{JUST_DIR}}/" >> .gitignore

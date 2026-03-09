@@ -7,7 +7,7 @@
       ...
     }:
     let
-      fenix-toolchain = inputs.fenix.packages.${pkgs.stdenv.hostPlatform.system}.complete;
+      fenix-toolchain = inputs.fenix.packages.${pkgs.stdenv.hostPlatform.system};
     in
     {
       home = {
@@ -30,7 +30,11 @@
           ]
           ++ (with fenix-toolchain; [
             # Install all nightly tools that exist in the selected toolchain
-            toolchain
+            complete.toolchain
+
+            # Install the windows target as well
+            targets."x86_64-pc-windows-msvc".latest.toolchain
+            targets."x86_64-pc-windows-gnu".latest.toolchain
           ]);
 
         # By default, it is in ~/.cargo
@@ -57,7 +61,7 @@
                 };
                 formatters = {
                   rustfmt = {
-                    command = "${fenix-toolchain.rustfmt}/bin/rustfmt";
+                    command = "${fenix-toolchain.complete.rustfmt}/bin/rustfmt";
                     args = [
                       "--edition"
                       "2024"

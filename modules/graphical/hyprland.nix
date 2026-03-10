@@ -1,11 +1,11 @@
 {
   flake.modules = {
-    nixos.desktop =
+    nixos.graphical =
       { pkgs, ... }:
       {
         programs.hyprland.enable = true;
       };
-    homeManager.desktop =
+    homeManager.graphical =
       { pkgs, ... }:
       {
         wayland.windowManager.hyprland = {

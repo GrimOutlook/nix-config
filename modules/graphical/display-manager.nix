@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.display-manager =
+  flake.modules.nixos.graphical =
     { pkgs, ... }:
     {
       # The theme should be in both sddm.extraPackages and environment.systemPackages.

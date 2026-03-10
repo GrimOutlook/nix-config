@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.wayland =
+  flake.modules.homeManager.graphical =
     { pkgs, ... }:
     {
       home = {

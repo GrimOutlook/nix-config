@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.zathura = {
+  flake.modules.homeManager.graphical = {
     home.shellAliases.z = "zathura";
 
     programs.zathura = {

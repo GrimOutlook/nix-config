@@ -1,4 +1,3 @@
-{ config, inputs, ... }:
 {
   flake.modules.nixos.laptop =
     { lib, pkgs, ... }:
@@ -7,7 +6,6 @@
         acpi
       ];
       services.acpid.enable = true;
-
 
     };
 }

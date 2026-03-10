@@ -9,6 +9,7 @@
         ouch
 
         # Utils
+        fclones
         dua
         fd
         file

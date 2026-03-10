@@ -116,9 +116,12 @@ let
         };
       };
 
-      config.flake = {
-        nixosConfigurations = lib.mkIf (config.nixos != null) {
-          ${config.host-info.name} =
+      config.flake = lib.mkMerge [
+        # Default empty homeConfigurations to ensure the option always has a value
+        { homeConfigurations = { }; }
+
+        (lib.mkIf (config.nixos != null) {
+          nixosConfigurations.${config.host-info.name} =
             let
               passthruConfig = extractPassthruConfig config.nixos;
               # Resolve top-level modules for nixos
@@ -142,10 +145,10 @@ let
                 ++ config.nixos.modules;
               specialArgs.inputs = ncInputs;
             };
-        };
+        })
 
-        homeConfigurations = lib.mkIf (config.home != null) {
-          ${config.host-info.name} =
+        (lib.mkIf (config.home != null) {
+          homeConfigurations.${config.host-info.name} =
             let
               passthruConfig = extractPassthruConfig config.home;
               configName = config.host-info.name;
@@ -173,14 +176,12 @@ let
               ++ resolvedHomeModules
               ++ config.home.modules;
             };
-        };
 
-        # Generate checks for home configuration
-        checks = lib.mkIf (config.home != null) {
-          ${config.home.arch}."home-${config.host-info.name}" =
+          # Generate checks for home configuration
+          checks.${config.home.arch}."home-${config.host-info.name}" =
             config.flake.homeConfigurations.${config.host-info.name}.activationPackage;
-        };
-      };
+        })
+      ];
     };
 in
 {

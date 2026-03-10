@@ -1,4 +1,3 @@
-{ config, ... }:
 {
   flake.modules.homeManager.dev =
     { pkgs, ... }:

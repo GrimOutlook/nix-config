@@ -1,7 +1,7 @@
 { config, inputs, ... }:
 {
   flake.modules.nixos.vm =
-    { pkgs, ... }:
+    { lib, pkgs, ... }:
     {
 
       imports =
@@ -15,5 +15,8 @@
 
       environment.systemPackages = with pkgs; [
       ];
+
+      # A Rust based QEMU alternative.
+      microvm.hypervisor = lib.mkDefault "cloud-hypervisor";
     };
 }

@@ -10,8 +10,5 @@
       environment.systemPackages = with pkgs; [
         podman
       ];
-
-      # A Rust based QEMU alternative.
-      microvm.hypervisor = lib.mkDefault "cloud-hypervisor";
     };
 }

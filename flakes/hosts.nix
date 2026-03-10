@@ -117,9 +117,6 @@ let
       };
 
       config.flake = lib.mkMerge [
-        # Default empty homeConfigurations to ensure the option always has a value
-        { homeConfigurations = { }; }
-
         (lib.mkIf (config.nixos != null) {
           nixosConfigurations.${config.host-info.name} =
             let
@@ -185,6 +182,12 @@ let
     };
 in
 {
+  options.flake.homeConfigurations = mkOption {
+    type = types.lazyAttrsOf types.raw;
+    default = { };
+    description = "Home Manager configurations";
+  };
+
   imports = [ (mkHostsModule nixConfigInputs nixConfigModules) ];
 
   config.flake.modules.flake.hosts = mkHostsModule nixConfigInputs nixConfigModules;

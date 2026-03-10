@@ -156,7 +156,6 @@ let
               extraSpecialArgs = {
                 inputs = ncInputs;
                 inherit configName;
-                nhSwitchCommand = "nh home switch --configuration ${configName}";
                 nhFlake = config.host-info.flake;
               };
               inherit (config.home) pkgs;

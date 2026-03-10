@@ -1,4 +1,4 @@
-topLevel@{ config, lib, inputs, ... }:
+topLevel@{ config, inputs, ... }:
 let
   username = config.meta.owner.username;
 in
@@ -26,13 +26,12 @@ in
 
           users.${username}.imports = [
             topLevel.config.flake.modules.homeManager.core
-            (topLevel.config.flake.modules.homeManager."host_${hostName}" or { })
-          ] ++ config.home-manager.extraModules;
+          ]
+          ++ config.home-manager.extraModules;
 
           extraSpecialArgs = {
             inputs = inputs;
             configName = topLevel.config.host-info.name;
-            nhSwitchCommand = "nh os switch";
             nhFlake = topLevel.config.host-info.flake;
           };
         };

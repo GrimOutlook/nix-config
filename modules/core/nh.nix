@@ -1,9 +1,9 @@
 {
   flake.modules.homeManager.nh =
-    { nhSwitchCommand, nhFlake, ... }:
+    { nhFlake, ... }:
     {
       home.shellAliases = {
-        u = nhSwitchCommand;
+        u = "nh os switch";
         nix-collect-garbage = "echo 'Use `nh clean` instead!'";
       };
 

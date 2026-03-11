@@ -68,6 +68,10 @@
         sad # CLI tool to search and replace
         sd # Intuitive find & replace CLI (sed alternative)
 
+        # Command-line fuzzy finder written in Rust
+        # https://github.com/skim-rs/skim
+        skim
+
         # A cli system trash manager, alternative to rm and trash-cli
         # https://github.com/oberblastmeister/trashy
         trashy

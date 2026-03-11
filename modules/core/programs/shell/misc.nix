@@ -18,6 +18,7 @@
         # https://github.com/skim-rs/skim
         skim = {
           enable = true;
+          keybindings = true;
         };
       };
 

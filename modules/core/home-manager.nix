@@ -45,6 +45,8 @@ in
           homeDirectory = lib.mkForce "/${if pkgs.stdenv.isLinux then "home" else "Users"}/${username}";
           stateVersion = "25.11";
         };
+        # Enable bash in home-manager so bash completions work
+        programs.bash.enable = true;
       };
   };
 }

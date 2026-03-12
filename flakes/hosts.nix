@@ -140,7 +140,11 @@ let
                 ]
                 ++ resolvedNixosModules
                 ++ config.nixos.modules;
-              specialArgs.inputs = ncInputs;
+
+              specialArgs = {
+                inputs = ncInputs;
+                nhFlake = config.host-info.flake;
+              };
             };
         })
 

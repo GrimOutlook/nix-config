@@ -25,6 +25,13 @@
             defaultBranch = "main";
           };
 
+          url = {
+            "git@github.com:".insteadOf = [
+              "gh:"
+              "github:"
+            ];
+          };
+
           push = {
             # Push the current branch to a branch of the same name on the remote.
             default = "current";

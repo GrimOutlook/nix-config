@@ -23,8 +23,6 @@ in
           extraGroups = [
             # Enable ‘sudo’ for the user.
             "sudo"
-
-            "wheel"
           ];
         };
       };

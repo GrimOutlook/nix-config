@@ -1,15 +1,10 @@
 {
-  flake.modules.nixos.core =
+  flake.modules.homeManager.nh =
     { nhFlake, ... }:
     {
-      environment = {
-        shellAliases = {
-          u = "nh os switch";
-          nix-collect-garbage = "echo 'Use `nh clean` instead!'";
-        };
-        sessionVariables = {
-          NH_FLAKE = nhFlake;
-        };
+      home.shellAliases = {
+        u = "nh os switch";
+        nix-collect-garbage = "echo 'Use `nh clean` instead!'";
       };
 
       programs.nh = {
@@ -21,7 +16,7 @@
           enable = true;
 
           dates = "daily";
-          extraArgs = "--keep 5 --keep-since 8d";
+          extraArgs = "--keep 1 --keep-since 8d";
         };
       };
     };

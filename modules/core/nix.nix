@@ -1,8 +1,19 @@
 {
   flake.modules = {
-    nixos.core = {
+    nixos.nix = {
       nixpkgs.config = {
         allowUnfree = true;
+      };
+
+      programs.nh = {
+        enable = true;
+
+        clean = {
+          enable = true;
+
+          dates = "05:00";
+          extraArgs = "--keep 5 --keep-since 8d";
+        };
       };
 
       nix = {
@@ -66,7 +77,7 @@
       };
     };
 
-    homeManager.core = {
+    homeManager.nix = {
       nix.settings = {
         warn-dirty = false;
         experimental-features = "nix-command flakes";

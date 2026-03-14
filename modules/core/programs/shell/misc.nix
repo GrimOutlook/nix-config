@@ -1,8 +1,9 @@
 {
   flake.modules.nixos.core =
-    { pkgs, ... }:
+    { pkgs, lib, ... }:
     {
       programs = {
+
         # Shell extension that manages your environment
         # https://direnv.net/
         direnv = {
@@ -18,8 +19,16 @@
         # https://github.com/skim-rs/skim
         skim = {
           enable = true;
-          keybindings = true;
+          # Disable default keybindings - we source a patched version that
+          # doesn't override git completion (see interactiveShellInit below)
+          keybindings = false;
         };
+        bash.interactiveShellInit = ''
+          # Source skim keybindings, then remove git from skim's completions
+          # so bash-completion's git completion can work instead
+          source ${pkgs.skim}/share/skim/key-bindings.bash
+          complete -r git 2>/dev/null
+        '';
       };
 
       environment.systemPackages = with pkgs; [

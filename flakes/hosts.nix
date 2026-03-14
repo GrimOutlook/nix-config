@@ -52,8 +52,6 @@ let
               system = config.arch;
               config.allowUnfree = true;
             };
-            # Make pkgs available as a module argument so host configs can use { pkgs, ... }: { ... }
-            _module.args.pkgs = config.pkgs;
           };
         };
 

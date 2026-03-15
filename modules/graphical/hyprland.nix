@@ -8,6 +8,11 @@
     homeManager.graphical =
       { pkgs, ... }:
       {
+        stylix.cursor = {
+          package = pkgs.rose-pine-hyprcursor;
+          name = "BreezX-RosePine-Linux";
+          size = 24;
+        };
         wayland.windowManager.hyprland = {
           enable = true;
           plugins = with pkgs.hyprlandPlugins; [
@@ -72,9 +77,9 @@
 
               border_size = 2;
 
-              # https://wiki.hyprland.org/Configuring/Variables/#variable-types for info about colors
-              "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-              "col.inactive_border" = "rgba(595959aa)";
+              # # https://wiki.hyprland.org/Configuring/Variables/#variable-types for info about colors
+              # "col.active_border" = "rgba(33ccffee) rgba(00ff99ee) 45deg";
+              # "col.inactive_border" = "rgba(595959aa)";
 
               # Set to true enable resizing windows by clicking and dragging on borders and gaps
               resize_on_border = true;
@@ -99,7 +104,7 @@
                 enabled = true;
                 range = 4;
                 render_power = 3;
-                color = "rgba(1a1a1aee)";
+                # color = "rgba(1a1a1aee)";
               };
 
               # https://wiki.hyprland.org/Configuring/Variables/#blur

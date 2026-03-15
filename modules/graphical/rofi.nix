@@ -5,8 +5,8 @@
       programs.rofi = {
         enable = true;
 
-        font = "DejaVu Sans Mono 18";
-        theme = "gruvbox-dark";
+        # font = "DejaVu Sans Mono 18";
+        # theme = "gruvbox-dark";
       };
     };
 }

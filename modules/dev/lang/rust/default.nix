@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  flake.modules.homeManager.dev =
+  flake.modules.homeManager.lang_rust =
     {
       pkgs,
       config,

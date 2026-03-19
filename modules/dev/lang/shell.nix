@@ -1,6 +1,6 @@
 { config, ... }:
 {
-  flake.modules.homeManager.dev =
+  flake.modules.homeManager.lang_shell =
     { pkgs, ... }:
     {
       programs = {

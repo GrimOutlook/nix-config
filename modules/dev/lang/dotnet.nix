@@ -1,6 +1,5 @@
-{ lib, ... }:
 {
-  flake.modules.homeManager.dev =
+  flake.modules.homeManager.lang_csharp =
     {
       pkgs,
       config,

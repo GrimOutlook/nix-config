@@ -1,6 +1,5 @@
-{ config, ... }:
 {
-  flake.modules.homeManager.dev =
+  flake.modules.homeManager.lang_python =
     {
       pkgs,
       config,

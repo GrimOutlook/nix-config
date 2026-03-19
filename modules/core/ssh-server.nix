@@ -18,7 +18,9 @@
           # Belfast
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhvuDzeDBK94c5jtkKLtunFNBbiIXDfwb06PrrjDMQb grim@belfast"
           # Paris
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHw6y8P3yv2xkLTl93JhF4DiCHjWrk0RzlY1Iwdz7tJL grim@paris "
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHw6y8P3yv2xkLTl93JhF4DiCHjWrk0RzlY1Iwdz7tJL grim@paris"
+          # Berlin
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIApGjkXLSbpQIvpIFbVeywyS8Y9rk0kQqPT5wjE/QEnX grim@berlin"
         ];
       in
       {

@@ -23,3 +23,6 @@ repo.
 ## TODO
 
 - [ ] Add service to mount all windows drives for WSL module.
+- [ ] Add waybar to hyprland.
+- [ ] Change login screen to something that looks decent.
+- [ ] Look into switching to Refind.

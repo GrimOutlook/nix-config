@@ -7,31 +7,22 @@ DEFAULT_CONNECTION := 'root@' + NIX_REPO_HOST
 
 # Reconfigure both nixos and home-manager
 [group('switch')]
-switch local-nix-config="" *args="":
-  #!/usr/bin/env bash
-  args="{{args}}"
-  if [[ "{{ local-nix-config }}" != "" ]]; then
-    args="$args --override-input nix-config path:{{local-nix-config}}"
-  fi
-
+switch *args="":
   nh os switch . -H {{NIX_REPO_HOST}} {{args}}
+
+# Deploy this host flake for the first time to a new system
+[group('deploy')]
+deploy-new host=DEFAULT_CONNECTION *args="":
+  just clear-ssh
+  nix run github:nix-community/nixos-anywhere -- {{args}} \
+    --flake .#{{NIX_REPO_HOST}} \
+    {{host}}
+  just switch --target-host {{host}} --build-host {{host}} {{args}}
+
 # Deploy this host flake to a remote system
 [group('deploy')]
-deploy mode='' host=DEFAULT_CONNECTION local-nix-config="" *args="":
-  #!/usr/bin/env bash
-  args="{{args}}"
-  if [[ "{{ local-nix-config }}" != "" ]]; then
-    args="$args --override-input nix-config path:{{local-nix-config}}"
-  fi
-
-  if [[ "{{ mode }}" == "new" ]]; then
-    just clear-ssh
-    nix run github:nix-community/nixos-anywhere -- $args \
-      --flake .#{{NIX_REPO_HOST}} \
-      {{host}}
-  else
-    just switch --target-host {{host}} --build-host {{host}} $args
-  fi
+deploy host=DEFAULT_CONNECTION *args="":
+  just switch --target-host {{host}} --build-host {{host}} {{args}}
   just connect
 
 # Connect to nix-host

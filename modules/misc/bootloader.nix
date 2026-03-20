@@ -1,19 +1,20 @@
 {
   flake.modules.nixos.bootloader =
     { lib, ... }:
+    with lib;
     {
       boot = {
         loader = {
           systemd-boot = {
-            enable = true;
-            configurationLimit = 10;
+            enable = mkDefault true;
+            configurationLimit = mkDefault 10;
           };
 
-          efi.canTouchEfiVariables = true;
+          efi.canTouchEfiVariables = mkDefault true;
 
-          timeout = lib.mkDefault 10;
+          timeout = mkDefault 10;
         };
-        supportedFilesystems = lib.mkForce [
+        supportedFilesystems = mkForce [
           "btrfs"
           "reiserfs"
           "vfat"

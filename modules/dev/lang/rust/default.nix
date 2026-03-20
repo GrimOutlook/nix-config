@@ -26,6 +26,12 @@
             # https://github.com/est31/cargo-udeps
             cargo-udeps
 
+            # For profiling binaries at runtime
+            cargo-flamegraph
+
+            # Heap memory profiler for Linux
+            heaptrack
+
             gcc
           ]
           ++ (with fenix-toolchain; [

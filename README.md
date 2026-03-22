@@ -22,7 +22,14 @@ repo.
 
 ## TODO
 
-- [ ] Add service to mount all windows drives for WSL module.
-- [ ] Add waybar to hyprland.
-- [ ] Change login screen to something that looks decent.
+### WSL
+- [ ] Add service to mount all windows drives.
+
+### Non-WSL
 - [ ] Look into switching to Refind.
+
+### Graphical
+- [ ] Add `eww` to hyprland.
+- [ ] Change login screen to something that looks decent.
+- [ ] Support wallpapers using `hyprpaper`.
+- [ ] Add `hyprlock` for automatic sleep support.

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -uo pipefail
+
+RED="\e[31m"
+GREEN="\e[32m"
+BLUE="\e[34m"
+RESET="\e[0m"
+
+RAW_MAC="$1"
+MAC="$(echo "$RAW_MAC" | tr "[:lower:]" "[:upper:]" | tr -d :)"
+CACHE="$HOME/.cache/oui.txt"
+if [[ ! -f "$CACHE" ]]; then
+  wget "http://standards-oui.ieee.org" -O "$CACHE"
+fi
+echo -en "Vendor for ${BLUE}${RAW_MAC}${RESET}: "
+for _ in 1 2 3 4; do
+  output="$(grep "$MAC" "$CACHE")"
+  if [ -n "$output" ]; then
+    echo -e "${GREEN}$(echo "$output" | cut -d ')' -f2 | tr -d '\t')${RESET}"
+    exit 0
+  fi
+  MAC=${MAC:0:-2}
+done
+echo -e "${RED}FAILED TO FIND VENDOR${RESET}"

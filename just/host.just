@@ -15,6 +15,11 @@ build *args="":
 switch *args="":
   nh os switch . -H {{NIX_REPO_HOST}} {{args}}
 
+# Reconfigure both nixos and home-manager
+[group('cleanup')]
+rollback *args="":
+  nh os rollback {{args}}
+
 # Deploy this host flake for the first time to a new system
 [group('deploy')]
 deploy-new host=DEFAULT_CONNECTION *args="":
@@ -22,7 +27,6 @@ deploy-new host=DEFAULT_CONNECTION *args="":
   nix run github:nix-community/nixos-anywhere -- {{args}} \
     --flake .#{{NIX_REPO_HOST}} \
     {{host}}
-  just switch --target-host {{host}} --build-host {{host}} {{args}}
 
 # Deploy this host flake to a remote system
 [group('deploy')]

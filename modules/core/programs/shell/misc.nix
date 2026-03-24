@@ -23,7 +23,9 @@
           # doesn't override git completion (see interactiveShellInit below)
           keybindings = false;
         };
-        bash.interactiveShellInit = ''
+        # After `bash-completion` initialization but before `zoxide`
+        # initialization.
+        bash.interactiveShellInit = lib.mkOrder 1900 ''
           # Source skim keybindings, then remove git from skim's completions
           # so bash-completion's git completion can work instead
           source ${pkgs.skim}/share/skim/key-bindings.bash

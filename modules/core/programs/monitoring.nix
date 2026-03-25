@@ -30,11 +30,8 @@
       ];
 
       environment.shellAliases = {
-        du = alias "diskus";
-
         ncdu = alias "dua";
 
-        kill = alias "pik";
         pkill = alias "pik";
         killall = alias "pik";
       };

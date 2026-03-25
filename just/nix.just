@@ -1,6 +1,10 @@
 # Update flake.nix inputs
 [group('update')]
-update:
+update FLAKE:
+  nix flake update {{FLAKE}}
+
+[group('update')]
+update-all:
   nix flake update
 
 # Check that config is valid

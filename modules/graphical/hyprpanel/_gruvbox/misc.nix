@@ -1,4 +1,7 @@
 {
+  scalingPriority = "hyprland";
+  bar.scale = 0.6;
+  font.size = "0.8rem";
   theme.bar.background = "#1d2021";
   theme.bar.border.color = "#83a598";
   theme.osd.label = "#83a598";

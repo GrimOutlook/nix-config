@@ -1,13 +1,11 @@
 {
   flake.modules.homeManager.graphical =
-    { pkgs, ... }:
+    { pkgs, lib, ... }:
     {
       programs.hyprpanel = {
         enable = true;
         systemd.enable = true;
-        settings = {
-
-        };
+        settings = lib.mkForce (import ./_gruvbox/imports.nix { inherit lib; });
       };
     };
 }

@@ -10,5 +10,9 @@ with lib;
         logRefusedConnections = mkDefault true;
       };
     };
+
+    environment.shellAliases = {
+      "clear-dns" = "sudo nscd -i hosts";
+    };
   };
 }

@@ -5,6 +5,8 @@ NIX_REPO_HOST := env('NIX_REPO_HOST')
 export NH_FLAKE := "github:GrimOutlook/nix-host-{{NIX_REPO_HOST}}"
 DEFAULT_CONNECTION := 'root@' + NIX_REPO_HOST
 
+OS_SWITCH_CMD := "nh"
+
 # Build the nix configuration for this host
 [group('build')]
 build *args="":
@@ -13,7 +15,7 @@ build *args="":
 # Reconfigure both nixos and home-manager
 [group('switch')]
 switch *args="":
-  nh os switch . -H {{NIX_REPO_HOST}} {{args}}
+  nh os switch --diff always . -H {{NIX_REPO_HOST}} {{args}}
 
 # Reconfigure both nixos and home-manager
 [group('cleanup')]

@@ -3,7 +3,11 @@
     nixos.graphical =
       { pkgs, ... }:
       {
-        programs.hyprland.enable = true;
+        programs.hyprland = {
+          enable = true;
+          withUWSM = true;
+          xwayland.enable = true;
+        };
       };
     homeManager.graphical =
       { pkgs, ... }:

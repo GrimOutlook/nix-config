@@ -2,12 +2,13 @@
   flake.modules.nixos.graphical =
     { pkgs, ... }:
     {
-      # The theme should be in both sddm.extraPackages and environment.systemPackages.
-      # https://wiki.nixos.org/wiki/SDDM_Themes
-      services.displayManager.sddm = {
+      programs.regreet = {
         enable = true;
-        wayland.enable = true;
-        autoNumlock = true;
+        settings = {
+          GTK = {
+            application_prefer_dark_theme = true;
+          };
+        };
       };
     };
 }

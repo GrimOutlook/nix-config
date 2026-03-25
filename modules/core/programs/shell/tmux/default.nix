@@ -23,6 +23,7 @@
         # List of plugins to install.
         plugins = with pkgs.tmuxPlugins; [
           gruvbox
+          resurrect
           sensible
           tmux-which-key
           vim-tmux-navigator

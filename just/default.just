@@ -13,7 +13,12 @@ default:
 
 # Fetch the all justfiles
 [group('just')]
-fetch-justfile: fetch-justfile-nix fetch-justfile-host
+just-update: fetch-justfile-default fetch-justfile-nix fetch-justfile-host
+
+# Fetch the latest `default` justfile
+[group('just')]
+fetch-justfile-default:
+  just _fetch-justfile "default"
 
 # Fetch the latest `host` justfile
 [group('just')]
@@ -31,13 +36,19 @@ _fetch-justfile config:
   #!/usr/bin/env bash
   set -euo pipefail
   [ `grep -E '^{{JUST_DIR}}/$' .gitignore` ] || echo "{{JUST_DIR}}/" >> .gitignore
-  just_host_path="{{JUST_DIR}}/{{config}}.{{JUST_EXT}}"
-  mkdir -p "$(dirname $just_host_path)"
+  if [[ "{{config}}" == "default" ]]; then
+    target="JUSTFILE"
+  else
+    target="{{JUST_DIR}}/{{config}}.{{JUST_EXT}}"
+    mkdir -p "$(dirname $target)"
+  fi
   tmp_path="$(mktemp)"
   url="{{JUSTFILE_BASE_URL}}/{{config}}.{{JUST_EXT}}"
-  if [ -f "$just_host_path" ]; then
+
+
+  if [ -f "$target" ]; then
     curl "$url" --output "$tmp_path"
-    difft --exit-code "$just_host_path" "$tmp_path" && {
+    difft --exit-code "$target" "$tmp_path" && {
       echo '{{RED}}No changes to \`{{config}}\` justfile found{{NORMAL}}'
       exit 0
     }
@@ -48,4 +59,4 @@ _fetch-justfile config:
     }
   fi
   echo "{{GREEN}}Found new {{config}} justfile to use. Activating...{{NORMAL}}"
-  mv "$tmp_path" "$just_host_path"
+  mv "$tmp_path" "$target"

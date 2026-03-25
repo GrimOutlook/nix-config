@@ -42,7 +42,6 @@
         broot
 
         choose # Human-friendly and fast alternative to cut and (sometimes) awk
-        coreutils-full # GNU Core Utilities
 
         # Command line csv viewer
         # https://github.com/YS-L/csvlens
@@ -88,6 +87,10 @@
         # https://github.com/oberblastmeister/trashy
         trashy
 
+        uutils-coreutils-noprefix # Rust remade GNU coreutils. `-noprefix` makes it to where `cat` isn't `uutils-cat`.
+        uutils-findutils # Rust remade GNU findutils
+        uutils-diffutils # Rust remade GNU diffutils
+
         xcp # Extended cp(1)
       ];
 
@@ -96,6 +99,7 @@
         cp = "xcp --verbose";
         log = "lnav";
         mkdir = "mkdir --parents";
+        mv = "uutils-mv --progress";
         replace = "fastmod --multiline";
         replace-all = "fastmod --accept-all --print-changed-files --multiline";
 

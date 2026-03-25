@@ -93,7 +93,7 @@
         sections = [
           {
             section = "terminal";
-            cmd = "${pkgs.coreutils-full}/bin/cat ${./thisisfine.txt}; sleep 0.1";
+            cmd = "${pkgs.uutils-coreutils-noprefix}/bin/cat ${./thisisfine.txt}; sleep 0.1";
             padding = 1;
             height = 30;
           }

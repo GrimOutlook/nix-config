@@ -35,6 +35,12 @@
 
       environment.systemPackages = with pkgs; [
         age # Modern encryption tool with small explicit keys
+
+        # Replacement for a shell history which records additional commands
+        # context with optional encrypted synchronization between machines
+        # https://github.com/atuinsh/atuin
+        atuin
+
         bingrep # Greps through binaries from various OSs and architectures, and colors them
 
         # Interactive tree view, a fuzzy search, a balanced BFS descent and customizable commands

@@ -105,7 +105,7 @@
         cp = "xcp --verbose";
         log = "lnav";
         mkdir = "mkdir --parents";
-        mv = "uutils-mv --progress";
+        mv = "mv --progress";
         replace = "fastmod --multiline";
         replace-all = "fastmod --accept-all --print-changed-files --multiline";
 

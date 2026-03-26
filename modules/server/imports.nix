@@ -4,6 +4,7 @@
     { lib, pkgs, ... }:
     {
       imports = with config.flake.modules.nixos; [
+        antivirus
         physical
         virtualization
       ];

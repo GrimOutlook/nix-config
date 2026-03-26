@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Color Reference: https://misc.flogisoft.com/bash/tip_colors_and_formatting
+BLUE="\e[36m"
+GREEN="\e[32m"
+PURPLE="\e[95m"
+YELLOW="\e[33m"
+STOP="\e[0m"
+
+URL=$(echo "$1" | grep -Po "(http[s]?:\/\/)?\K.*?((?=\/)|$)")
+if [ -z "$URL" ]; then
+    echo "Usage: $0 <hostname>"
+    echo ""
+    echo "Scrapes the host for certificates and saves all found to a file"
+    exit 1
+fi
+
+OUTPUT_FILE="${URL}_chain.pem"
+TEMP_CERT=$(mktemp)
+FINGERPRINT_FILE=$(mktemp)
+
+# Ensure cleanup happens even on failure
+trap 'rm -f "$TEMP_CERT" "$FINGERPRINT_FILE"' EXIT
+
+# Clear existing file
+truncate -s 0 "$OUTPUT_FILE"
+
+echo -e "${PURPLE}Fetching certificate chain for $URL...${STOP}"
+
+while read -r line; do
+    echo "$line" >>"$TEMP_CERT"
+
+    if [[ "$line" == *"END CERTIFICATE"* ]]; then
+        # Improved CN extraction: Handles different spacing styles
+        # -noout: don't print the cert
+        # -subject: print the subject line
+        # -nameopt RFC2253: forces a consistent format for parsing
+        CN=$(openssl x509 -in "$TEMP_CERT" -noout -subject -nameopt RFC2253 | sed -n 's/.*CN=\([^,]*\).*/\1/p')
+
+        # If CN is still empty, fall back to a generic label
+        CN=${CN:-"Unknown-Common-Name"}
+
+        # Calculate fingerprint
+        FINGERPRINT=$(openssl x509 -noout -fingerprint -sha256 -in "$TEMP_CERT")
+
+        # Use 'if ! grep' to safely check for absence without triggering set -e
+        if ! grep -qs "$FINGERPRINT" "$FINGERPRINT_FILE"; then
+            echo -e "${BLUE}Adding certificate for: $CN${STOP}"
+            cat "$TEMP_CERT" >>"$OUTPUT_FILE"
+            echo "$FINGERPRINT" >>"$FINGERPRINT_FILE"
+        else
+            echo -e "${YELLOW}Skipping duplicate certificate for: $CN${STOP}"
+        fi
+
+        # Reset temp cert for next block
+        truncate -s 0 "$TEMP_CERT"
+    fi
+done < <(openssl s_client -showcerts -connect "${URL}:443" </dev/null 2>/dev/null | awk '/BEGIN CERTIFICATE/,/END CERTIFICATE/')
+
+echo -e "${PURPLE}Verifying chain integrity...${STOP}"
+
+# Verify the chain logic
+# Note: This checks if the leaf is signed by the intermediates in the file.
+# We use -untrusted to provide the intermediates found during the scan.
+if openssl verify -untrusted "$OUTPUT_FILE" "$OUTPUT_FILE" >/dev/null 2>&1; then
+    echo -e "${BLUE}Verification SUCCESS: The chain is complete and valid.${STOP}"
+else
+    echo -e "${YELLOW}Verification WARNING: The chain may be incomplete or contain a self-signed root not in your local trust store.${STOP}"
+fi
+
+# Cleanup
+rm "$TEMP_CERT" "$FINGERPRINT_FILE"
+echo -e "${GREEN}Final chain saved to $OUTPUT_FILE${STOP}"

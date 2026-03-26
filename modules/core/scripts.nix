@@ -8,6 +8,7 @@
       };
       environment.systemPackages = with pkgs; [
         (writeShellScriptBin "macvendor" (builtins.readFile ./scripts/macvendor))
+        (writeShellScriptBin "certscrape" (builtins.readFile ./scripts/certscrape))
       ];
     };
 }

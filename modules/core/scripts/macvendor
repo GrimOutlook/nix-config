@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
+# Color reference: https://misc.flogisoft.com/bash/tip_colors_and_formatting
 RED="\e[31m"
 GREEN="\e[32m"
 BLUE="\e[34m"

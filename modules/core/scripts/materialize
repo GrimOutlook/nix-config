@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+LINK_PATH="$1"
+if [ -z "$PATH" ]; then
+    echo "Usage: $0 <path>"
+    echo ""
+    echo "Replace a symbolic link in-place with the inner contents of the link"
+    exit 1
+fi
+
+cp --remove-destination $(readlink -f $LINK_PATH) $LINK_PATH

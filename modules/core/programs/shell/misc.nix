@@ -102,6 +102,7 @@
 
       environment.shellAliases = {
         benchmark = "hyperfine";
+        cdtmp = "cd $(mktemp -d)";
         cp = "xcp --verbose";
         log = "lnav";
         mkdir = "mkdir --parents";

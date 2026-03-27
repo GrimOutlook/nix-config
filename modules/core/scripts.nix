@@ -10,6 +10,7 @@
         (writeShellScriptBin "macvendor" (builtins.readFile ./scripts/macvendor))
         (writeShellScriptBin "certscrape" (builtins.readFile ./scripts/certscrape))
         (writeShellScriptBin "materialize" (builtins.readFile ./scripts/materialize))
+        (writeShellScriptBin "cs" (builtins.readFile ./scripts/cs))
       ];
     };
 }

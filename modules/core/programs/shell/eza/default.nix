@@ -4,20 +4,21 @@
 
     let
       eza_config_file = ./theme.yml;
-      EZA_DEFAULT_OPTIONS = "--header --long --time-style long-iso --git-repos --git --icons --octal-permissions --classify --hyperlink --group --mounts --extended";
+      # Add a timeout for large or non-responsive directories
+      EZA_DEFAULT_OPTIONS = "timeout --kill-after=4s 3s eza --header --long --time-style long-iso --git-repos --git --icons --octal-permissions --classify --hyperlink --group --mounts --extended";
     in
     {
       environment.systemPackages = with pkgs; [
         eza
       ];
       environment.shellAliases = {
-        l = "eza ${EZA_DEFAULT_OPTIONS}";
-        ls = "eza ${EZA_DEFAULT_OPTIONS}";
-        la = "eza -a ${EZA_DEFAULT_OPTIONS}";
-        lr = "eza -R ${EZA_DEFAULT_OPTIONS}";
-        lsr = "eza -R ${EZA_DEFAULT_OPTIONS}";
-        lar = "eza -Ra ${EZA_DEFAULT_OPTIONS}";
-        lt = "eza -R --tree ${EZA_DEFAULT_OPTIONS}";
+        l = EZA_DEFAULT_OPTIONS;
+        ls = EZA_DEFAULT_OPTIONS;
+        la = "${EZA_DEFAULT_OPTIONS} -a";
+        lr = "${EZA_DEFAULT_OPTIONS} -R";
+        lsr = "${EZA_DEFAULT_OPTIONS} -R";
+        lar = "${EZA_DEFAULT_OPTIONS} -Ra";
+        lt = "${EZA_DEFAULT_OPTIONS} -R --tree";
       };
 
       environment.etc."eza/config.yml" = {

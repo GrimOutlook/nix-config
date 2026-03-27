@@ -37,7 +37,7 @@
             ### PROGRAMS ###
             ################
             "$fileManager" = "thunar";
-            "$menu" = "rofi -show run";
+            "$menu" = "rofi -show drun";
             "$terminal" = "alacritty";
 
             #################
@@ -259,7 +259,6 @@
             ];
 
             bindm = [
-
               # Move/resize windows with mainMod + LMB/RMB and dragging
               "$mainMod, mouse:272, movewindow"
               "$mainMod, mouse:273, resizewindow"
@@ -277,7 +276,6 @@
             ];
 
             bindl = [
-
               # Requires playerctl
               ", XF86AudioNext, exec, playerctl next"
               ", XF86AudioPause, exec, playerctl play-pause"

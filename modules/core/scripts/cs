@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$1"
+if [ -z "$DIR" ]; then
+    echo "Usage: $0 <directory>"
+    echo ""
+    echo "CD to directory and list files"
+    exit 1
+fi
+
+cd "$DIR" && ls "$DIR"

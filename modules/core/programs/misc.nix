@@ -19,5 +19,7 @@
         ripgrep
       ];
 
+      services.vnstat.enable = true;
+
     };
 }

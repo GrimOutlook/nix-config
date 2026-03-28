@@ -1,12 +1,15 @@
 {
   flake.modules.nixos.ssh-server = {
-    services.openssh = {
-      enable = true;
+    services = {
+      fail2ban.enable = true;
+      openssh = {
+        enable = true;
 
-      settings = {
-        PermitRootLogin = "prohibit-password";
-        PasswordAuthentication = false;
-        KbdInteractiveAuthentication = false;
+        settings = {
+          PermitRootLogin = "prohibit-password";
+          PasswordAuthentication = false;
+          KbdInteractiveAuthentication = false;
+        };
       };
     };
 

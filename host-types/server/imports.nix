@@ -5,7 +5,7 @@
     {
       imports = with config.flake.modules.nixos; [
         antivirus
-        physical
+        bootloader
         virtualization
       ];
     };

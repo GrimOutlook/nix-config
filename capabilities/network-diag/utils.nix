@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.networking =
+  flake.modules.homeManager.network-diag =
     { config, pkgs, ... }:
     {
       home.packages = with pkgs; [

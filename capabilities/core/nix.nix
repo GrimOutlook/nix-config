@@ -101,6 +101,10 @@ in
         experimental-features = "nix-command flakes";
 
         use-xdg-base-directories = true;
+
+        trusted-public-keys = builtins.catAttrs "publicKey" substituters;
+
+        substituters = builtins.map (def: "${def.url}?priority=${toString def.priority}") substituters;
       };
     };
   };

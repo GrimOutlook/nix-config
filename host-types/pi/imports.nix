@@ -9,6 +9,12 @@
         ];
         nixpkgs.buildPlatform = "x86_64-linux";
         nixpkgs.hostPlatform = "aarch64-linux";
+        nix.settings = {
+          substituters = [ "https://raspberry-pi-nix.cachix.org" ];
+          trusted-public-keys = [
+            "raspberry-pi-nix.cachix.org-1:WmV2rdSangxW0KTFjanUjs096+7CwhvL32Ggca9M4w="
+          ];
+        };
       };
     home.pi.imports = with config.flake.modules.home; [
     ];

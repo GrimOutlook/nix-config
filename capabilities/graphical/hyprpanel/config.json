@@ -1,11 +1,18 @@
 {
   "bar.autoHide": "fullscreen",
-  "bar.clock.format": "%a %b %d  %H:%M:%S",
+  "bar.clock.format": "%H:%M",
   "bar.clock.showIcon": true,
   "bar.clock.showTime": true,
+  "bar.customModules.cpuTemp.label": true,
+  "bar.customModules.cpuTemp.round": true,
+  "bar.customModules.cpuTemp.showUnit": false,
+  "bar.customModules.microphone.middleClick": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+  "bar.customModules.microphone.rightClick": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+  "bar.customModules.microphone.scrollDown": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-",
+  "bar.customModules.microphone.scrollUp": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+",
   "bar.customModules.netstat.dynamicIcon": true,
   "bar.customModules.netstat.label": true,
-  "bar.customModules.netstat.labelType": "full",
+  "bar.customModules.netstat.labelType": "in",
   "bar.customModules.netstat.leftClick": "menu:network",
   "bar.customModules.netstat.rateUnit": "MiB",
   "bar.customModules.netstat.round": true,
@@ -13,34 +20,13 @@
     "/"
   ],
   "bar.launcher.icon": "",
-  "bar.layouts": {
-    "0": {
-      "left": [
-        "dashboard",
-        "workspaces",
-        "windowtitle"
-      ],
-      "middle": [
-        "media"
-      ],
-      "right": [
-        "volume",
-        "microphone",
-        "cputemp",
-        "cpu",
-        "ram",
-        "netstat",
-        "systray",
-        "clock",
-        "notifications"
-      ]
-    },
-    "1": {},
-    "2": {}
-  },
   "bar.media.show_active_only": true,
   "bar.notifications.hideCountWhenZero": true,
   "bar.notifications.show_total": true,
+  "bar.volume.middleClick": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+  "bar.volume.rightClick": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+  "bar.volume.scrollDown": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
+  "bar.volume.scrollUp": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
   "bar.workspaces.show_icons": false,
   "bar.workspaces.show_numbered": true,
   "menus.clock.time.military": true,
@@ -1119,15 +1105,14 @@
   "theme.osd.scaling": 80,
   "theme.tooltip.scaling": 80,
   "wallpaper.image": "/home/grim/downloads/1314645.jpg",
-  "bar.customModules.cpuTemp.label": true,
-  "bar.customModules.cpuTemp.showUnit": false,
-  "bar.customModules.cpuTemp.round": true,
-  "bar.customModules.microphone.scrollUp": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%+",
-  "bar.customModules.microphone.scrollDown": "wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 5%-",
-  "bar.customModules.microphone.rightClick": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
-  "bar.volume.middleClick": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-  "bar.volume.rightClick": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-  "bar.volume.scrollUp": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+",
-  "bar.volume.scrollDown": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
-  "bar.customModules.microphone.middleClick": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+  "menus.power.lowBatteryNotification": true,
+  "bar.customModules.ram.labelType": "percentage",
+  "bar.customModules.ram.round": true,
+  "bar.customModules.cpu.round": true,
+  "theme.bar.buttons.modules.netstat.enableBorder": false,
+  "menus.clock.time.hideSeconds": false,
+  "bar.workspaces.numbered_active_indicator": "underline",
+  "bar.network.showWifiInfo": false,
+  "bar.battery.hideLabelWhenFull": true,
+  "bar.clock.icon": ""
 }

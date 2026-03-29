@@ -76,6 +76,7 @@
         pastel # Command-line tool to generate, analyze, convert and manipulate colors
         plocate # Much faster locate
         progress # Tool that shows the progress of coreutils programs
+        pv # Tool for monitoring the progress of data through a pipeline
         rage # A simple, secure and modern file encryption tool (and Rust library) with small explicit keys, no config options, and UNIX-style composability.
         ragenix # Age-encrypted secrets for NixOS, drop-in replacement for agenix
         rclone # Command line program to sync files and directories to and from major cloud storage

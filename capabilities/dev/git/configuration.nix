@@ -71,8 +71,11 @@
           };
 
           commit = {
+            gpgSign = true;
             template = builtins.path { path = ./commit-template; };
           };
+
+          tag.gpgSign = true;
         };
       };
     };

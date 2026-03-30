@@ -1,26 +1,31 @@
 {
-  flake.modules.nixos.core =
-    {
-      pkgs,
-      lib,
-      ...
-    }:
-    {
-      # GNU Bourne-Again Shell, the de facto standard shell on Linux (for
-      # interactive use)
-      programs.bash = {
-        enable = true;
+  flake.modules = {
+    nixos.core =
+      {
+        pkgs,
+        lib,
+        ...
+      }:
+      {
+        # GNU Bourne-Again Shell, the de facto standard shell on Linux (for
+        # interactive use)
+        programs.bash = {
+          enable = true;
 
-        interactiveShellInit = ''
-          ${lib.getExe pkgs.pfetch}
-        ''
-        + builtins.readFile ./bashrc.interactive;
-      };
+          interactiveShellInit = ''
+            ${lib.getExe pkgs.pfetch}
+          ''
+          + builtins.readFile ./bashrc.interactive;
+        };
 
-      environment.sessionVariables = {
-        HISTCONTROL = "ignoreboth:erasedups";
-        HISTSIZE = 10000;
-        HISTFILESIZE = 10000;
+        environment.sessionVariables = {
+          HISTCONTROL = "ignoreboth:erasedups";
+          HISTSIZE = 10000;
+          HISTFILESIZE = 10000;
+        };
       };
-    };
+  };
+  home.core = {
+    programs.bash.enable = true;
+  };
 }

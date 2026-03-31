@@ -4,18 +4,12 @@
     {
       environment.systemPackages = with pkgs; [
         # Rust implementations of linux commands
-        procs # ps
+        dust # du
+        dysk # df
+        duf # df
 
-        # Other utils
-        mprocs
-        nixos-anywhere
-        wget
+        parted
 
-        fd
-        jq
-        ripgrep
       ];
-
-      services.vnstat.enable = true;
     };
 }

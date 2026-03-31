@@ -3,6 +3,9 @@
     nixos.graphical =
       { pkgs, ... }:
       {
+        environment.systemPackages = with pkgs; [
+          libnotify
+        ];
         programs.hyprland = {
           enable = true;
           withUWSM = true;

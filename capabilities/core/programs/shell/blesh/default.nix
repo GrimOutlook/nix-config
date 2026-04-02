@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.dev =
+  flake.modules.nixos.core =
     { pkgs, lib, ... }:
     {
       environment.etc."blerc".text = builtins.readFile ./blerc + builtins.readFile ./ble-keybinds;

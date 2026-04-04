@@ -31,6 +31,7 @@
         ];
         # Additional contents of /etc/tmux.conf, to be run after sourcing plugins.
         extraConfig =
+          # Remove the `Ctrl-L` mapping that clears the screen.
           builtins.readFile ./tmux.conf + "\n" + ''set -g @vim_navigator_prefix_mapping_clear_screen ""'';
       };
 
@@ -57,5 +58,9 @@
           tmux new-session
         fi
       '';
+      programs.ssh.extraConfig = ''
+        SendEnv TMUX
+      '';
+      services.openssh.settings.AcceptEnv = "TMUX";
     };
 }

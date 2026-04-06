@@ -1,4 +1,3 @@
-{ config, ... }:
 {
   flake.modules.homeManager.lang_shell =
     { pkgs, ... }:

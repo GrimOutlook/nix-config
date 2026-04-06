@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# NOTE: This is Gemini generated :p I just gave it the base regex and what I
+# wanted to inputs to be.
+
+# Default: no space between words
+SPACE_CHAR=""
+
+# Parse flags
+while getopts "s" opt; do
+    case $opt in
+    s) SPACE_CHAR=" " ;;
+    *)
+        echo "Usage: $0 [-s] <ACRONYM> [FILE]"
+        exit 1
+        ;;
+    esac
+done
+
+# Shift arguments so $1 is the acronym
+shift $((OPTIND - 1))
+
+ACRONYM=$1
+FILE=${2:-.}
+
+if [ -z "$ACRONYM" ]; then
+    echo "Usage: $0 [-s] <ACRONYM> [FILE]"
+    exit 1
+fi
+
+# 1. Break ABC into A B C
+# 2. Map each letter to "L\w+"
+# 3. Join them with the $SPACE_CHAR
+# 4. Wrap in word boundaries
+REGEX_BODY=$(echo "$ACRONYM" | sed 's/./&\\w+'"$SPACE_CHAR"'/g' | sed 's/'"$SPACE_CHAR"'$//')
+FINAL_REGEX="(?<=^|\\W)${REGEX_BODY}(?=\\W|$)"
+
+echo "Searching for regex: $FINAL_REGEX"
+echo "-----------------------------------"
+
+rg -Po "$FINAL_REGEX" "$FILE"

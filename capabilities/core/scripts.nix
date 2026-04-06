@@ -11,6 +11,7 @@
         (writeShellScriptBin "certscrape" (builtins.readFile ./scripts/certscrape))
         (writeShellScriptBin "materialize" (builtins.readFile ./scripts/materialize))
         (writeShellScriptBin "cs" (builtins.readFile ./scripts/cs))
+        (writeShellScriptBin "acronym" (builtins.readFile ./scripts/acronym))
       ];
     };
 }

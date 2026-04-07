@@ -5,7 +5,9 @@
     {
       home.packages = with pkgs; [
         grim
+        gpu-screen-recorder-gtk
       ];
+      progrograms.gpu-screen-recorder.enable = true;
       services.flameshot = {
         enable = true;
         settings = {

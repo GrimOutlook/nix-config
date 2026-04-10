@@ -1,3 +1,0 @@
-# Graphical Capabilities
-
-Handles configuration for systems that need a display manager, audio, etc...

@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   ...
 }:
@@ -24,13 +23,10 @@ in
   };
 
   config = mkIf cfg.enable {
-    imports = [
-      inputs.home-manager.nixosModules.default
-    ];
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      users.${config.host.owner.username} = removeAttrs (attrsOf cfg.host.home-manager) [ "enable" ];
+      users.${config.host.owner.username} = removeAttrs cfg [ "enable" ];
     };
   };
 }

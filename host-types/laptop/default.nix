@@ -8,16 +8,14 @@ let
   cfg = config.host.type.laptop;
 in
 {
+  options.host.type.laptop.enable = lib.mkEnableOption "Enable laptop configurations";
 
-  options.host.type.laptop = {
-    enable = lib.mkEnableOption "Enable laptop configurations";
-  };
   config = lib.mkIf cfg.enable {
     host = {
       antivirus.enable = true;
       bluetooth.enable = true;
       bootloader.enable = true;
-      graphical.enable = true;
+      # graphical.enable = true;
     };
 
     programs.light = {

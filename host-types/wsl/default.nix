@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   ...
 }:
@@ -8,13 +7,9 @@ let
   cfg = config.host.type.wsl;
 in
 {
-  options.host.type.wsl = {
-    enable = lib.mkEnableOption "Enable WSL configurations";
-  };
+  options.host.type.wsl.enable = lib.mkEnableOption "Enable WSL configurations";
+
   config = lib.mkIf cfg.enable {
-    imports = [
-      inputs.nixos-wsl.nixosModules.default
-    ];
     wsl = {
       enable = true;
       defaultUser = config.host.owner.username;

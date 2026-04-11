@@ -118,10 +118,24 @@
 
   outputs =
     { flake-parts, ... }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } (
-      inputs.import-tree [
-        ./capabilities
-        ./host-types
-      ]
-    );
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" "aarch64-linux" ];
+
+      flake.nixosModules.default = {
+        imports = [
+          # External module dependencies
+          inputs.agenix.nixosModules.default
+          inputs.disko.nixosModules.disko
+          inputs.home-manager.nixosModules.default
+          inputs.microvm.nixosModules.microvm
+          inputs.nix-index-database.nixosModules.nix-index
+          inputs.nixos-wsl.nixosModules.default
+          "${inputs.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
+
+          # Local modules
+          (inputs.import-tree ./capabilities)
+          (inputs.import-tree ./host-types)
+        ];
+      };
+    };
 }

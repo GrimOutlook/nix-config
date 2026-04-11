@@ -24,7 +24,7 @@ in
         userDirs = {
           enable = true;
         }
-        // (lib.mapAttrs (_: folderName: "${config.home.homeDirectory}/${folderName}") {
+        // (lib.mapAttrs (_: folderName: "/home/${config.host.owner.username}/${folderName}") {
           desktop = "desktop";
           documents = "documents";
           download = "downloads";

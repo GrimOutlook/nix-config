@@ -18,7 +18,7 @@ in
         ) modules;
     in
     mkIf cfg.enable {
-      host = enableAll [
+      host = lib.mkMerge (enableAll [
         "atuin"
         "bash"
         "bat"
@@ -30,6 +30,6 @@ in
         "starship"
         "tmux"
         "zoxide"
-      ];
+      ]);
     };
 }

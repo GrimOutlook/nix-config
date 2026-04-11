@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   ...
 }:
@@ -11,11 +10,8 @@ in
   options.host.nix-index-database = {
     enable = lib.mkEnableOption "Enable nix-index-database configurations";
   };
-  config = lib.mkIf cfg.enable {
-    imports = [
-      inputs.nix-index-database.nixosModules.nix-index
-    ];
 
+  config = lib.mkIf cfg.enable {
     # runs programs without installing them
     programs = {
       nix-index-database.comma.enable = true;

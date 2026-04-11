@@ -19,15 +19,14 @@ in
         ) modules;
     in
     mkIf cfg.enable {
-      host = enableAll [
+      host = lib.mkMerge (enableAll [
         "compression"
         "documentation"
         "monitoring"
         "networking"
         "shell"
-        "ssh"
         "storage"
-      ];
+      ]);
       environment = {
         systemPackages = with pkgs; [
           # Other utils

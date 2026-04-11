@@ -4,7 +4,7 @@
   ...
 }:
 let
-  substituters = builtins.map (def: "${def.url}?priority=${toString def.priority}") [
+  cacheDefinitions = [
     {
       url = "https://cache.nixos.org";
       publicKey = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=";
@@ -16,6 +16,8 @@ let
       priority = 2;
     }
   ];
+  substituters = builtins.map (def: "${def.url}?priority=${toString def.priority}") cacheDefinitions;
+  trustedPublicKeys = builtins.catAttrs "publicKey" cacheDefinitions;
   cfg = config.host.nix;
 in
 {
@@ -29,6 +31,8 @@ in
 
     programs.nh = {
       enable = true;
+
+      flake = config.host.flake-url;
 
       clean = {
         enable = true;
@@ -92,7 +96,7 @@ in
 
         builders-use-substitutes = true;
 
-        trusted-public-keys = builtins.catAttrs "publicKey" substituters;
+        trusted-public-keys = trustedPublicKeys;
 
         inherit substituters;
 
@@ -100,20 +104,22 @@ in
         # fails. This is equivalent to the –fallback flag. The default is false.
         fallback = true;
 
-        system.stateVersion = "25.11";
       };
     };
+    system.stateVersion = "25.11";
 
-    host.home-manager.nix.settings = {
-      warn-dirty = false;
-      experimental-features = "nix-command flakes";
+    host.home-manager = {
+      nix.settings = {
+        warn-dirty = false;
+        experimental-features = "nix-command flakes";
 
-      use-xdg-base-directories = true;
+        use-xdg-base-directories = true;
 
-      trusted-public-keys = builtins.catAttrs "publicKey" substituters;
+        trusted-public-keys = trustedPublicKeys;
 
-      inherit substituters;
+        inherit substituters;
 
+      };
       home.stateVersion = "25.11";
     };
   };

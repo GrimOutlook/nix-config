@@ -1,23 +1,25 @@
-{ inputs, ... }:
 {
-  flake.modules = {
-    nixos.agenix =
-      { pkgs, ... }:
-      {
-        imports = [
-          inputs.agenix.nixosModules.default
-        ];
+  config,
+  inputs,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.host.disable_ipv6;
+in
+{
+  options.host.disable_ipv6 = {
+    enable = lib.mkEnableOption "Enable agenix configurations";
+  };
+  config = lib.mkIf cfg.enable {
+    imports = [
+      inputs.agenix.nixosModules.default
+    ];
 
-        environment.systemPackages = with pkgs; [
-          rage
-          ragenix
-        ];
-      };
-
-    homeManager.agenix = {
-      imports = [
-        inputs.agenix.homeManagerModules.default
-      ];
-    };
+    environment.systemPackages = with pkgs; [
+      rage
+      ragenix
+    ];
   };
 }

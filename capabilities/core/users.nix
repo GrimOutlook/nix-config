@@ -1,16 +1,20 @@
-{ config, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 let
-  username = config.meta.owner.username;
+  cfg = config.host.users;
+  inherit (config.host.owner) username;
 in
 {
-  flake.modules.nixos.users = {
+  options.host.users.enable = lib.mkEnableOption "Enable users configurations";
+  config = lib.mkIf cfg.enable {
     users = {
       mutableUsers = false;
 
       users = {
-        root = {
-          isSystemUser = true;
-        };
+        root.isSystemUser = true;
 
         "${username}" = {
           isNormalUser = true;
@@ -28,9 +32,12 @@ in
           ];
         };
       };
-      groups."${username}" = { };
+
+      # NOTE: This ensures these groups are created.
+      groups.${username} = { };
       groups.sudo = { };
     };
+
     nix.settings.trusted-users = [ "${username}" ];
   };
 }

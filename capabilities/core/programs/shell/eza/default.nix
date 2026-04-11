@@ -1,13 +1,22 @@
 {
-  flake.modules.nixos.core =
-    { config, pkgs, ... }:
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.host.default-program.eza;
+in
+{
+  options.host.default-program.eza.enable = lib.mkEnableOption "Enable default eza configurations";
 
+  config =
     let
       eza_config_file = ./theme.yml;
       # Add a timeout for large or non-responsive directories
       EZA_DEFAULT_OPTIONS = "timeout --kill-after=4s 3s eza --header --long --time-style long-iso --git-repos --git --icons --octal-permissions --classify --hyperlink --group --mounts --extended";
     in
-    {
+    lib.mkIf cfg.enable {
       environment.systemPackages = with pkgs; [
         eza
       ];

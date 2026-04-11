@@ -1,25 +1,39 @@
 {
-  flake.modules.nixos.core =
-    { config, pkgs, ... }:
-    {
-      environment.systemPackages = with pkgs; [
-        # Command-line DNS client
-        # https://github.com/ogham/dog
-        # NOTE: Appears unmaintained and was last updated 5 years ago.
-        dogdns
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.host.default-programs.networking;
+in
+{
+  options.host.default-programs.networking.enable =
+    lib.mkEnableOption "Enable default networking programs configurations";
 
-        # Ping, but with a graph
-        # https://github.com/orf/gping
-        gping
+  config = lib.mkIf cfg.enable {
+    environment.systemPackages = with pkgs; [
+      dig # Domain name server
 
-        # A network diagnostic tool
-        # https://github.com/fujiapple852/trippy
-        trippy
-      ];
+      # Command-line DNS client
+      # https://github.com/ogham/dog
+      # NOTE: Appears unmaintained and was last updated 5 years ago.
+      dogdns
 
-      environment.shellAliases = {
-        dig = "dog";
-        traceroute = "trippy";
-      };
+      # Ping, but with a graph
+      # https://github.com/orf/gping
+      gping
+
+      lsof
+
+      # A network diagnostic tool
+      # https://github.com/fujiapple852/trippy
+      trippy
+    ];
+
+    environment.shellAliases = {
+      dig = "dog";
+      traceroute = "trippy";
     };
+  };
 }

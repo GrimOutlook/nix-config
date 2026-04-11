@@ -1,9 +1,17 @@
 {
-  flake.modules.nixos.core = {
+  config,
+  lib,
+  ...
+}:
+let
+  cfg = config.host.default-program.bat;
+in
+{
+  options.host.default-program.bat.enable = lib.mkEnableOption "Enable default bat configurations";
+
+  config = lib.mkIf cfg.enable {
     # Cat(1) clone with syntax highlighting and Git integration
-    programs.bat = {
-      enable = true;
-    };
+    programs.bat.enable = true;
 
     environment.sessionVariables = {
       # TODO: Figure out why this isn't working

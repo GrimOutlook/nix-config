@@ -120,7 +120,6 @@
     { flake-parts, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (
       inputs.import-tree [
-        ./flakes
         ./capabilities
         ./host-types
       ]

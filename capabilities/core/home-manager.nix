@@ -1,50 +1,36 @@
-topLevel@{ config, inputs, ... }:
+{
+  config,
+  inputs,
+  lib,
+  ...
+}:
+with lib;
 let
-  username = config.meta.owner.username;
+  cfg = config.host.home-manager;
 in
 {
-  flake.modules = {
-    nixos.homeManager =
-      { config, lib, ... }:
-      let
-        inherit (config.networking) hostName;
-      in
-      {
-        options.home-manager.extraModules = lib.mkOption {
-          type = lib.types.listOf lib.types.deferredModule;
-          default = [ ];
-          description = "Additional home-manager modules to import";
-        };
-
-        imports = [
-          inputs.home-manager.nixosModules.home-manager
-        ];
-
-        config.home-manager = {
-          useGlobalPkgs = true;
-          useUserPackages = true;
-
-          users.${username}.imports = [
-            topLevel.config.flake.modules.homeManager.core
-          ]
-          ++ config.home-manager.extraModules;
-
-          extraSpecialArgs = {
-            inputs = inputs;
-            configName = topLevel.config.host-info.name;
-            nhFlake = topLevel.config.host-info.flake;
-          };
+  options.host.home-manager = mkOption {
+    type = types.submodule {
+      freeformType = types.attrsOf types.anything;
+      options = {
+        enable = mkOption {
+          type = types.bool;
+          default = mkDefault true;
         };
       };
+    };
 
-    homeManager.core =
-      { lib, pkgs, ... }:
-      {
-        home = {
-          username = username;
-          homeDirectory = lib.mkForce "/${if pkgs.stdenv.isLinux then "home" else "Users"}/${username}";
-          stateVersion = "25.11";
-        };
-      };
+    description = "home-manager configurations that are passed to the `home-manager.users.\${owner}` field";
+  };
+
+  config = mkIf cfg.enable {
+    imports = [
+      inputs.home-manager.nixosModules.default
+    ];
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      users.${config.host.owner.username} = removeAttrs (attrsOf cfg.host.home-manager) [ "enable" ];
+    };
   };
 }

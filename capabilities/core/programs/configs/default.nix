@@ -25,6 +25,7 @@ in
         "blesh"
         "eza"
         "just"
+        "nixvim"
         "skim"
         "ssh"
         "starship"

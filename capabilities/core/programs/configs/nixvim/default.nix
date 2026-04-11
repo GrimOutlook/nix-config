@@ -6,7 +6,7 @@
   ...
 }:
 let
-  cfg = config.host.nixvim;
+  cfg = config.host.default-program.nixvim;
   mkRaw = inputs.nixvim.lib.nixvim.mkRaw;
 
   # Custom plugins
@@ -45,7 +45,7 @@ let
   };
 in
 {
-  options.host.nixvim.enable = lib.mkEnableOption "Enable Nixvim configuration";
+  options.host.default-program.nixvim.enable = lib.mkEnableOption "Enable Nixvim configuration";
 
   config = lib.mkIf cfg.enable {
     host.home-manager = {

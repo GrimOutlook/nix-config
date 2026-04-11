@@ -18,7 +18,6 @@ in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
         "git"
-        "nixvim"
         "dev-tools"
       ])
     );

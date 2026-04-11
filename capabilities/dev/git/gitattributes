@@ -1,0 +1,40 @@
+*               text=auto
+
+# Text files
+*.bash          text
+*.compose       text
+*.conf          text
+*.css           text
+*.fish          text
+*.groovy        text
+*.html          text
+*.java          text
+*.js            text
+*.json          text
+*.jsx           text
+*.lock          text
+*.lua           text
+*.md            text
+*.pl            text
+*.py            text
+*.rs            text
+*.sh            text
+*.spec          text
+*.toml          text
+*.ts            text
+*.tsx           text
+*.txt           text
+*.xml           text
+*.yaml          text
+*.yml           text
+
+# CRLF text files
+*.vcproj        text eol=crlf
+
+# Binary files
+*.gz           -text
+*.jpg          -text
+*.pdf          -text
+*.tar          -text
+*.xz           -text
+*.zip          -text

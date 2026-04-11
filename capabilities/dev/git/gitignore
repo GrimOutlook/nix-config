@@ -1,0 +1,11 @@
+*.swp
+*.bkp
+*~
+.tasks
+.settings
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+.claude/
+
+!.gitignore

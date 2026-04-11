@@ -25,7 +25,7 @@ in
             ripsecrets # Command-line tool to prevent committing secret keys into your source code
             tokei # Count your code, quickly
           ]
-          ++ (with inputs.nixpkgs-unstable; [
+          ++ (with inputs.nix-config.inputs.nixpkgs-unstable; [
             just # Handy way to save and run project-specific commands
           ]);
 

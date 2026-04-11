@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   ...
 }:
@@ -8,6 +9,10 @@ let
   cfg = config.host.home-manager;
 in
 {
+  imports = [
+    inputs.nix-config.inputs.home-manager.nixosModules.default
+  ];
+
   options.host.home-manager = mkOption {
     type = types.submodule {
       freeformType = types.attrsOf types.anything;

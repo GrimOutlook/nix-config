@@ -7,7 +7,7 @@
 }:
 let
   cfg = config.host.lang.rust;
-  fenix-toolchain = inputs.fenix.packages.${pkgs.stdenv.hostPlatform.system};
+  fenix-toolchain = inputs.nix-config.inputs.fenix.packages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   options.host.lang.rust.enable = lib.mkEnableOption "Enable Rust language support";

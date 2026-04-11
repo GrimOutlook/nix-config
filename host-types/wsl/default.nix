@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   ...
 }:
@@ -7,6 +8,10 @@ let
   cfg = config.host.type.wsl;
 in
 {
+  imports = [
+    inputs.nix-config.inputs.nixos-wsl.nixosModules.default
+  ];
+
   options.host.type.wsl.enable = lib.mkEnableOption "Enable WSL configurations";
 
   config = lib.mkIf cfg.enable {

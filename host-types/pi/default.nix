@@ -17,6 +17,5 @@ in
         "raspberry-pi-nix.cachix.org-1:WmV2rdSangxW0KTFjanUjs096+7CwhvL32Ggca9M4w="
       ];
     };
-    system.autoUpgrade.enable = lib.mkDefault true;
   };
 }

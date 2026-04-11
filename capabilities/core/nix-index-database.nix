@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   ...
 }:
@@ -7,6 +8,10 @@ let
   cfg = config.host.nix-index-database;
 in
 {
+  imports = [
+    inputs.nix-config.inputs.nix-index-database.nixosModules.nix-index
+  ];
+
   options.host.nix-index-database = {
     enable = lib.mkEnableOption "Enable nix-index-database configurations";
   };

@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   ...
 }:
@@ -8,6 +9,9 @@ let
   cfg = config.host.core;
 in
 {
+  imports = [
+    inputs.nix-config.inputs.disko.nixosModules.disko
+  ];
   options.host.core = {
     enable = mkEnableOption "Enable core configurations" // {
       default = true;

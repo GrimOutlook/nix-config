@@ -14,7 +14,7 @@ in
   config = lib.mkIf cfg.enable {
     host.home-manager = {
       imports = [
-        inputs.stylix.homeModules.stylix
+        inputs.nix-config.inputs.stylix.homeModules.stylix
       ];
       stylix = {
         enable = lib.mkDefault true;

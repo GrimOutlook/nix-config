@@ -6,26 +6,28 @@
   ...
 }:
 let
+  nc-inputs = inputs.nix-config.inputs;
+
   cfg = config.host.default-program.nixvim;
-  mkRaw = inputs.nixvim.lib.nixvim.mkRaw;
+  mkRaw = nc-inputs.nixvim.lib.nixvim.mkRaw;
 
   # Custom plugins
   karen-yank = pkgs.vimUtils.buildVimPlugin {
     pname = "karen-yank-nvim";
     version = "unstable";
-    src = inputs.karen-yank-nvim;
+    src = nc-inputs.karen-yank-nvim;
   };
 
   smart-scrolloff = pkgs.vimUtils.buildVimPlugin {
     pname = "smart-scrolloff-nvim";
     version = "unstable";
-    src = inputs.smart-scrolloff-nvim;
+    src = nc-inputs.smart-scrolloff-nvim;
   };
 
   plenary = pkgs.vimUtils.buildVimPlugin {
     pname = "plenary-nvim";
     version = "unstable";
-    src = inputs.plenary-nvim;
+    src = nc-inputs.plenary-nvim;
     # NOTE: Since `plenary` is just a library there is no need to do
     # `requires()` checks
     doCheck = false;
@@ -34,7 +36,7 @@ let
   tiny-code-action = pkgs.vimUtils.buildVimPlugin {
     pname = "tiny-code-action-nvim";
     version = "unstable";
-    src = inputs.tiny-code-action-nvim;
+    src = nc-inputs.tiny-code-action-nvim;
     dependencies = [ plenary ];
     nvimSkipModules = [
       # NOTE: Since the snacks previewer isn't used, we don't include
@@ -50,7 +52,7 @@ in
   config = lib.mkIf cfg.enable {
     host.home-manager = {
       imports = [
-        inputs.nixvim.homeModules.nixvim
+        nc-inputs.nixvim.homeModules.nixvim
       ];
 
       home.shellAliases.v = "nvim";

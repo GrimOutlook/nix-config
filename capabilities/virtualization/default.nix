@@ -16,9 +16,13 @@ in
   options.host.virtualization.enable = lib.mkEnableOption "Enable virtualization configurations";
 
   config = lib.mkIf cfg.enable {
-
     environment.systemPackages = with pkgs; [
       podman
     ];
+
+    virtualisation.podman = {
+      enable = true;
+      dockerCompat = true;
+    };
   };
 }

@@ -24,11 +24,17 @@ in
     };
   };
 
-  config.home-manager = mkIf cfg.enable {
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    users.${config.host.owner.username} = {
-      imports = [ cfg.config ];
+  config.home-manager =
+    let
+      inherit (config.host.owner) username;
+    in
+    mkIf cfg.enable {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      users.${username} = {
+        home.homeDirectory = "/home/${username}";
+
+        imports = [ cfg.config ];
+      };
     };
-  };
 }

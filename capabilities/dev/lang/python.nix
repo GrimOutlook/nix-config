@@ -20,10 +20,14 @@ in
           python3
         ];
 
-        sessionVariables = {
-          MYPY_CACHE_DIR = "${config.host.home-manager.config.xdg.cacheHome}/mypy";
-          PYTHON_HISTORY = "${config.host.home-manager.config.xdg.dataHome}/python_history";
-        };
+        sessionVariables =
+          let
+            inherit (config.host.owner) username;
+          in
+          {
+            MYPY_CACHE_DIR = "${config.home-manager.users.${username}.xdg.cacheHome}/mypy";
+            PYTHON_HISTORY = "${config.home-manager.users.${username}.xdg.dataHome}/python_history";
+          };
       };
 
       programs = {

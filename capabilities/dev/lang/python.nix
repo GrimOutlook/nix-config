@@ -14,15 +14,15 @@ in
     # Enable nix-ld for easier uv use
     programs.nix-ld.enable = true;
 
-    host.home-manager = {
+    host.home-manager.config = {
       home = {
         packages = with pkgs; [
           python3
         ];
 
         sessionVariables = {
-          MYPY_CACHE_DIR = "${config.host.home-manager.xdg.cacheHome}/mypy";
-          PYTHON_HISTORY = "${config.host.home-manager.xdg.dataHome}/python_history";
+          MYPY_CACHE_DIR = "${config.host.home-manager.config.xdg.cacheHome}/mypy";
+          PYTHON_HISTORY = "${config.host.home-manager.config.xdg.dataHome}/python_history";
         };
       };
 

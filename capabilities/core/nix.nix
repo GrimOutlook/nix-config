@@ -108,7 +108,7 @@ in
     };
     system.stateVersion = "25.11";
 
-    host.home-manager = {
+    host.home-manager.config = {
       nix.settings = {
         warn-dirty = false;
         experimental-features = "nix-command flakes";

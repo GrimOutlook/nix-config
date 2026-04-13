@@ -28,6 +28,6 @@ in
       HISTFILESIZE = 10000;
     };
 
-    host.home-manager.programs.bash.enable = true;
+    host.home-manager.config.programs.bash.enable = true;
   };
 }

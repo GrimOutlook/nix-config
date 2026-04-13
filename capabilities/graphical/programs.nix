@@ -11,7 +11,7 @@ in
   options.host.graphical-programs.enable = lib.mkEnableOption "Enable graphical applications";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.home.packages = with pkgs; [
+    host.home-manager.config.home.packages = with pkgs; [
       # Terminal
       alacritty
 

@@ -50,7 +50,7 @@ in
   options.host.default-program.nixvim.enable = lib.mkEnableOption "Enable Nixvim configuration";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       imports = [
         nc-inputs.nixvim.homeModules.nixvim
       ];

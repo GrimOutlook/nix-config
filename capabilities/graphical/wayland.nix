@@ -11,7 +11,7 @@ in
   options.host.wayland.enable = lib.mkEnableOption "Enable wayland configuration";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.home = {
+    host.home-manager.config.home = {
       packages = with pkgs; [
         wdisplays
         wlr-randr

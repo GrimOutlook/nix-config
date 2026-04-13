@@ -20,7 +20,7 @@ in
       xwayland.enable = true;
     };
 
-    host.home-manager = {
+    host.home-manager.config = {
       stylix.cursor = {
         package = pkgs.rose-pine-hyprcursor;
         name = "BreezX-RosePine-Linux";

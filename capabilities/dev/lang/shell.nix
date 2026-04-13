@@ -11,7 +11,7 @@ in
   options.host.lang.shell.enable = lib.mkEnableOption "Enable shell (bash/sh) language support";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.programs.nixvim = {
+    host.home-manager.config.programs.nixvim = {
       extraPackages = with pkgs; [
         shellcheck
         shfmt

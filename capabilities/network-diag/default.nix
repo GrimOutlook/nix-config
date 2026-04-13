@@ -11,7 +11,7 @@ in
   options.host.network-diag.enable = lib.mkEnableOption "Enable network diag configurations";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.home = {
+    host.home-manager.config.home = {
       packages = with pkgs; [
         # API for GeoIP/Geolocation databases
         # https://www.maxmind.com/

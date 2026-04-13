@@ -11,7 +11,7 @@ in
   options.host.lang.dotnet.enable = lib.mkEnableOption "Enable .NET/C# language support";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       home.packages = with pkgs; [
         dotnet-sdk_9
         dotnet-runtime_9

@@ -9,29 +9,33 @@ let
   cfg = config.host.home-manager;
 in
 {
+
   imports = [
     inputs.nix-config.inputs.home-manager.nixosModules.default
   ];
 
-  options.host.home-manager = mkOption {
-    type = types.submodule {
-      freeformType = types.attrsOf types.anything;
-      options = {
-        enable = mkOption {
-          type = types.bool;
-          default = mkDefault true;
-        };
-      };
-    };
+  options.host.home-manager = {
+    enable = mkEnableOption "Enable home-manager configurations";
 
-    description = "home-manager configurations that are passed to the `home-manager.users.\${owner}` field";
+    config = mkOption {
+      type = types.submoduleWith {
+        # This pulls in all Home Manager logic (packages, services, etc.)
+        modules = [ inputs.nix-config.inputs.home-manager.nixosModules.home-manager ];
+        # Allows merging multiple definitions of this option
+        shorthandOnlyDefinesConfig = true;
+      };
+
+      description = "home-manager configurations that are passed to the `home-manager.users.\${owner}` field";
+    };
   };
 
   config = mkIf cfg.enable {
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      users.${config.host.owner.username} = removeAttrs cfg [ "enable" ];
+      users.${config.host.owner.username} = {
+        imports = [ cfg.config ];
+      };
     };
   };
 }

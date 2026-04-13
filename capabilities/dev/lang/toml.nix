@@ -10,6 +10,6 @@ in
   options.host.lang.toml.enable = lib.mkEnableOption "Enable TOML language support";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.programs.nixvim.lsp.servers.tombi.enable = true;
+    host.home-manager.config.programs.nixvim.lsp.servers.tombi.enable = true;
   };
 }

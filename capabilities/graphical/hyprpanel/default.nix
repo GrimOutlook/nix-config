@@ -21,7 +21,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.programs.hyprpanel = {
+    host.home-manager.config.programs.hyprpanel = {
       enable = true;
       systemd.enable = true;
       settings = lib.recursiveUpdate baseConfig cfg.extraSettings;

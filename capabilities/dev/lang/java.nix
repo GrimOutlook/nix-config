@@ -11,7 +11,7 @@ in
   options.host.lang.java.enable = lib.mkEnableOption "Enable Java language support";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       home.packages = with pkgs; [
         google-java-format
       ];

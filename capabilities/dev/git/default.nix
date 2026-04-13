@@ -12,7 +12,7 @@ in
   options.host.git.enable = lib.mkEnableOption "Enable Git configuration";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       home = {
         packages = with pkgs; [
           git-filter-repo # Quickly rewrite git repository history

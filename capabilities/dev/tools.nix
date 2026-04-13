@@ -12,7 +12,7 @@ in
   options.host.dev-tools.enable = lib.mkEnableOption "Enable development tools";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       home = {
         packages =
           with pkgs;
@@ -119,7 +119,7 @@ in
 
           settings = {
             user = {
-              inherit (config.host.home-manager.programs.git.settings.user)
+              inherit (config.host.home-manager.config.programs.git.settings.user)
                 name
                 email
                 ;

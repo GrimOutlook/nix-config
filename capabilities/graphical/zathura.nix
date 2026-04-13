@@ -10,7 +10,7 @@ in
   options.host.zathura.enable = lib.mkEnableOption "Enable zathura PDF viewer";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       home.shellAliases.z = "zathura";
 
       programs.zathura = {

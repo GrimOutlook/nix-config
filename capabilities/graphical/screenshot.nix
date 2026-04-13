@@ -16,7 +16,7 @@ in
     ];
     programs.gpu-screen-recorder.enable = true;
 
-    host.home-manager = {
+    host.home-manager.config = {
       home.packages = with pkgs; [
         grim
       ];

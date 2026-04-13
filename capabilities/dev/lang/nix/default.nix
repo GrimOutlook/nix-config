@@ -11,7 +11,7 @@ in
   options.host.lang.nix.enable = lib.mkEnableOption "Enable Nix language support";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       home = {
         packages = with pkgs; [
           alejandra

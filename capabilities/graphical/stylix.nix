@@ -12,7 +12,7 @@ in
   options.host.stylix.enable = lib.mkEnableOption "Enable stylix theming";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       imports = [
         inputs.nix-config.inputs.stylix.homeModules.stylix
       ];

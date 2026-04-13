@@ -10,7 +10,7 @@ in
 {
   options.host.xdg.enable = lib.mkEnableOption "Enable xdg configurations";
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       home = {
         packages = [ pkgs.xdg-utils ];
 

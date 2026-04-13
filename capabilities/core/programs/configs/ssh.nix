@@ -10,7 +10,7 @@ in
   options.host.default-program.ssh.enable = lib.mkEnableOption "Enable default ssh configurations";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.programs.ssh = {
+    host.home-manager.config.programs.ssh = {
       enable = true;
 
       # Explicitly declare default config and disable HM's vendored one.

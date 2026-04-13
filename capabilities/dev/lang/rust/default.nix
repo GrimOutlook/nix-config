@@ -13,7 +13,7 @@ in
   options.host.lang.rust.enable = lib.mkEnableOption "Enable Rust language support";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager = {
+    host.home-manager.config = {
       home = {
         packages =
           with pkgs;

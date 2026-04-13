@@ -10,7 +10,7 @@ in
   options.host.udiskie.enable = lib.mkEnableOption "Enable udiskie automount service";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.services.udiskie = {
+    host.home-manager.config.services.udiskie = {
       enable = true;
       tray = "never";
     };

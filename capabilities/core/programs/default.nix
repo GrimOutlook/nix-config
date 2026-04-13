@@ -25,6 +25,7 @@ in
         "misc"
         "monitoring"
         "networking"
+        "searching"
         "shell"
         "storage"
       ]);

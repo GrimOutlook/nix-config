@@ -47,9 +47,6 @@ in
             targets."x86_64-pc-windows-gnu".latest.toolchain
           ]);
 
-        # By default, it is in ~/.cargo
-        sessionVariables.CARGO_HOME = "${config.host.home-manager.xdg.dataHome}/cargo";
-
         file.".config/rustfmt/rustfmt.toml".source = ./rustfmt.toml;
       };
 

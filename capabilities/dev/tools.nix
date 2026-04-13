@@ -118,12 +118,16 @@ in
           enable = true;
 
           settings = {
-            user = {
-              inherit (config.host.home-manager.config.programs.git.settings.user)
-                name
-                email
-                ;
-            };
+            user =
+              let
+                inherit (config.host.owner) username;
+              in
+              {
+                inherit (config.home-manager.users.${username}.programs.git.settings.user)
+                  name
+                  email
+                  ;
+              };
           };
         };
       };

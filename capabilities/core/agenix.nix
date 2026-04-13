@@ -21,5 +21,7 @@ in
       rage
       ragenix
     ];
+
+    host.home-manager.config.imports = [ inputs.nix-config.inputs.agenix.homeManagerModules.default ];
   };
 }

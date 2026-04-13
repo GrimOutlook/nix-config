@@ -18,24 +18,17 @@ in
     enable = mkEnableOption "Enable home-manager configurations";
 
     config = mkOption {
-      type = types.submoduleWith {
-        # This pulls in all Home Manager logic (packages, services, etc.)
-        modules = [ inputs.nix-config.inputs.home-manager.nixosModules.home-manager ];
-        # Allows merging multiple definitions of this option
-        shorthandOnlyDefinesConfig = true;
-      };
-
+      type = types.deferredModule;
+      default = { };
       description = "home-manager configurations that are passed to the `home-manager.users.\${owner}` field";
     };
   };
 
-  config = mkIf cfg.enable {
-    home-manager = {
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      users.${config.host.owner.username} = {
-        imports = [ cfg.config ];
-      };
+  config.home-manager = mkIf cfg.enable {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    users.${config.host.owner.username} = {
+      imports = [ cfg.config ];
     };
   };
 }

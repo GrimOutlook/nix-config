@@ -22,6 +22,7 @@ in
       host = lib.mkMerge (enableAll [
         "compression"
         "documentation"
+        "misc"
         "monitoring"
         "networking"
         "shell"

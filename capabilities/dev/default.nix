@@ -13,12 +13,15 @@ in
     let
       enableAll =
         modules:
-        map (module: lib.setAttrByPath [ "host" "${module}" ] { enable = lib.mkDefault true; }) modules;
+        map (
+          module: lib.setAttrByPath (lib.splitString "." "host.${module}") { enable = lib.mkDefault true; }
+        ) modules;
     in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
         "git"
         "dev-tools"
+        "lang.core"
       ])
     );
 }

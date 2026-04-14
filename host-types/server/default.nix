@@ -9,7 +9,8 @@ in
     host = {
       antivirus.enable = true;
       bootloader.enable = true;
-      # virtualization.enable = true;
+      metrics.enable = true;
+      virtualization.enable = true;
     };
   };
 }

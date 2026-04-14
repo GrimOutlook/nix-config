@@ -19,8 +19,11 @@ in
     { microvm.guest.enable = lib.mkDefault false; }
 
     (lib.mkIf cfg.enable {
-      microvm.guest.enable = true;
-      microvm.hypervisor = lib.mkDefault "cloud-hypervisor";
+      microvm = {
+        guest.enable = true;
+        hypervisor = lib.mkDefault "cloud-hypervisor";
+      };
+      host.metrics = true;
     })
   ];
 

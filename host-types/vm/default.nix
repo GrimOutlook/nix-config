@@ -23,7 +23,7 @@ in
         guest.enable = true;
         hypervisor = lib.mkDefault "cloud-hypervisor";
       };
-      host.metrics = true;
+      # host.metrics = true;
     })
   ];
 

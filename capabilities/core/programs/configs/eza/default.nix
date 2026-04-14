@@ -14,7 +14,7 @@ in
     let
       eza_config_file = ./theme.yml;
       # Add a timeout for large or non-responsive directories
-      EZA_DEFAULT_OPTIONS = "timeout --kill-after=4s 3s eza --header --long --time-style long-iso --git-repos --git --icons --octal-permissions --classify --hyperlink --group --mounts --extended";
+      EZA_DEFAULT_OPTIONS = "eza --header --long --time-style long-iso --icons --octal-permissions --classify --hyperlink --group --mounts --extended";
     in
     lib.mkIf cfg.enable {
       environment.systemPackages = with pkgs; [
@@ -28,6 +28,7 @@ in
         lsr = "${EZA_DEFAULT_OPTIONS} -R";
         lar = "${EZA_DEFAULT_OPTIONS} -Ra";
         lt = "${EZA_DEFAULT_OPTIONS} -R --tree";
+        lg = "${EZA_DEFAULT_OPTIONS} --git --git-repos";
       };
 
       environment.etc."eza/config.yml" = {

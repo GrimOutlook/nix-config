@@ -59,9 +59,6 @@ in
         };
       };
 
-      # Print's what package (if any) contains the missing command
-      programs.command-not-found.enable = true;
-
       services.vnstat.enable = true;
     };
 }

@@ -30,20 +30,12 @@ in
         packages =
           with pkgs;
           [
-            # Agentic coding tool that lives in your terminal, understands your
-            # codebase, and helps you code faster
-            # https://github.com/anthropics/claude-code
-            claude-code
-
             cmake # Cross-platform, open-source build system generator
             dos2unix # Convert text files with DOS or Mac line breaks to Unix line breaks and vice versa
-
-            # An open-source AI agent that brings the power of Gemini directly
-            # into your terminal.
-            # https://github.com/google-gemini/gemini-cli
-            gemini-cli
-
             mdbook # Create books from MarkDown
+
+            nodejs
+
             pnpm # Fast, disk space efficient package manager for JavaScript
             ripsecrets # Command-line tool to prevent committing secret keys into your source code
 
@@ -59,13 +51,27 @@ in
             just # Handy way to save and run project-specific commands
           ]);
 
-        shellAliases = {
-          # NOTE: This module requires `fd`/`fdfind` to work fully but that isn't made explicit anywhere.
-          # TODO: Make it explicit.
-          lf = "fd -t f -x dos2unix {} \\;";
+        shellAliases =
+          let
+            pnpm-run = "pnpm dlx";
+          in
+          {
+            # Agentic coding tool that lives in your terminal, understands your
+            # codebase, and helps you code faster
+            # https://github.com/anthropics/claude-code
+            claude = "${pnpm-run} @anthropic-ai/claude-code@latest";
 
-          j = "just";
-        };
+            # An open-source AI agent that brings the power of Gemini directly
+            # into your terminal.
+            # https://github.com/google-gemini/gemini-cli
+            gemini = "${pnpm-run} @google/gemini-cli@latest";
+
+            # NOTE: This module requires `fd`/`fdfind` to work fully but that isn't made explicit anywhere.
+            # TODO: Make it explicit.
+            lf = "fd -t f -x dos2unix {} \\;";
+
+            j = "just";
+          };
       };
 
       programs = {

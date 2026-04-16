@@ -6,24 +6,54 @@
   ...
 }:
 let
-  cfg = config.host.dev-tools;
+  cfg = config.host.dev.tools;
 in
 {
-  options.host.dev-tools.enable = lib.mkEnableOption "Enable development tools";
+  options.host.dev.tools.enable = lib.mkEnableOption "Enable development tools";
 
   config = lib.mkIf cfg.enable {
+    programs = {
+      # Shell extension that manages your environment
+      # https://direnv.net/
+      direnv = {
+        enable = true;
+        enableBashIntegration = true;
+        # Whether to enable
+        # [nix-direnv](https://github.com/nix-community/nix-direnv, a fast,
+        # persistent use_nix implementation for direnv.
+        nix-direnv.enable = true;
+      };
+    };
+
     host.home-manager.config = {
       home = {
         packages =
           with pkgs;
           [
-            claude-code # Agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster
+            # Agentic coding tool that lives in your terminal, understands your
+            # codebase, and helps you code faster
+            # https://github.com/anthropics/claude-code
+            claude-code
+
             cmake # Cross-platform, open-source build system generator
             dos2unix # Convert text files with DOS or Mac line breaks to Unix line breaks and vice versa
+
+            # An open-source AI agent that brings the power of Gemini directly
+            # into your terminal.
+            # https://github.com/google-gemini/gemini-cli
+            gemini-cli
+
             mdbook # Create books from MarkDown
             pnpm # Fast, disk space efficient package manager for JavaScript
             ripsecrets # Command-line tool to prevent committing secret keys into your source code
-            tokei # Count your code, quickly
+
+            # A very fast accurate code counter with complexity calculations
+            # https://github.com/boyter/scc
+            scc
+
+            # Count your code, quickly
+            # https://github.com/XAMPPRocky/tokei
+            tokei
           ]
           ++ (with inputs.nix-config.inputs.nixpkgs-unstable; [
             just # Handy way to save and run project-specific commands
@@ -47,46 +77,7 @@ in
           complete -F _just j
         '';
 
-        # Difftastic configuration
-        difftastic = {
-          enable = true;
-          git = {
-            # Whether to enable git integration for difftastic.
-            #
-            # When enabled, difftastic will be configured as git's external diff
-            # tool or difftool depending on the value of
-            # {option}`programs.difftastic.git.diffToolMode`.
-            enable = true;
-            # Whether to additionally configure difftastic as a git difftool.
-            #
-            # When false, only diff.external is set (used for git diff).
-            # When true, both diff.external and difftool config are set (supporting both git diff and git difftool).
-            diffToolMode = true;
-          };
-        };
-
         git.settings = {
-          delta = {
-            navigate = true; # use n and N to move between diff sections
-            dark = true; # or light = true, or omit for auto-detection
-          };
-
-          diff = {
-            mnemonicprefix = true;
-            algorithm = "patience";
-          };
-
-          difftool = {
-            # Run the difftool immediately, don't ask 'are you sure' each time.
-            prompt = false;
-          };
-
-          pager = {
-            # Use a pager if the difftool output is larger than one screenful,
-            # consistent with the behaviour of `git diff`.
-            difftool = true;
-          };
-
           merge = {
             conflictstyle = "zdiff3";
             tool = "diffview";
@@ -118,16 +109,12 @@ in
           enable = true;
 
           settings = {
-            user =
-              let
-                inherit (config.host.owner) username;
-              in
-              {
-                inherit (config.home-manager.users.${username}.programs.git.settings.user)
-                  name
-                  email
-                  ;
-              };
+            user = {
+              inherit (config.host.owner)
+                name
+                email
+                ;
+            };
           };
         };
       };

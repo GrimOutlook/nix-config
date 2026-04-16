@@ -35,10 +35,7 @@ in
           mprocs
           nixos-anywhere
 
-          jq
-
           # Utils
-          fclones
           file
           git
           nfs-utils # Linux user-space NFS utilities

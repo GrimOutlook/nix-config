@@ -20,7 +20,8 @@ in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
         "git"
-        "dev-tools"
+        "dev.diff"
+        "dev.tools"
         "lang.core"
       ])
     );

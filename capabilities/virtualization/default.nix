@@ -18,6 +18,14 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       podman
+
+      # Top-like interface for container metrics
+      # https://github.com/bcicen/ctop
+      ctop
+
+      # Tool for exploring each layer in a Docker image
+      # https://github.com/wagoodman/dive
+      dive
     ];
 
     virtualisation.podman = {

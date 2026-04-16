@@ -15,10 +15,9 @@ in
     environment.systemPackages = with pkgs; [
       dig # Domain name server
 
-      # Command-line DNS client
-      # https://github.com/ogham/dog
-      # NOTE: Appears unmaintained and was last updated 5 years ago.
-      dogdns
+      # 🐶 Command-line DNS Client for Humans. Written in Golang
+      # https://github.com/mr-karan/doggo
+      doggo
 
       # Ping, but with a graph
       # https://github.com/orf/gping

@@ -21,9 +21,8 @@ let
   cfg = config.host.nix;
 in
 {
-  options.host.nix = {
-    enable = lib.mkEnableOption "Enable nix configurations";
-  };
+  options.host.nix.enable = lib.mkEnableOption "Enable nix configurations";
+
   config = lib.mkIf cfg.enable {
     nixpkgs.config = {
       allowUnfree = true;

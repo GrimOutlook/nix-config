@@ -15,7 +15,7 @@ in
       antivirus.enable = true;
       bluetooth.enable = true;
       bootloader.enable = true;
-      # graphical.enable = true;
+      graphical.enable = true;
     };
 
     programs.light = {

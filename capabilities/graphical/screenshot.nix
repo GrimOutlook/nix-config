@@ -60,7 +60,7 @@ in
         # Takes a manual screenshot that shows options after selection.
         "$mainMod, PRINT, exec, flameshot gui"
         # Manual screenshot GUI that saves to clipboard and closes on selection.
-        "PRINT, exec, flameshot gui --clipboard --accept-on-select"
+        ", PRINT, exec, flameshot gui --clipboard --accept-on-select"
       ];
     };
   };

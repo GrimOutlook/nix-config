@@ -21,41 +21,17 @@ in
     mkIf cfg.enable {
       host = lib.mkMerge (enableAll [
         "compression"
+        "core"
         "documentation"
+        "file-processing"
         "misc"
         "monitoring"
         "networking"
         "searching"
         "shell"
         "storage"
+        "web"
       ]);
-      environment = {
-        systemPackages = with pkgs; [
-          # Other utils
-          mprocs
-          nixos-anywhere
-
-          # Utils
-          file
-          git
-          nfs-utils # Linux user-space NFS utilities
-          tree
-          wget
-        ];
-
-        shellAliases = {
-          ##################
-          # GNU core utils #
-          ##################
-          rm = "rm -iv";
-
-          ########
-          # Misc #
-          ########
-          t = "date +'%a %b %e %R:%S %Z %Y'";
-        };
-      };
-
       services.vnstat.enable = true;
     };
 }

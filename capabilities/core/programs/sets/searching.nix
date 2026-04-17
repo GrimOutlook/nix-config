@@ -20,6 +20,14 @@ in
       # Simple, fast and user-friendly alternative to find
       fd
 
+      # Find files with SQL-like queries
+      # https://github.com/jhspetersson/fselect
+      fselect
+
+      # Command-line tool for generating regular expressions from user-provided
+      # test cases
+      grex
+
       # Much faster locate
       plocate
 

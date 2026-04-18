@@ -1,16 +1,32 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
-  inherit (lib) mkDefault mkEnableOption mkIf;
+  inherit (lib)
+    mkDefault
+    mkIf
+    mkOption
+    types
+    ;
   cfg = config.host.default-programs;
 in
 {
-  options.host.default-programs.enable = mkEnableOption "Enable default program configurations";
-  config =
+  options.host.default-programs = {
+    enable = mkOption {
+      type = types.either types.bool (
+        types.enum [
+          "all"
+          "minimal"
+          "none"
+        ]
+      );
+      default = mkDefault true;
+      description = "Enable all default program configurations";
+    };
+  };
+  config.host =
     let
       enableAll =
         modules:
@@ -18,20 +34,25 @@ in
           module: lib.setAttrByPath [ "default-programs" "${module}" ] { enable = mkDefault true; }
         ) modules;
     in
-    mkIf cfg.enable {
-      host = lib.mkMerge (enableAll [
-        "compression"
-        "core"
-        "documentation"
-        "file-processing"
-        "misc"
-        "monitoring"
-        "networking"
-        "searching"
-        "shell"
-        "storage"
-        "web"
-      ]);
-      services.vnstat.enable = true;
-    };
+    lib.mkMerge (
+      (
+        mkIf cfg.enable or cfg.enable != "none" (enableAll [
+          "core"
+        ])
+      )
+      ++ (
+        mkIf cfg.enable or cfg.enable == "all" (enableAll [
+          "compression"
+          "documentation"
+          "file-processing"
+          "misc"
+          "monitoring"
+          "networking"
+          "searching"
+          "shell"
+          "storage"
+          "web"
+        ])
+      )
+    );
 }

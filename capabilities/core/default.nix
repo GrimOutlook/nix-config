@@ -36,6 +36,7 @@ in
         "security"
         "ssh-server"
         "users"
+        "vnstat"
         "xdg"
       ])
     );

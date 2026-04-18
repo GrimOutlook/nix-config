@@ -12,6 +12,12 @@ in
 
   config.environment = lib.mkIf cfg.enable {
     systemPackages = with pkgs; [
+
+      # Low-level unprivileged sandboxing tool used by Flatpak and similar
+      # projects
+      # https://github.com/containers/bubblewrap
+      bubblewrap
+
       # Human-friendly and fast alternative to cut and (sometimes) awk
       # https://github.com/theryangeary/choose
       choose
@@ -19,6 +25,11 @@ in
       # A tool for glamorous shell scripts
       # https://github.com/charmbracelet/gum
       gum
+
+      # moreutils is a growing collection of the unix tools that nobody thought
+      # to write long ago when unix was young
+      # https://joeyh.name/code/moreutils/
+      moreutils
 
       progress # Tool that shows the progress of coreutils programs
       pv # Tool for monitoring the progress of data through a pipeline

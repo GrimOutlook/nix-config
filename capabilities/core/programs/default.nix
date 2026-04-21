@@ -51,6 +51,7 @@ in
           "searching"
           "shell"
           "storage"
+          "troubleshooting"
           "web"
         ])
       )

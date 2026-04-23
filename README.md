@@ -14,3 +14,5 @@ repo.
 ### Graphical
 - [ ] Support wallpapers using `hyprpaper`.
 - [ ] Add `hyprlock` for automatic sleep support.
+- [ ] Add grub2 theme to make grub less boring.
+    - Use [this one](https://github.com/vinceliuice/Elegant-grub2-themes)

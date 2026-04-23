@@ -4,7 +4,7 @@
   ...
 }:
 let
-  hostname = config.networking.hostName;
+  hostname = config.host.hostname;
 in
 {
   options.host.flake-url = lib.mkOption {

@@ -24,6 +24,7 @@ in
         hypervisor = lib.mkDefault "cloud-hypervisor";
       };
       # host.metrics = true;
+      # notifications.ssh-server = true;
     })
   ];
 

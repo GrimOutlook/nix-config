@@ -10,6 +10,7 @@ in
       antivirus.enable = true;
       bootloader.enable = true;
       metrics.enable = true;
+      notifications.ssh-server = true;
       virtualization.enable = true;
     };
   };

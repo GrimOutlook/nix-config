@@ -15,17 +15,13 @@ in
   options.host.type.virtual-machine.enable =
     lib.mkEnableOption "Enable virtual-machine configurations";
 
-  config = lib.mkMerge [
-    { microvm.guest.enable = lib.mkDefault false; }
-
-    (lib.mkIf cfg.enable {
-      microvm = {
-        guest.enable = true;
-        hypervisor = lib.mkDefault "cloud-hypervisor";
-      };
-      # host.metrics = true;
-      # notifications.ssh-server = true;
-    })
-  ];
+  config = {
+    microvm = {
+      guest.enable = cfg.enable;
+      hypervisor = lib.mkDefault "cloud-hypervisor";
+    };
+    # host.metrics = true;
+    # notifications.ssh-server = true;
+  };
 
 }

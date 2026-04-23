@@ -35,25 +35,21 @@ in
         ) modules;
     in
     lib.mkMerge (
-      (
-        mkIf cfg.enable or cfg.enable != "none" (enableAll [
-          "core"
-        ])
-      )
-      ++ (
-        mkIf cfg.enable or cfg.enable == "all" (enableAll [
-          "compression"
-          "documentation"
-          "file-processing"
-          "misc"
-          "monitoring"
-          "networking"
-          "searching"
-          "shell"
-          "storage"
-          "troubleshooting"
-          "web"
-        ])
-      )
+      (mkIf (cfg.enable or cfg.enable != "none") (enableAll [
+        "core"
+      ]))
+      ++ (mkIf (cfg.enable or cfg.enable == "all") (enableAll [
+        "compression"
+        "documentation"
+        "file-processing"
+        "misc"
+        "monitoring"
+        "networking"
+        "searching"
+        "shell"
+        "storage"
+        "troubleshooting"
+        "web"
+      ]))
     );
 }

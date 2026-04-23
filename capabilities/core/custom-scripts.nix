@@ -25,8 +25,13 @@ in
         ips = ''grep -Po "(\b25[0-5]|\b2[0-4][0-9]|\b[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}"'';
         nix-size = "nix path-info --closure-size --human-readable";
       };
-      environment.systemPackages = map (
-        name: pkgs.writeShellScriptBin name (builtins.readFile (scriptDir + "/${name}"))
-      ) scriptNames;
+      environment.systemPackages =
+        with pkgs;
+        [
+          docopts
+        ]
+        ++ (map (
+          name: pkgs.writeShellScriptBin name (builtins.readFile (scriptDir + "/${name}"))
+        ) scriptNames);
     };
 }

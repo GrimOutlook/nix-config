@@ -22,8 +22,6 @@ in
       discord
 
       # Browser
-      # TODO: Add `zen-browser` to `nixpkgs`
-      # zen-browser
       firefox
 
       # Video
@@ -32,6 +30,10 @@ in
 
       # Misc
       #spotify
+
+      # Small Gotify daemon to send messages as desktop notifications
+      # https://github.com/desbma/gotify-desktop
+      gotify-desktop
     ];
   };
 }

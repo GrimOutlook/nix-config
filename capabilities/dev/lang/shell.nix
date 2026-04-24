@@ -10,13 +10,16 @@ in
 {
   options.host.dev.lang.shell.enable = lib.mkEnableOption "Enable shell (bash/sh) language support";
 
-  config = lib.mkIf cfg.enable {
-    host.home-manager.config.programs.nixvim = {
-      extraPackages = with pkgs; [
-        shellcheck
-        shfmt
-      ];
-      lsp.servers.bashls.enable = true;
-    };
+  config.host.home-manager.config.programs.nixvim = lib.mkIf cfg.enable {
+    extraPackages = with pkgs; [
+      shellcheck
+
+      # Shell interpreter for docopt, the command-line interface description language.
+      # https://github.com/docopt/docopts
+      docopts
+
+      shfmt
+    ];
+    lsp.servers.bashls.enable = true;
   };
 }

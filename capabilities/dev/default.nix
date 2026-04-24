@@ -24,8 +24,9 @@ in
         "github-cli"
         "diff"
         "jujutsu"
-        "tools"
         "lang.core"
+        "lazygit"
+        "tools"
       ])
     );
 }

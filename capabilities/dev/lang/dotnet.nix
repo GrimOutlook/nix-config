@@ -13,9 +13,6 @@ in
   config = lib.mkIf cfg.enable {
     host.home-manager.config = {
       home.packages = with pkgs; [
-        dotnet-sdk_9
-        dotnet-runtime_9
-        dotnetPackages.Nuget
         csharpier
       ];
 

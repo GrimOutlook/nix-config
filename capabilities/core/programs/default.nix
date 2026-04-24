@@ -28,6 +28,7 @@ in
   };
   config.host =
     let
+      enabled = if builtins.isBool cfg.enable then if cfg.enable then "all" else "none" else cfg.enable;
       enableAll =
         modules:
         map (
@@ -35,10 +36,10 @@ in
         ) modules;
     in
     lib.mkMerge (
-      (optionals (cfg.enable or cfg.enable != "none") (enableAll [
+      (optionals (enabled != "none") (enableAll [
         "core"
       ]))
-      ++ (optionals (cfg.enable or cfg.enable == "all") (enableAll [
+      ++ (optionals (enabled == "all") (enableAll [
         "compression"
         "documentation"
         "file-processing"

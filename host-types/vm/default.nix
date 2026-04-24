@@ -17,7 +17,7 @@ in
 
   config = {
     microvm = {
-      guest.enable = cfg.enable;
+      guest.enable = (cfg.enable);
       hypervisor = lib.mkDefault "cloud-hypervisor";
     };
     # host.metrics = true;

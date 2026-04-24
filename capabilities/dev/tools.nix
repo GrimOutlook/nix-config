@@ -27,29 +27,24 @@ in
 
     host.home-manager.config = {
       home = {
-        packages =
-          with pkgs;
-          [
-            cmake # Cross-platform, open-source build system generator
-            dos2unix # Convert text files with DOS or Mac line breaks to Unix line breaks and vice versa
-            mdbook # Create books from MarkDown
+        packages = with pkgs; [
+          cmake # Cross-platform, open-source build system generator
+          dos2unix # Convert text files with DOS or Mac line breaks to Unix line breaks and vice versa
+          mdbook # Create books from MarkDown
 
-            nodejs
+          nodejs
 
-            pnpm # Fast, disk space efficient package manager for JavaScript
-            ripsecrets # Command-line tool to prevent committing secret keys into your source code
+          pnpm # Fast, disk space efficient package manager for JavaScript
+          ripsecrets # Command-line tool to prevent committing secret keys into your source code
 
-            # A very fast accurate code counter with complexity calculations
-            # https://github.com/boyter/scc
-            scc
+          # A very fast accurate code counter with complexity calculations
+          # https://github.com/boyter/scc
+          scc
 
-            # Count your code, quickly
-            # https://github.com/XAMPPRocky/tokei
-            tokei
-          ]
-          ++ (with inputs.nix-config.inputs.nixpkgs-unstable; [
-            just # Handy way to save and run project-specific commands
-          ]);
+          # Count your code, quickly
+          # https://github.com/XAMPPRocky/tokei
+          tokei
+        ];
 
         shellAliases =
           let
@@ -69,60 +64,7 @@ in
             # NOTE: This module requires `fd`/`fdfind` to work fully but that isn't made explicit anywhere.
             # TODO: Make it explicit.
             lf = "fd -t f -x dos2unix {} \\;";
-
-            j = "just";
           };
-      };
-
-      programs = {
-        bash.initExtra = ''
-          eval "$(just --completions bash)"
-
-          # Use `just` bash-completion function (`_just`) for the alias
-          # we made for it (`j`).
-          complete -F _just j
-        '';
-
-        git.settings = {
-          merge = {
-            conflictstyle = "zdiff3";
-            tool = "diffview";
-          };
-
-          mergetool = {
-            prompt = false;
-            keepBackup = false;
-            "diffview" = {
-              cmd = ''nvim -n -c 'DiffviewOpen' "$MERGE"'';
-              layout = "LOCAL,BASE,REMOTE / MERGED";
-            };
-          };
-
-          pull = {
-            # Avoid creating merge commits in non-main branches.
-            rebase = true;
-          };
-
-          rebase = {
-            autoStash = true;
-            autosquash = true;
-            forkpoint = false;
-          };
-        };
-
-        # Jujutsu configuration
-        jujutsu = {
-          enable = true;
-
-          settings = {
-            user = {
-              inherit (config.host.owner)
-                name
-                email
-                ;
-            };
-          };
-        };
       };
     };
   };

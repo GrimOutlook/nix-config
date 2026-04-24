@@ -5,11 +5,11 @@
   ...
 }:
 let
-  cfg = config.host.git;
+  cfg = config.host.dev.git;
   hooks_path = ".config/git/hooks";
 in
 {
-  options.host.git.enable = lib.mkEnableOption "Enable Git configuration";
+  options.host.dev.git.enable = lib.mkEnableOption "Enable Git configuration";
 
   config.host.home-manager.config = lib.mkIf cfg.enable {
     home = {
@@ -164,14 +164,31 @@ in
             aasp = "amend-all-and-send-please";
             a = "add-all";
           };
-        };
-      };
 
-      gh = {
-        enable = true;
+          merge = {
+            conflictstyle = "zdiff3";
+            tool = "diffview";
+          };
 
-        settings = {
-          git_protocol = "ssh";
+          mergetool = {
+            prompt = false;
+            keepBackup = false;
+            "diffview" = {
+              cmd = ''nvim -n -c 'DiffviewOpen' "$MERGE"'';
+              layout = "LOCAL,BASE,REMOTE / MERGED";
+            };
+          };
+
+          pull = {
+            # Avoid creating merge commits in non-main branches.
+            rebase = true;
+          };
+
+          rebase = {
+            autoStash = true;
+            autosquash = true;
+            forkpoint = false;
+          };
         };
       };
     };

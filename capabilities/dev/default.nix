@@ -19,8 +19,11 @@ in
     in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
-        "git"
+        "dev.git"
+        "dev.github-cli"
         "dev.diff"
+        "dev.jujutsu"
+        "dev.just"
         "dev.tools"
         "lang.core"
       ])

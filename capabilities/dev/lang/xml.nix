@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.host.lang.xml;
+  cfg = config.host.dev.lang.xml;
 in
 {
-  options.host.lang.xml.enable = lib.mkEnableOption "Enable XML language support";
+  options.host.dev.lang.xml.enable = lib.mkEnableOption "Enable XML language support";
 
   config = lib.mkIf cfg.enable {
     host.home-manager.config.home.packages = with pkgs; [

@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.host.lang.database;
+  cfg = config.host.dev.lang.database;
 in
 {
-  options.host.lang.database.enable =
+  options.host.dev.lang.database.enable =
     lib.mkEnableOption "Enable database access and language support";
 
   config = lib.mkIf cfg.enable {

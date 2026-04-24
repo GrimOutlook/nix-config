@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.host.lang.python;
+  cfg = config.host.dev.lang.python;
 in
 {
-  options.host.lang.python.enable = lib.mkEnableOption "Enable Python language support";
+  options.host.dev.lang.python.enable = lib.mkEnableOption "Enable Python language support";
 
   config = lib.mkIf cfg.enable {
     # Enable nix-ld for easier uv use

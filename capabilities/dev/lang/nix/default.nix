@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.host.lang.nix;
+  cfg = config.host.dev.lang.nix;
 in
 {
-  options.host.lang.nix.enable = lib.mkEnableOption "Enable Nix language support";
+  options.host.dev.lang.nix.enable = lib.mkEnableOption "Enable Nix language support";
 
   config = lib.mkIf cfg.enable {
     host.home-manager.config = {

@@ -14,17 +14,18 @@ in
       enableAll =
         modules:
         map (
-          module: lib.setAttrByPath (lib.splitString "." "host.${module}") { enable = lib.mkDefault true; }
+          module:
+          lib.setAttrByPath (lib.splitString "." "host.dev.${module}") { enable = lib.mkDefault true; }
         ) modules;
     in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
-        "dev.git"
-        "dev.github-cli"
-        "dev.diff"
-        "dev.jujutsu"
-        "dev.just"
-        "dev.tools"
+        "git"
+        "github-cli"
+        "diff"
+        "jujutsu"
+        "just"
+        "tools"
         "lang.core"
       ])
     );

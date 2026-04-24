@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.host.lang.typescript;
+  cfg = config.host.dev.lang.typescript;
 in
 {
-  options.host.lang.typescript.enable = lib.mkEnableOption "Enable TypeScript language support";
+  options.host.dev.lang.typescript.enable = lib.mkEnableOption "Enable TypeScript language support";
 
   config = lib.mkIf cfg.enable {
     host.home-manager.config.programs.nixvim = {

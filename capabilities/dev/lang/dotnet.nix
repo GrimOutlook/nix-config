@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.host.lang.dotnet;
+  cfg = config.host.dev.lang.dotnet;
 in
 {
-  options.host.lang.dotnet.enable = lib.mkEnableOption "Enable .NET/C# language support";
+  options.host.dev.lang.dotnet.enable = lib.mkEnableOption "Enable .NET/C# language support";
 
   config = lib.mkIf cfg.enable {
     host.home-manager.config = {

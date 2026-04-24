@@ -6,11 +6,11 @@
   ...
 }:
 let
-  cfg = config.host.lang.rust;
+  cfg = config.host.dev.lang.rust;
   fenix-toolchain = inputs.nix-config.inputs.fenix.packages.${pkgs.stdenv.hostPlatform.system};
 in
 {
-  options.host.lang.rust.enable = lib.mkEnableOption "Enable Rust language support";
+  options.host.dev.lang.rust.enable = lib.mkEnableOption "Enable Rust language support";
 
   config = lib.mkIf cfg.enable {
     host.home-manager.config = {

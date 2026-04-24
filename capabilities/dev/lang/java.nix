@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.host.lang.java;
+  cfg = config.host.dev.lang.java;
 in
 {
-  options.host.lang.java.enable = lib.mkEnableOption "Enable Java language support";
+  options.host.dev.lang.java.enable = lib.mkEnableOption "Enable Java language support";
 
   config = lib.mkIf cfg.enable {
     host.home-manager.config = {

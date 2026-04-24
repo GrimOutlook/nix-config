@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.host.lang.core;
+  cfg = config.host.dev.lang.core;
 in
 {
-  options.host.lang.core.enable = lib.mkEnableOption "Enable core language support";
+  options.host.dev.lang.core.enable = lib.mkEnableOption "Enable core language support";
 
   config =
     let
@@ -15,7 +15,7 @@ in
         modules:
         map (
           module:
-          lib.setAttrByPath (lib.splitString "." "host.lang.${module}") { enable = lib.mkDefault true; }
+          lib.setAttrByPath (lib.splitString "." "host.dev.lang.${module}") { enable = lib.mkDefault true; }
         ) modules;
     in
     lib.mkIf cfg.enable (

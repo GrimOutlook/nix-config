@@ -6,14 +6,15 @@
 }:
 let
   cfg = config.host.dev.just;
+  pkgs-unstable = inputs.nix-config.inputs.nixpkgs-unstable;
 in
 {
   options.host.dev.just.enable = lib.mkEnableOption "Enable just tool configurations";
 
   config.host.home-manager.config = lib.mkIf cfg.enable {
     home = {
-      packages = with inputs.nix-config.inputs.nixpkgs-unstable; [
-        just # Handy way to save and run project-specific commands
+      packages = [
+        pkgs-unstable.just # Handy way to save and run project-specific commands
       ];
 
       shellAliases.j = "just";

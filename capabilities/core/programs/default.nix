@@ -6,8 +6,8 @@
 let
   inherit (lib)
     mkDefault
-    mkIf
     mkOption
+    optionals
     types
     ;
   cfg = config.host.default-programs;
@@ -35,10 +35,10 @@ in
         ) modules;
     in
     lib.mkMerge (
-      (mkIf (cfg.enable or cfg.enable != "none") (enableAll [
+      (optionals (cfg.enable or cfg.enable != "none") (enableAll [
         "core"
       ]))
-      ++ (mkIf (cfg.enable or cfg.enable == "all") (enableAll [
+      ++ (optionals (cfg.enable or cfg.enable == "all") (enableAll [
         "compression"
         "documentation"
         "file-processing"

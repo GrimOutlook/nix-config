@@ -8,9 +8,7 @@ let
   cfg = config.host.custom-scripts;
 in
 {
-  options.host.custom-scripts = {
-    enable = lib.mkEnableOption "Enable customs script installation";
-  };
+  options.host.custom-scripts.enable = lib.mkEnableOption "Enable customs script installation";
 
   config =
     let

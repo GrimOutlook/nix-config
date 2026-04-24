@@ -24,7 +24,6 @@ in
         "github-cli"
         "diff"
         "jujutsu"
-        "just"
         "tools"
         "lang.core"
       ])

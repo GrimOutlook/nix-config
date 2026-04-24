@@ -6,8 +6,8 @@
 let
   inherit (lib)
     mkDefault
+    mkIf
     mkOption
-    optionals
     types
     ;
   cfg = config.host.default-programs;
@@ -22,24 +22,24 @@ in
           "none"
         ]
       );
-      default = mkDefault true;
+      default = true;
       description = "Enable all default program configurations";
     };
   };
-  config.host =
+  config =
     let
       enabled = if builtins.isBool cfg.enable then if cfg.enable then "all" else "none" else cfg.enable;
       enableAll =
         modules:
         map (
-          module: lib.setAttrByPath [ "default-programs" "${module}" ] { enable = mkDefault true; }
+          module: lib.setAttrByPath [ "host" "default-programs" "${module}" ] { enable = mkDefault true; }
         ) modules;
     in
-    lib.mkMerge (
-      (optionals (enabled != "none") (enableAll [
+    lib.mkMerge [
+      (mkIf (enabled != "none") (lib.mkMerge (enableAll [
         "core"
-      ]))
-      ++ (optionals (enabled == "all") (enableAll [
+      ])))
+      (mkIf (enabled == "all") (lib.mkMerge (enableAll [
         "compression"
         "documentation"
         "file-processing"
@@ -51,6 +51,6 @@ in
         "storage"
         "troubleshooting"
         "web"
-      ]))
-    );
+      ])))
+    ];
 }

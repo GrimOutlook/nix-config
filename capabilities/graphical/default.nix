@@ -17,6 +17,7 @@ in
     in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
+        "boot-screen"
         "display-manager"
         "graphical-programs"
         "hyprland"

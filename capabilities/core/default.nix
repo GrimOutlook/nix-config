@@ -35,7 +35,6 @@ in
         "nix"
         "security"
         "ssh-server"
-        "troubleshooting"
         "users"
         "xdg"
       ])

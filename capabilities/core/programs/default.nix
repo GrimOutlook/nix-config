@@ -30,6 +30,7 @@ in
         "searching"
         "shell"
         "storage"
+        "troubleshooting"
         "web"
       ]);
       services.vnstat.enable = true;

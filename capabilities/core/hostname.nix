@@ -9,9 +9,9 @@ let
 in
 {
   options.host.hostname = mkOption {
-    type = types.string;
+    type = types.str;
     description = "Hostname of the system";
   };
 
-  config.networking.hostName = cfg.hostname;
+  config.networking.hostName = cfg;
 }

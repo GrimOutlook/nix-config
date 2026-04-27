@@ -34,17 +34,36 @@
             '';
           }
           {
-            name = "rebuild";
+            name = "switch";
             command = ''
-              $!/usr/bin/env bash
               hostname=''${1:-""}
-              [ -z "$hostname" ] && hostname=$(hostname)
+
+              base_command='nh os switch . --hostname $hostname'
+
+              if [ -z "$hostname" ]; then
+                configs=$(
+                  nix eval .#nixosConfigurations --apply 'builtins.attrNames' --json |
+                  jq '[ .[] | select(. != "default") ]'
+                )
+                case "$(jq 'length' <<< $configs)" in
+                  0) 
+                    echo "No hostname found. Building default and switching locally..."
+                    hostname="default"
+                    command="$base_command"
+                    ;;
+                  1)
+                    hostname=$(jq '.[0]' <<< "$configs")
+                    command="$base_command" '--target-host root@$hostname --build-host root@$hostname'
+                    ;;
+                  *)
+                    echo "Failed to get hostname to build from flake.nix. Available hosts: $configs" >&2
+                    exit 1
+                    ;;
+                esac
+              fi
 
               echo "=> Deploying system '$hostname'"
-              nh os switch . \
-                  --hostname $hostname \
-                  --target-host root@$hostname \
-                  --build-host root@$hostname
+              eval "$command"
             '';
           }
           {

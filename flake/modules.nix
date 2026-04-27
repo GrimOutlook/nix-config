@@ -4,11 +4,21 @@
   nixpkgs,
   ...
 }:
-{
-  flake.modules.default.imports = [
-    (inputs.import-tree ./capabilities)
-    (inputs.import-tree ./host-types)
+let
+  modules = [
+    (inputs.import-tree ../capabilities)
+    (inputs.import-tree ../host-types)
   ];
+in
+{
+  flake = {
+    modules.default.imports = modules;
+    nixosModules.default =
+      { ... }:
+      {
+        imports = modules;
+      };
+  };
 
   perSystem =
     {

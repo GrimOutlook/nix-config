@@ -128,11 +128,13 @@
         "x86_64-linux"
         "aarch64-linux"
       ];
+      flake = {
 
-      flake.nixosModules.default.imports = [
-        (inputs.import-tree ./capabilities)
-        (inputs.import-tree ./host-types)
-      ];
+        nixosModules.default.imports = [
+          (inputs.import-tree ./capabilities)
+          (inputs.import-tree ./host-types)
+        ];
+      };
 
       perSystem =
         {
@@ -144,29 +146,30 @@
           ...
         }:
         {
-          checks = {
-            default =
-              (nixpkgs.lib.nixosSystem {
-                specialArgs = {
-                  # WARN: This is pretty gross but because the modules have to
-                  # use `inputs.nix-config.inputs` instead of just `inputs`
-                  # (because that's the importing flake's inputs) this is
-                  # required
-                  inputs = inputs // {
-                    nix-config.inputs = inputs;
-                  };
+          checks.default =
+            (nixpkgs.lib.nixosSystem {
+              specialArgs = {
+                # WARN: This is pretty gross but because the modules have to
+                # use `inputs.nix-config.inputs` instead of just `inputs`
+                # (because that's the importing flake's inputs) this is
+                # required
+                inputs = inputs // {
+                  nix-config.inputs = inputs;
                 };
-                modules = [
-                  self.nixosModules.default
-                  {
-                    # Required minimal boilerplate
-                    nixpkgs.hostPlatform = system;
-                    boot.loader.grub.enable = false;
-                    fileSystems."/".device = "/dev/nodevice";
-                  }
-                ];
-              }).config.system.build.toplevel;
-          };
+              };
+              modules = [
+                self.nixosModules.default
+                {
+                  # Required minimal boilerplate
+                  nixpkgs.hostPlatform = system;
+                  boot.loader.grub.enable = false;
+                  fileSystems."/".device = "/dev/nodevice";
+                  host.hostname = "test";
+                }
+              ];
+            }).config.system.build.toplevel;
+
         };
-    };
+    }
+    // (inputs.import-tree ./flake);
 }

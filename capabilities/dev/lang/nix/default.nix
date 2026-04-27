@@ -31,13 +31,6 @@ in
         ];
 
         sessionVariables.NIXPKGS_ALLOW_UNFREE = 1;
-
-        shellAliases = {
-          ur = "${lib.getExe pkgs.fd} --no-ignore --max-depth 1 'result*' --exec unlink";
-          nu = "nix-update";
-          nuc = "nix-update --commit";
-          nucb = "nix-update --commit --build";
-        };
       };
 
       programs = {
@@ -46,10 +39,6 @@ in
           settings = {
             maintainers = [ "GrimOutlook" ];
           };
-        };
-
-        bash.shellAliases = {
-          nl = "nix log";
         };
 
         nixvim = {

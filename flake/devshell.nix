@@ -36,7 +36,7 @@
           {
             name = "rebuild";
             command = ''
-              hostname=$1
+              hostname="${"1:-''"}"
               [ -z "$hostname" ] && hostname=$(hostname)
 
               echo "=> Deploying system '$hostname'"

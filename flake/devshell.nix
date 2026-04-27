@@ -48,6 +48,7 @@
           }
           {
             name = "unlink-results";
+            # packages = [ "fd" ];
             command = ''
               ${lib.getExe pkgs.fd} --no-ignore --max-depth 1 'result*' --exec unlink
             '';

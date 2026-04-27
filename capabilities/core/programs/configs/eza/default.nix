@@ -28,7 +28,7 @@ in
         lsr = "${EZA_DEFAULT_OPTIONS} -R";
         lar = "${EZA_DEFAULT_OPTIONS} -Ra";
         lt = "${EZA_DEFAULT_OPTIONS} -R --tree";
-        lg = "${EZA_DEFAULT_OPTIONS} --git --git-repos";
+        llg = "${EZA_DEFAULT_OPTIONS} --git --git-repos";
       };
 
       environment.etc."eza/config.yml" = {

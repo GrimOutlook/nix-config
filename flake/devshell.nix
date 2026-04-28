@@ -26,12 +26,13 @@
               echo "=> Updating flake inputs"
               nix flake update
 
-              deploy
+              nix flake check
 
               git add flake.lock
               git commit -m "flake.lock: Update"
               git push
             '';
+            help = "Update all flakes + commit and push";
           }
           {
             name = "switch";
@@ -65,6 +66,7 @@
               echo "=> Deploying system '$hostname'"
               eval "$command"
             '';
+            help = "Rebuild nix configuration for host";
           }
           {
             name = "unlink-results";
@@ -72,6 +74,7 @@
             command = ''
               ${lib.getExe pkgs.fd} --no-ignore --max-depth 1 'result*' --exec unlink
             '';
+            help = "Unlink all `result` symlinks";
           }
         ];
       };

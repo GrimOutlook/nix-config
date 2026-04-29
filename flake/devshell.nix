@@ -53,8 +53,8 @@
                     command="$base_command"
                     ;;
                   1)
-                    hostname=$(jq '.[0]' <<< "$configs")
-                    command="$base_command" '--target-host root@$hostname --build-host root@$hostname'
+                    hostname=$(jq -r '.[0]' <<< "$configs")
+                    command=$(echo "$base_command" '--target-host root@$hostname --build-host root@$hostname')
                     ;;
                   *)
                     echo "Failed to get hostname to build from flake.nix. Available hosts: $configs" >&2
@@ -63,7 +63,7 @@
                 esac
               fi
 
-              echo "=> Deploying system '$hostname'"
+              echo "=> Deploying host: $hostname"
               eval "$command"
             '';
             help = "Rebuild nix configuration for host";

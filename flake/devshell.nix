@@ -39,7 +39,7 @@
             command = ''
               hostname=''${1:-""}
 
-              base_command='nh os switch . --hostname $hostname'
+              command='nh os switch . --hostname $hostname'
 
               if [ -z "$hostname" ]; then
                 configs=$(
@@ -50,11 +50,12 @@
                   0) 
                     echo "No hostname found. Building default and switching locally..."
                     hostname="default"
-                    command="$base_command"
                     ;;
                   1)
                     hostname=$(jq -r '.[0]' <<< "$configs")
-                    command=$(echo "$base_command" '--target-host root@$hostname --build-host root@$hostname')
+                    if [ "$hostname" != "$HOSTNAME" ]; then
+                      command=$(echo "$command" '--target-host root@$hostname --build-host root@$hostname')
+                    fi
                     ;;
                   *)
                     echo "Failed to get hostname to build from flake.nix. Available hosts: $configs" >&2

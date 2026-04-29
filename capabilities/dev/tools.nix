@@ -27,6 +27,8 @@ in
     host.home-manager.config = {
       home = {
         packages = with pkgs; [
+          binwalk
+
           cmake # Cross-platform, open-source build system generator
           dos2unix # Convert text files with DOS or Mac line breaks to Unix line breaks and vice versa
           mdbook # Create books from MarkDown
@@ -43,6 +45,8 @@ in
           # Count your code, quickly
           # https://github.com/XAMPPRocky/tokei
           tokei
+
+          xxd
         ];
 
         shellAliases =

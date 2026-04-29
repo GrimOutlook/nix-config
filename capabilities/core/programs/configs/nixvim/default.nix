@@ -228,11 +228,6 @@ in
               win.preview.wo.wrap = true;
             };
 
-            which-key = {
-              enable = true;
-              preset = "helix";
-            };
-
             dashboard = {
               preset = {
                 keys = [
@@ -416,6 +411,16 @@ in
         ts-context-commentstring.enable = true;
         vim-suda.enable = true;
         web-devicons.enable = true;
+        which-key = {
+          enable = true;
+          settings = {
+            preset = "helix";
+            delay = 200;
+            expand = 1;
+            notify = false;
+          };
+        };
+
       };
 
       keymaps = [

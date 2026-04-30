@@ -667,7 +667,8 @@
         "smart-scrolloff-nvim": "smart-scrolloff-nvim",
         "stylix": "stylix",
         "tiny-code-action-nvim": "tiny-code-action-nvim",
-        "treefmt-nix": "treefmt-nix"
+        "treefmt-nix": "treefmt-nix",
+        "wayfinder-nvim": "wayfinder-nvim"
       }
     },
     "rust-analyzer-src": {
@@ -946,6 +947,22 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "wayfinder-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777547958,
+        "narHash": "sha256-ErLCE95QZNw9RUKEB/JH6xK4t77oWpKa+K4h7uxwoVo=",
+        "owner": "error311",
+        "repo": "wayfinder.nvim",
+        "rev": "2985e7edc79ac9fdca4cd3b83c92dd1183c82424",
+        "type": "github"
+      },
+      "original": {
+        "owner": "error311",
+        "repo": "wayfinder.nvim",
         "type": "github"
       }
     }

@@ -107,15 +107,12 @@
       url = "github:rachartier/tiny-code-action.nvim";
     };
 
-    # TODO: Determine if I actually want these. They're cool but I just
-    # inherited them from the initial flake I copied
-    #
-    # # Jump to next/previous LSP reference in the current buffer for the item
-    # # under the cursor with `]r`/`[r`.
-    # refjump-nvim = {
-    #   flake = false;
-    #   url = "github:mawkler/refjump.nvim";
-    # };
+    # A Neovim plugin that provides a simple way to run and visualize code
+    # actions
+    wayfinder-nvim = {
+      flake = false;
+      url = "github:error311/wayfinder.nvim";
+    };
   };
 
   outputs =

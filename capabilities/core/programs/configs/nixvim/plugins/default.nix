@@ -23,6 +23,7 @@ in
     in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
+        "blink"
         "fyler"
       ])
     );

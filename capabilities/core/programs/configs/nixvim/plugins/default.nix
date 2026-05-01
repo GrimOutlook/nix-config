@@ -24,6 +24,7 @@ in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
         "blink"
+        "conform"
         "fyler"
       ])
     );

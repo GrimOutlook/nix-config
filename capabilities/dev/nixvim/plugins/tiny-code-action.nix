@@ -10,15 +10,6 @@ let
   inherit (nc-inputs.nixvim.lib.nixvim) mkRaw;
 
   cfg = config.host.dev.nixvim.plugins.tiny-code-action;
-
-  plenary = pkgs.vimUtils.buildVimPlugin {
-    pname = "plenary-nvim";
-    version = "unstable";
-    src = nc-inputs.plenary-nvim;
-    # NOTE: Since `plenary` is just a library there is no need to do
-    # `requires()` checks
-    doCheck = false;
-  };
 in
 {
   options.host.dev.nixvim.plugins.tiny-code-action.enable =
@@ -30,7 +21,7 @@ in
         pname = "tiny-code-action-nvim";
         version = "unstable";
         src = nc-inputs.tiny-code-action-nvim;
-        dependencies = [ plenary ];
+        dependencies = with pkgs.vimPlugins; [ plenary-nvim ];
         nvimSkipModules = [
           # NOTE: Since the snacks previewer isn't used, we don't include
           # snacks as a dependency and so the check fails. We can ignore this

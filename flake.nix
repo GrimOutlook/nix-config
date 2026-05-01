@@ -84,12 +84,6 @@
       url = "github:tenxsoydev/karen-yank.nvim";
     };
 
-    # NOTE: Dependency for `tiny-code-action-nvim`
-    plenary-nvim = {
-      flake = false;
-      url = "github:nvim-lua/plenary.nvim";
-    };
-
     # Smart scroll is a plugin that enables you to control the scrolloff
     # setting using percentages instead of static line numbers. This is a more
     # intuitive way to handle scrolling, especially as you move between

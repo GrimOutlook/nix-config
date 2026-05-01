@@ -23,7 +23,6 @@ in
     in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
-        "fyler"
         "wayfinder"
       ])
     );

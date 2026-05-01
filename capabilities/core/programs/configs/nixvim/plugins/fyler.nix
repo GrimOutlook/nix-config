@@ -5,10 +5,11 @@
   ...
 }:
 let
-  cfg = config.host.dev.nixvim.plugins.fyler;
+  cfg = config.host.default-programs.nixvim.plugins.fyler;
 in
 {
-  options.host.dev.nixvim.plugins.fyler.enable = lib.mkEnableOption "Enable nixvim fyler plugin";
+  options.host.default-programs.nixvim.plugins.fyler.enable =
+    lib.mkEnableOption "Enable nixvim fyler plugin";
 
   config.host.home-manager.config.programs.nixvim = lib.mkIf cfg.enable {
     extraPlugins = with pkgs.vimPlugins; [

@@ -264,8 +264,8 @@ in
                   {
                     icon = "󱞋 ";
                     key = "e";
-                    desc = "File Explorer (Oil)";
-                    action = "<CMD>Oil<CR>";
+                    desc = "File Explorer (Fyler)";
+                    action = "<CMD>Fyler<CR>";
                   }
                   {
                     icon = " ";
@@ -370,8 +370,6 @@ in
         nvim-bqf.enable = true;
         nvim-lightbulb.enable = true;
         nvim-ufo.enable = true;
-        oil.enable = true;
-        oil-git-status.enable = true;
         overseer.enable = true;
         persistence.enable = true;
         project-nvim.enable = true;
@@ -623,14 +621,6 @@ in
           key = "<leader>/R";
           action = ''<cmd>lua require("grug-far").open({ prefills = { search = vim.fn.expand("<cword>") } })<cr>'';
           options.desc = "Search and Replace (CWD)";
-        }
-
-        # Oil keymap
-        {
-          mode = "n";
-          key = "<leader>e";
-          action = "<cmd>Oil<cr>";
-          options.desc = "File Explorer";
         }
 
         # Code action keymap

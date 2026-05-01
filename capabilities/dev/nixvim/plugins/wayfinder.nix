@@ -7,7 +7,6 @@
 }:
 let
   nc-inputs = inputs.nix-config.inputs;
-
   cfg = config.host.dev.nixvim.plugins.wayfinder;
 in
 {

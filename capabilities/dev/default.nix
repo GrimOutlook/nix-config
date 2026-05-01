@@ -26,6 +26,7 @@ in
         "jujutsu"
         "lang.core"
         "lazygit"
+        "nixvim"
         "tools"
       ])
     );

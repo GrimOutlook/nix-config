@@ -45,11 +45,6 @@ let
       "tiny-code-action.previewers.snacks"
     ];
   };
-  wayfinder = pkgs.vimUtils.buildVimPlugin {
-    pname = "wayfinder-nvim";
-    version = "unstable";
-    src = nc-inputs.wayfinder-nvim;
-  };
 in
 {
 
@@ -93,7 +88,6 @@ in
         karen-yank
         smart-scrolloff
         tiny-code-action
-        wayfinder
       ];
 
       extraConfigLua = ''
@@ -126,27 +120,6 @@ in
         })
         -- Disable Neovim's default virtual text diagnostics
         vim.diagnostic.config({ virtual_text = false })
-
-        require('wayfinder').setup({
-          performance = "fast",
-          scope = {
-            mode = "package",
-            package_markers = {
-              "package.json",
-              "tsconfig.json",
-              "pyproject.toml",
-              "go.mod",
-              "Cargo.toml",
-              ".git",
-            },
-          },
-          limits = {
-            refs = { max_results = 200, timeout_ms = 1200 },
-            text = { enabled = true, max_results = 100, timeout_ms = 800 },
-            tests = { max_results = 50, timeout_ms = 700 },
-            git = { enabled = true, max_commits = 15, timeout_ms = 400 },
-          },
-        })
       '';
 
       plugins = {
@@ -720,56 +693,6 @@ in
           options = {
             desc = "Up";
             expr = true;
-          };
-        }
-        {
-          mode = [
-            "n"
-          ];
-          key = "<leader>wf";
-          action = "<Plug>(WayfinderOpen)";
-          options = {
-            desc = "Wayfinder";
-          };
-        }
-        {
-          mode = [
-            "n"
-          ];
-          key = "<leader>wtn";
-          action = "<Plug>(WayfinderTrailNext)";
-          options = {
-            desc = "Wayfinder Trail Next";
-          };
-        }
-        {
-          mode = [
-            "n"
-          ];
-          key = "<leader>wtn";
-          action = "<Plug>(WayfinderTrailPrev)";
-          options = {
-            desc = "Wayfinder Trail Prev";
-          };
-        }
-        {
-          mode = [
-            "n"
-          ];
-          key = "<leader>wtn";
-          action = "<Plug>(WayfinderTrailOpen)";
-          options = {
-            desc = "Wayfinder Trail Open";
-          };
-        }
-        {
-          mode = [
-            "n"
-          ];
-          key = "<leader>wtn";
-          action = "<Plug>(WayfinderTrailShow)";
-          options = {
-            desc = "Wayfinder Trail Show";
           };
         }
       ];

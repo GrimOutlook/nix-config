@@ -343,14 +343,6 @@ in
             options.desc = "Clear Search Highlighting";
           }
 
-          # Formatting keymap
-          {
-            mode = [ "n" ];
-            key = "<leader>F";
-            action = "<CMD>lua require('conform').format()<CR>";
-            options.desc = "Format File";
-          }
-
           # LSP keymaps
           {
             mode = "n";

@@ -22,6 +22,7 @@ in
           enable = mkDefault true;
           efiSupport = mkDefault true;
           configurationLimit = mkDefault 10;
+          device = mkDefault "nodev"; # "nodev" is correct for EFI systems
         };
 
         efi.canTouchEfiVariables = mkDefault true;

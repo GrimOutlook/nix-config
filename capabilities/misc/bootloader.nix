@@ -18,14 +18,15 @@ in
   config = mkIf cfg.enable {
     boot = {
       loader = {
-        systemd-boot = {
+        grub = {
           enable = mkDefault true;
+          efiSupport = mkDefault true;
           configurationLimit = mkDefault 10;
         };
 
         efi.canTouchEfiVariables = mkDefault true;
 
-        timeout = mkDefault 10;
+        timeout = mkDefault 2;
       };
       supportedFilesystems = mkForce [
         "btrfs"

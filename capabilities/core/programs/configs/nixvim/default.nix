@@ -136,8 +136,8 @@ in
                     {
                       icon = "󱞋 ";
                       key = "e";
-                      desc = "File Explorer (Fyler)";
-                      action = "<CMD>Fyler<CR>";
+                      desc = "File Explorer (Oil)";
+                      action = "<CMD>Oil<CR>";
                     }
                     {
                       icon = " ";

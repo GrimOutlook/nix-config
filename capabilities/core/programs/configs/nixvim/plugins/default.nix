@@ -25,7 +25,7 @@ in
       lib.mkMerge (enableAll [
         "blink"
         "conform"
-        "fyler"
+        "oil"
       ])
     );
 }

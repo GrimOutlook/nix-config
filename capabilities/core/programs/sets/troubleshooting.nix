@@ -32,6 +32,8 @@ in
       # A log file highlighter
       # https://github.com/bensadeh/tailspin
       tailspin
+
+      usbutils
     ];
 
     environment.shellAliases = {

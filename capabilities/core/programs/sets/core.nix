@@ -41,9 +41,11 @@ in
       # https://github.com/oberblastmeister/trashy
       trashy
 
-      uutils-coreutils-noprefix # Rust remade GNU coreutils. `-noprefix` makes it to where `cat` isn't `uutils-cat`.
-      uutils-findutils # Rust remade GNU findutils
-      uutils-diffutils # Rust remade GNU diffutils
+      udisks
+
+      # uutils-coreutils-noprefix # Rust remade GNU coreutils. `-noprefix` makes it to where `cat` isn't `uutils-cat`.
+      # uutils-findutils # Rust remade GNU findutils
+      # uutils-diffutils # Rust remade GNU diffutils
 
       # Extended cp(1)
       xcp

@@ -62,7 +62,6 @@ in
       cdtmp = "cd $(mktemp -d)";
       cp = "xcp --verbose";
       mkdir = "mkdir --parents";
-      mv = "mv --progress";
 
       # NOTE: Don't make an `rm` alias. Moving to a new system that doesn't
       # have trashy would result in unintended unrecoverable deletes.

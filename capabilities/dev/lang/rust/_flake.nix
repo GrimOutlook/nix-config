@@ -1,5 +1,5 @@
 {
-  description = "nRF52840 Rust Development Environment";
+  description = "Rust Development Environment";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

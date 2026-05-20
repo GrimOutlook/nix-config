@@ -26,6 +26,14 @@ in
 
     host.home-manager.config = {
       home = {
+        file.".config/direnv/direnvrc".text = ''
+          # Place all direnv layouts in the cache directory. This fixes various
+          # problems with the `.direnv` directory being scanned when placed
+          # in a repo
+          direnv_layout_dir() {
+            echo "$HOME/.cache/direnv/layouts/$(basename "$PWD")"
+          }
+        '';
         packages = with pkgs; [
           binwalk
 

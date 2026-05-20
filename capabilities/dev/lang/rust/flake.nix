@@ -167,7 +167,7 @@
               name = "fmt";
               command = ''
                 echo "=> Formatting the crate"
-                cargo fmt -- --edition 2024 --unstable-features
+                cargo fmt -- --unstable-features
                 echo "=> Finished formatting crate"
               '';
               help = "Format the crate";

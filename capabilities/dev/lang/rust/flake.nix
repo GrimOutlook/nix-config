@@ -170,7 +170,7 @@
                 cargo fmt -- --edition 2024 --unstable-features
                 echo "=> Finished formatting crate"
               '';
-              help = "Lint the crate";
+              help = "Format the crate";
             }
             {
               category = "develop";

@@ -152,6 +152,36 @@
               '';
               help = "Test the crate";
             }
+            {
+              category = "develop";
+              name = "lint";
+              command = ''
+                echo "=> Linting the crate"
+                cargo clippy
+                echo "=> Finished linting crate"
+              '';
+              help = "Lint the crate";
+            }
+            {
+              category = "develop";
+              name = "fmt";
+              command = ''
+                echo "=> Formatting the crate"
+                cargo fmt -- --edition 2024 --unstable-features
+                echo "=> Finished formatting crate"
+              '';
+              help = "Lint the crate";
+            }
+            {
+              category = "develop";
+              name = "prerelease";
+              command = ''
+                echo "=> Running pre-release checks"
+                cargo clippy -- -D warnings
+                echo "=> Finished prerelease-checks"
+              '';
+              help = "Run pre-release checks on the crate";
+            }
           ];
         };
 

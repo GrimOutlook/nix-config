@@ -12,11 +12,18 @@
 # Type can be 
 #    feat     (new feature)
 #    fix      (bug fix)
-#    refactor (refactoring production code)
-#    style    (formatting, missing semi colons, etc; no code change)
-#    docs     (changes to documentation)
-#    test     (adding or refactoring tests; no production code change)
-#    chore    (updating grunt tasks etc; no production code change)
+#    refactor (structural improvements to the code without changing its 
+#              behavior)
+#    style    (formatting, whitepace, missing semi colons, etc)
+#    docs     (changes to documentation, comments, or API descriptions)
+#    test     (adding, modifying, fixing or improving tests)
+#    chore    (updating grunt tasks etc)
+#    build    (should be used for changes that impact the build process or
+#              production dependencies, including tools and configurations
+#              necessary for application deployment or runtime)
+#    revert   (used to roll back a previous commit)
+#    perf     (changes that bring measurable performance improvements)
+#    ci       (changes to CI/CD configurations or workflows)
 # --------------------
 # Remember to
 #   - Capitalize the subject line

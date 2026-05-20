@@ -17,6 +17,7 @@ in
           enable = true;
           settings.server.default_settings.rust-analyzer = {
             check.command = "clippy";
+            files.exclude = [ ".direnv" ];
             inlayHints.lifetimeElisionHints.enable = "always";
           };
         };

@@ -27,7 +27,6 @@ in
           formatters.rustfmt = {
             command = "rustfmt";
             args = [
-              "--"
               "--edition"
               "2024"
               "--unstable-features"

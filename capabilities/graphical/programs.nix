@@ -34,6 +34,9 @@ in
       # Small Gotify daemon to send messages as desktop notifications
       # https://github.com/desbma/gotify-desktop
       gotify-desktop
+
+      # Calculator
+      qalculate-qt
     ];
   };
 }

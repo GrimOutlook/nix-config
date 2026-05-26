@@ -31,6 +31,8 @@ in
               "2024"
               "--unstable-features"
             ];
+            # Prevent `rustfmt` from being installed by default. It should be installed by the project flake.
+            package = null;
           };
         };
       };

@@ -241,7 +241,7 @@ in
           noice.enable = true;
           nvim-bqf.enable = true;
           nvim-lightbulb.enable = true;
-          nvim-ufo.enable = true;
+          nvim-ufo.enable = false;
           overseer.enable = true;
           persistence.enable = true;
           project-nvim.enable = true;

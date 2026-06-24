@@ -66,6 +66,10 @@
               # # https://github.com/crev-dev/cargo-crev
               # cargo-crev
 
+              # #  Command line helpers for fuzzing
+              # # https://github.com/rust-fuzz/cargo-fuzz
+              # cargo-fuzz
+
               # # Find unused dependencies in Cargo.toml
               # # https://github.com/est31/cargo-udeps
               # cargo-udeps

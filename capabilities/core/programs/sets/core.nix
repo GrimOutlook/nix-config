@@ -26,10 +26,22 @@ in
       # https://github.com/charmbracelet/gum
       gum
 
+      # Checks presence of various command line tools and their versions on the path
+      # https://github.com/kdabir/has
+      has
+
       # moreutils is a growing collection of the unix tools that nobody thought
       # to write long ago when unix was young
       # https://joeyh.name/code/moreutils/
       moreutils
+
+      # Command-line tool to generate, analyze, convert and manipulate colors
+      # https://github.com/sharkdp/pastel
+      pastel
+
+      # The PCI Utilities
+      # https://github.com/pciutils/pciutils
+      pciutils
 
       progress # Tool that shows the progress of coreutils programs
       pv # Tool for monitoring the progress of data through a pipeline
@@ -56,6 +68,23 @@ in
       nfs-utils # Linux user-space NFS utilities
       tree
       wget
+      inetutils
+      gdb
+      iw
+      parted
+      # Has stuff like `fdisk`
+      util-linux
+      screen
+      socat
+      tcpdump
+      traceroute
+      usbutils
+      units
+
+      unixtools.route
+      wirelesstools
+      renameutils
+      nomino
     ];
 
     shellAliases = {

@@ -26,6 +26,7 @@ in
         in
         {
           enable = true;
+          setSessionVariables = true;
         }
         // (lib.mapAttrs
           (_: folderName: "${config.home-manager.users.${username}.home.homeDirectory}/${folderName}")

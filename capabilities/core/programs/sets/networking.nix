@@ -32,7 +32,6 @@ in
 
     environment.shellAliases = {
       dig = "dog";
-      traceroute = "trippy";
     };
   };
 }

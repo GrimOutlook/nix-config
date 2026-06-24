@@ -23,6 +23,8 @@ in
 
       killall
 
+      iotop
+
       # A modern replacement for ps written in Rust
       # https://github.com/dalance/procs
       procs
@@ -30,6 +32,8 @@ in
       # Process Interactive Kill
       # https://github.com/jacek-kurlit/pik
       pik
+
+      smartmontools
 
       systemd-manager-tui
 

@@ -17,6 +17,8 @@ in
         # Database management TUI for Postgres, MySQL, and SQLite
         # https://github.com/achristmascarl/rainfrog
         rainfrog
+
+        usql
       ];
     };
   };

@@ -41,8 +41,13 @@ in
       # https://github.com/saulpw/visidata
       visidata
 
+      # Command-line XML and HTML beautifier and content extractor
+      # https://github.com/sibprogrammer/xq
+      xq
+
       # Command-line YAML, XML, TOML processor - jq wrapper for YAML/XML/TOML documents
       # https://github.com/kislyuk/yq
       yq
+
     ];
 }

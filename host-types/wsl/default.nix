@@ -2,6 +2,7 @@
   config,
   inputs,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -27,6 +28,9 @@ in
       shellAliases = {
         "powershell.exe" = "'/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'";
       };
+      systemPackages = with pkgs; [
+        wl-clipboard
+      ];
     };
 
     # nftables seems to fail to start in WSL

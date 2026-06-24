@@ -37,9 +37,26 @@ in
         packages = with pkgs; [
           binwalk
 
+          # Terminal based bitwise calculator in curses
+          # https://github.com/mellowcandle/bitwise
+          bitwise
+
           cmake # Cross-platform, open-source build system generator
+
+          # Command line tool for keeping track of what you’re doing and tracking what you’ve done
+          # https://github.com/ttscoff/doing/
+          doing
+
           dos2unix # Convert text files with DOS or Mac line breaks to Unix line breaks and vice versa
           mdbook # Create books from MarkDown
+
+          # Preview GitHub README.md files locally before committing them.
+          # https://github.com/joeyespo/grip
+          grip
+
+          # Modular visual interface for GDB in Python
+          # https://github.com/cyrus-and/gdb-dashboard
+          gdb-dashboard
 
           nodejs
 

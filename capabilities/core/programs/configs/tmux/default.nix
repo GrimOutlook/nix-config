@@ -70,6 +70,6 @@ in
     programs.ssh.extraConfig = ''
       SendEnv TMUX
     '';
-    services.openssh.settings.AcceptEnv = "TMUX";
+    services.openssh.settings.AcceptEnv = [ "TMUX" ];
   };
 }

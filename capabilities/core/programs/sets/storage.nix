@@ -22,7 +22,6 @@ in
       dua
 
       # Rust implementations of linux commands
-      dust # du
       dysk # df
       duf # df
 

@@ -51,15 +51,12 @@ in
       # TODO: Make `ssh` command tell you to use `mosh`
       mosh # Mobile shell (ssh replacement)
       navi # Interactive cheatsheet tool for the command-line and application launchers
-      neofetch # Fast, highly customizable system info script
 
       # Command-line Git information tool
       # https://github.com/o2sh/onefetch
       onefetch
 
       openssl # Cryptographic library that implements the SSL and TLS protocols
-
-      pastel # Command-line tool to generate, analyze, convert and manipulate colors
 
       # # Task management tool for sequential and parallel execution of
       # # long-running tasks

@@ -15,6 +15,11 @@ in
     home = {
       packages = with pkgs; [
         git-filter-repo # Quickly rewrite git repository history
+
+        # GIT utilities -- repo summary, repl, changelog population, author
+        # commit percentages and more
+        # https://github.com/tj/git-extras
+        git-extras
       ];
 
       shellAliases = {

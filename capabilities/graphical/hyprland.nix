@@ -302,7 +302,7 @@ in
           # Example windowrule
           # windowrule = float,class:^(kitty)$,title:^(kitty)$
 
-          windowrulev2 = [
+          windowrule = [
             # Ignore maximize requests from apps. You'll probably like this.
             "suppressevent maximize, class:.*"
 

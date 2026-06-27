@@ -18,13 +18,9 @@ in
       graphical.enable = true;
     };
 
-    programs.light = {
-      enable = true;
-      brightnessKeys.enable = true;
-    };
-
     environment.systemPackages = with pkgs; [
       acpi
+      brightnessctl
       upower
     ];
     services.acpid.enable = true;

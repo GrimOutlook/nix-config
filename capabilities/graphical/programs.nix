@@ -16,7 +16,7 @@ in
       alacritty
 
       # File Manager
-      xfce.thunar
+      thunar
 
       # IM
       discord

@@ -34,7 +34,7 @@ in
         # This feature is disabled by default because it slows down building.
         # If you don't mind waiting a few more seconds when Home Manager
         # builds a new generation, you may safely enable this option.
-        generateCaches = true;
+        cache.enable = true;
       };
     };
   };

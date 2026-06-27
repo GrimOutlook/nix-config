@@ -37,12 +37,12 @@ in
       home.shellAliases.v = "nvim";
 
       programs.nixvim = {
-        # TODO: Figure out why this is required here since it's already declared in
-        # `configuration.nix`
-        nixpkgs.config.allowUnfree = true;
-
         enable = true;
         defaultEditor = true;
+        nixpkgs = {
+          source = pkgs.path;
+          config.allowUnfree = true;
+        };
 
         viAlias = true;
         vimAlias = true;

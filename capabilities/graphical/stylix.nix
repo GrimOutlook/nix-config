@@ -18,6 +18,7 @@ in
     stylix = {
       enable = lib.mkDefault true;
       base16Scheme = lib.mkDefault "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-soft.yaml";
+      overlays.enable = false;
       targets.nixvim.colors.enable = false;
     };
   };

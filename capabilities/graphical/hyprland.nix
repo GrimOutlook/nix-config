@@ -168,8 +168,7 @@ in
 
           # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
           dwindle = {
-            pseudotile = true; # Master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
-            preserve_split = true; # You probably want this
+            preserve_split = true;
           };
 
           # https://wiki.hyprland.org/Configuring/Variables/#misc
@@ -303,7 +302,7 @@ in
           # Example windowrule
           # windowrule = float,class:^(kitty)$,title:^(kitty)$
 
-          windowrule = [
+          windowrulev2 = [
             # Ignore maximize requests from apps. You'll probably like this.
             "suppressevent maximize, class:.*"
 

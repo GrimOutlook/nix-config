@@ -35,5 +35,9 @@ in
 
     # nftables seems to fail to start in WSL
     networking.nftables.enable = false;
+
+    # wpa_supplicant fails to start in WSL due to namespace restrictions and is not needed
+    networking.wireless.enable = lib.mkForce false;
+    systemd.services.wpa_supplicant.enable = lib.mkForce false;
   };
 }

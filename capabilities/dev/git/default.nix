@@ -26,7 +26,7 @@ in
         push = "git push";
         pull = "git pull";
         add = "git add -Av";
-        status = "git status";
+        stat = "git status";
 
         s = "git diff HEAD --stat";
         st = "git status --short";

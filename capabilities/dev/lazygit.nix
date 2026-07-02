@@ -12,7 +12,7 @@ in
   config.host.home-manager.config = lib.mkIf cfg.enable {
     programs.lazygit = {
       enable = true;
-      enableBashIntegration = true;
+      enableFishIntegration = true;
       settings = {
         gui.theme = {
           activeBorderColor = [

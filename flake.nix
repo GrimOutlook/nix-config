@@ -34,6 +34,8 @@
 
     import-tree.url = "github:vic/import-tree";
 
+    llm-agents.url = "github:numtide/llm-agents.nix";
+
     microvm = {
       url = "github:microvm-nix/microvm.nix";
       inputs.nixpkgs.follows = "nixpkgs";

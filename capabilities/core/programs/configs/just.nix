@@ -25,12 +25,11 @@ in
         "curl ${url} > JUSTFILE";
     };
 
-    programs.bash.interactiveShellInit = ''
-      eval "$(just --completions bash)"
+    programs.fish.interactiveShellInit = ''
+      just --completions fish | source
 
-      # Use `just` bash-completion function (`_just`) for the alias
-      # we made for it (`j`).
-      complete -F _just j
+      # Reuse `just`'s completions for the alias we made for it (`j`).
+      complete -c j -w just
     '';
   };
 }

@@ -19,8 +19,8 @@ in
       atuin
     ];
 
-    programs.bash.interactiveShellInit = lib.mkOrder 1900 ''
-      eval "$(atuin init bash)"
+    programs.fish.interactiveShellInit = lib.mkOrder 1900 ''
+      atuin init fish | source
     '';
 
     environment.etc."atuin/config.toml".text = ''

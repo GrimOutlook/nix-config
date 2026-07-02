@@ -52,20 +52,18 @@ in
       tmk = "tmux kill-session -t";
     };
 
-    programs.bash.interactiveShellInit = ''
+    programs.fish.interactiveShellInit = ''
       # Verify that:
       # 1. TMUX command exists
-      # 2. PS1 string is set and isn't ""
+      # 2. We are in an interactive shell
       # 3. We aren't in a screen session
       # 4. We aren't in a TMUX session already
-      # 5. Additional check to make sure we aren't in a tmux session
-      if command -v tmux &>/dev/null \
-        && [ -n "$PS1" ] \
-        && [[ ! "$TERM" =~ screen ]] \
-        && [[ ! "$TERM" =~ tmux ]] \
-        && [ -z "$TMUX" ]; then
+      if type -q tmux
+        and status is-interactive
+        and not string match -qr 'screen|tmux' -- "$TERM"
+        and not set -q TMUX
         tmux new-session
-      fi
+      end
     '';
     programs.ssh.extraConfig = ''
       SendEnv TMUX

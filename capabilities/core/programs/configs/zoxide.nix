@@ -15,11 +15,11 @@ in
     # Fast cd command that learns your habits
     programs.zoxide.enable = true;
 
-    # Disable automatic integration so we can place the eval command at the
+    # Disable automatic integration so we can place the init command at the
     # end ourselves.
-    programs.zoxide.enableBashIntegration = false;
-    programs.bash.interactiveShellInit = lib.mkOrder 2000 ''
-      eval "$(${lib.getExe pkgs.zoxide} init bash)"
+    programs.zoxide.enableFishIntegration = false;
+    programs.fish.interactiveShellInit = lib.mkOrder 2000 ''
+      ${lib.getExe pkgs.zoxide} init fish | source
     '';
 
     environment.sessionVariables = {

@@ -17,7 +17,7 @@ in
       # https://direnv.net/
       direnv = {
         enable = true;
-        enableBashIntegration = true;
+        enableFishIntegration = true;
         # Whether to enable
         # [nix-direnv](https://github.com/nix-community/nix-direnv, a fast,
         # persistent use_nix implementation for direnv.

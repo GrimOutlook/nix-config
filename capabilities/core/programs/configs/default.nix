@@ -20,10 +20,9 @@ in
     mkIf cfg.enable {
       host = lib.mkMerge (enableAll [
         "atuin"
-        "bash"
         "bat"
-        "blesh"
         "eza"
+        "fish"
         "just"
         "nixvim"
         "skim"

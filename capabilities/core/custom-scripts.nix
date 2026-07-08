@@ -30,7 +30,7 @@ in
         [
           docopts
           pastel
-          rg
+          ripgrep
         ]
         ++ (map (
           name: pkgs.writeShellScriptBin name (builtins.readFile (scriptDir + "/${name}"))

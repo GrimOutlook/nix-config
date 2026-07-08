@@ -29,6 +29,8 @@ in
         with pkgs;
         [
           docopts
+          pastel
+          rg
         ]
         ++ (map (
           name: pkgs.writeShellScriptBin name (builtins.readFile (scriptDir + "/${name}"))

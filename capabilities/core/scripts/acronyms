@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+set -eo pipefail
+usage() {
+    cat <<EOU
+Attempt to find out what an acronym means by looking for matches in a codebase.
+
+Usage:
+  acronyms [options] <acronym> [<directory>]
+
+Arguments:
+  <acronym>             Acronym to search for
+  <directory>           Path to search
+
+Options:
+  -h --help                             Show this screen.
+  --debug                               Print debug messages to stderr.
+  -i, --ignore-case                     Ignore character cases when searching for matches using separators.
+  -p, --search-pascal                   Search for pascal case matches (without a separator) [default: true].
+  -s, --separators <separators_string>  Separators to use when looking for acronyms [default: " _-"].
+  --no-filename                         Don't print the filename of the found acronym match.
+  --full-path                           Use full paths instead of relative paths.
+EOU
+}
+
+# no vesion support in docopt_auto_parse() so we call docopts directly
+eval "$(docopts -h "$(usage)" : "$@")"
+
+dir=$(realpath "${directory:-.}")
+
+# Enable alias expansion for this script. More concise than writing a wrapper function.
+shopt -s expand_aliases
+
+color_base="pastel paint"
+
+# Disabled because I'm intentionally using a local variable in my aliases
+# shellcheck disable=SC2139
+{
+    alias cyan="$color_base '#3399ff'"
+    alias lavendar="$color_base '#FF99FF'"
+    alias heat="$color_base '#FF9922'"
+    alias lava="$color_base '#FF3322'"
+    alias mint="$color_base '#44EE88'"
+    alias leaf="$color_base '#44BB33'"
+}
+
+separators_regex="[${separators//\"/}]"
+separators_regex_escaped=$(printf "%s" "$separators_regex" | sed 's/[]\[]/\\&/g')
+
+# 1. Break ABC into A B C
+# 2. Map each letter to "L\w+"
+# 3. Join them with the $SPACE_CHAR
+# 4. Wrap in word boundaries
+REGEX_BODY=$(echo "$acronym" | sed 's/./&\\w+'"$separators_regex"'/g' | sed 's/'"$separators_regex_escaped"'$//')
+FINAL_REGEX="(?<=^|\\W)${REGEX_BODY}(?=\\W|$)"
+
+echo "Searching for regex: $FINAL_REGEX"
+echo "-----------------------------------"
+
+rg $IGNORE_CASE -Po "$FINAL_REGEX" "$dir"

@@ -21,6 +21,13 @@ in
       };
     };
 
+    # Allow the owner to connect to wifi networks and change network
+    # settings (via nmcli/nmtui/nm-applet) without a polkit prompt on
+    # desktop systems.
+    users.users.${config.host.owner.username}.extraGroups = lib.optionals config.host.graphical.enable [
+      "networkmanager"
+    ];
+
     environment.shellAliases = {
       "clear-dns" = "sudo nscd -i hosts";
     };

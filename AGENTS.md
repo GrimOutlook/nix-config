@@ -42,8 +42,8 @@ reading individual files.
   `flake.modules.default` / `flake.nixosModules.default`. This is the actual
   wiring; if a capability doesn't seem to apply, check it's reachable from
   here.
-- `systems.nix` — supported systems (`x86_64-linux`, `aarch64-linux`,
-  `x86_64-darwin`, `aarch64-darwin`).
+- `systems.nix` — supported systems (`x86_64-linux`, `aarch64-linux`; no
+  Darwin support).
 - `devshell.nix` — devshell commands available via `nix develop`: `update`
   (flake update + commit + push), `switch` (rebuild/deploy current host via
   `nh os switch`), `unlink-results`.

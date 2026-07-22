@@ -29,6 +29,7 @@ in
       inherit (config.host.owner) username;
     in
     mkIf cfg.enable {
+      backupFileExtension = "hm-bkp";
       useGlobalPkgs = true;
       useUserPackages = true;
       users.${username} = {

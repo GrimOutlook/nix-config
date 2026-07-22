@@ -9,6 +9,7 @@ let
   cfg = config.host.dev.ai.opencode;
   opencodeConfig = {
     "$schema" = "https://opencode.ai/config.json";
+    disabled_providers = [ "opencode" ];
     share = "disabled";
     mcp = {
       nixos = {

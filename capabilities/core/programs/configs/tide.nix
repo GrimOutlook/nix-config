@@ -15,6 +15,9 @@ let
     if not contains context $tide_left_prompt_items
         set -U tide_left_prompt_items context $tide_left_prompt_items
     end
+    if contains context $tide_right_prompt_items
+        set -U tide_right_prompt_items (string match -v context $tide_right_prompt_items)
+    end
   '';
 in
 {

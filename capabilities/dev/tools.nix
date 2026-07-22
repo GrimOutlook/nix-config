@@ -7,6 +7,43 @@
 }:
 let
   cfg = config.host.dev.tools;
+  agySettings = {
+    allowNonWorkspaceAccess = true;
+    colorScheme = "dark";
+    enableTelemetry = false;
+    permissions = {
+      allow = [
+        "command(file)"
+        "command(ls)"
+        "command(git status)"
+        "command(git diff)"
+        "command(git add)"
+        "command(git commit)"
+        "command(git log)"
+        "command(git checkout)"
+        "command(git stash)"
+        "command(git branch)"
+        "command(git pull)"
+        "command(journalctl -n 50)"
+        "command(systemctl status)"
+        "command(head)"
+        "command(grep)"
+        "command(find)"
+        "command(nix-instantiate)"
+        "command(nix eval)"
+        "command(nix build)"
+      ];
+    };
+    trustedWorkspaces = [
+      "/home/grim/sparta"
+      "/home/grim/nix/config"
+      "/home/grim/nix/hosts/newyork"
+      "/home/grim/nix/hosts/amsterdam"
+      "/home/grim/nix/homelab"
+      "/home/grim/tactical-messaging"
+      "/home/grim/nix"
+    ];
+  };
 in
 {
   options.host.dev.tools.enable = lib.mkEnableOption "Enable development tools";
@@ -27,14 +64,18 @@ in
 
     host.home-manager.config = {
       home = {
-        file.".config/direnv/direnvrc".text = ''
-          # Place all direnv layouts in the cache directory. This fixes various
-          # problems with the `.direnv` directory being scanned when placed
-          # in a repo
-          direnv_layout_dir() {
-            echo "$HOME/.cache/direnv/layouts/$(basename "$PWD")"
-          }
-        '';
+        file = {
+          ".config/direnv/direnvrc".text = ''
+            # Place all direnv layouts in the cache directory. This fixes various
+            # problems with the `.direnv` directory being scanned when placed
+            # in a repo
+            direnv_layout_dir() {
+              echo "$HOME/.cache/direnv/layouts/$(basename "$PWD")"
+            }
+          '';
+          ".gemini/antigravity-cli/settings.json".text = builtins.toJSON agySettings;
+          ".gemini/config/settings.json".text = builtins.toJSON agySettings;
+        };
         packages =
           with pkgs;
           [

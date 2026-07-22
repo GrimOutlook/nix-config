@@ -79,11 +79,6 @@ in
             pnpm-run = "pnpm dlx";
           in
           {
-            # Agentic coding tool that lives in your terminal, understands your
-            # codebase, and helps you code faster
-            # https://github.com/anthropics/claude-code
-            claude = "${pnpm-run} @anthropic-ai/claude-code@latest";
-
             # The open source coding agent.
             # https://github.com/anomalyco/opencode
             opencode = "${pnpm-run} opencode-ai";

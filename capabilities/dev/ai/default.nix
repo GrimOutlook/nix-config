@@ -9,6 +9,7 @@ in
 {
   imports = [
     ./agy.nix
+    ./claude.nix
   ];
 
   options.host.dev.ai.enable = lib.mkEnableOption "Enable AI development configurations";
@@ -25,6 +26,7 @@ in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
         "agy"
+        "claude"
       ])
     );
 }

@@ -11,6 +11,9 @@ let
     allowNonWorkspaceAccess = true;
     colorScheme = "dark";
     enableTelemetry = false;
+    ui = {
+      showTokenUsage = true;
+    };
     permissions = {
       allow = [
         "command(file)"

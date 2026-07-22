@@ -30,6 +30,7 @@ let
         "command(journalctl -n 50)"
         "command(systemctl status)"
         "command(head)"
+        "command(cat)"
         "command(grep)"
         "command(rg)"
         "command(find)"

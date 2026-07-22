@@ -27,7 +27,10 @@ in
   config = lib.mkIf cfg.enable {
     host.home-manager.config = {
       home = {
-        file.".config/opencode/opencode.json".text = lib.mkDefault (builtins.toJSON opencodeConfig);
+        file.".config/opencode/opencode.json" = {
+          text = lib.mkDefault (builtins.toJSON opencodeConfig);
+          force = true;
+        };
         packages =
           with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
             opencode

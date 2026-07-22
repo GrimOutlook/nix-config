@@ -59,8 +59,14 @@ in
     host.home-manager.config = {
       home = {
         file = {
-          ".gemini/antigravity-cli/settings.json".text = builtins.toJSON agySettings;
-          ".gemini/config/settings.json".text = builtins.toJSON agySettings;
+          ".gemini/antigravity-cli/settings.json" = {
+            text = builtins.toJSON agySettings;
+            force = true;
+          };
+          ".gemini/config/settings.json" = {
+            text = builtins.toJSON agySettings;
+            force = true;
+          };
         };
         packages = with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
           antigravity-cli

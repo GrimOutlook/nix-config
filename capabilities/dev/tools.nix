@@ -28,10 +28,22 @@ let
         "command(systemctl status)"
         "command(head)"
         "command(grep)"
+        "command(rg)"
         "command(find)"
+        "command(fd)"
+        "command(sed)"
+        "command(sd)"
         "command(nix-instantiate)"
         "command(nix eval)"
         "command(nix build)"
+        "command(podman run)"
+        "command(podman images)"
+        "command(podman exec)"
+        "command(podman build)"
+        "command(docker run)"
+        "command(docker images)"
+        "command(docker exec)"
+        "command(docker build)"
       ];
     };
     trustedWorkspaces = [

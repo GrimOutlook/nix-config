@@ -74,19 +74,11 @@ in
           xxd
         ];
 
-        shellAliases =
-          let
-            pnpm-run = "pnpm dlx";
-          in
-          {
-            # The open source coding agent.
-            # https://github.com/anomalyco/opencode
-            opencode = "${pnpm-run} opencode-ai";
-
-            # NOTE: This module requires `fd`/`fdfind` to work fully but that isn't made explicit anywhere.
-            # TODO: Make it explicit.
-            lf = "fd -t f -x dos2unix {} \\;";
-          };
+        shellAliases = {
+          # NOTE: This module requires `fd`/`fdfind` to work fully but that isn't made explicit anywhere.
+          # TODO: Make it explicit.
+          lf = "fd -t f -x dos2unix {} \\;";
+        };
       };
     };
   };

@@ -10,6 +10,7 @@ in
   imports = [
     ./agy.nix
     ./claude.nix
+    ./opencode.nix
   ];
 
   options.host.dev.ai.enable = lib.mkEnableOption "Enable AI development configurations";
@@ -27,6 +28,7 @@ in
       lib.mkMerge (enableAll [
         "agy"
         "claude"
+        "opencode"
       ])
     );
 }

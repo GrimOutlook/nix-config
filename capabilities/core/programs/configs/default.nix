@@ -27,7 +27,7 @@ in
         "nixvim"
         "skim"
         "ssh"
-        "starship"
+        "tide"
         "tmux"
         "zoxide"
       ]);

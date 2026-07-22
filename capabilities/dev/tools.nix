@@ -43,6 +43,9 @@ in
 
           cmake # Cross-platform, open-source build system generator
 
+          # Fast, Declarative, Reproducible, and Composable Developer Environments
+          devenv
+
           # Command line tool for keeping track of what you’re doing and tracking what you’ve done
           # https://github.com/ttscoff/doing/
           doing

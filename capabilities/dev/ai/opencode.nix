@@ -7,15 +7,31 @@
 }:
 let
   cfg = config.host.dev.ai.opencode;
+  opencodeConfig = {
+    "$schema" = "https://opencode.ai/config.json";
+    share = "disabled";
+    mcp = {
+      nixos = {
+        enabled = true;
+        type = "local";
+        command = "nix run github:utensils/mcp-nixos --";
+      };
+    };
+  };
 in
 {
   options.host.dev.ai.opencode.enable =
     lib.mkEnableOption "Enable OpenCode CLI configuration";
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.config.home.packages =
-      with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-        opencode
-      ];
+    host.home-manager.config = {
+      home = {
+        file.".config/opencode/opencode.json".text = builtins.toJSON opencodeConfig;
+        packages =
+          with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+            opencode
+          ];
+      };
+    };
   };
 }

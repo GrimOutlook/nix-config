@@ -46,20 +46,10 @@ let
         "command(docker build)"
       ];
     };
-    trustedWorkspaces = [
-      "/home/grim/sparta"
-      "/home/grim/nix/config"
-      "/home/grim/nix/hosts/newyork"
-      "/home/grim/nix/hosts/amsterdam"
-      "/home/grim/nix/homelab"
-      "/home/grim/tactical-messaging"
-      "/home/grim/nix"
-    ];
   };
 in
 {
-  options.host.dev.ai.agy.enable =
-    lib.mkEnableOption "Enable Antigravity CLI (agy) configuration";
+  options.host.dev.ai.agy.enable = lib.mkEnableOption "Enable Antigravity CLI (agy) configuration";
 
   config = lib.mkIf cfg.enable {
     host.home-manager.config = {
@@ -68,10 +58,9 @@ in
           ".gemini/antigravity-cli/settings.json".text = builtins.toJSON agySettings;
           ".gemini/config/settings.json".text = builtins.toJSON agySettings;
         };
-        packages =
-          with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-            antigravity-cli
-          ];
+        packages = with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+          antigravity-cli
+        ];
       };
     };
   };

@@ -1,61 +1,11 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
   ...
 }:
 let
   cfg = config.host.dev.tools;
-  agySettings = {
-    allowNonWorkspaceAccess = true;
-    colorScheme = "dark";
-    enableTelemetry = false;
-    permissions = {
-      allow = [
-        "command(file)"
-        "command(ls)"
-        "command(git status)"
-        "command(git diff)"
-        "command(git add)"
-        "command(git commit)"
-        "command(git log)"
-        "command(git checkout)"
-        "command(git stash)"
-        "command(git branch)"
-        "command(git pull)"
-        "command(journalctl -n 50)"
-        "command(systemctl status)"
-        "command(head)"
-        "command(grep)"
-        "command(rg)"
-        "command(find)"
-        "command(fd)"
-        "command(sed)"
-        "command(sd)"
-        "command(nix-instantiate)"
-        "command(nix eval)"
-        "command(nix build)"
-        "command(podman run)"
-        "command(podman images)"
-        "command(podman exec)"
-        "command(podman build)"
-        "command(docker run)"
-        "command(docker images)"
-        "command(docker exec)"
-        "command(docker build)"
-      ];
-    };
-    trustedWorkspaces = [
-      "/home/grim/sparta"
-      "/home/grim/nix/config"
-      "/home/grim/nix/hosts/newyork"
-      "/home/grim/nix/hosts/amsterdam"
-      "/home/grim/nix/homelab"
-      "/home/grim/tactical-messaging"
-      "/home/grim/nix"
-    ];
-  };
 in
 {
   options.host.dev.tools.enable = lib.mkEnableOption "Enable development tools";
@@ -76,62 +26,53 @@ in
 
     host.home-manager.config = {
       home = {
-        file = {
-          ".config/direnv/direnvrc".text = ''
-            # Place all direnv layouts in the cache directory. This fixes various
-            # problems with the `.direnv` directory being scanned when placed
-            # in a repo
-            direnv_layout_dir() {
-              echo "$HOME/.cache/direnv/layouts/$(basename "$PWD")"
-            }
-          '';
-          ".gemini/antigravity-cli/settings.json".text = builtins.toJSON agySettings;
-          ".gemini/config/settings.json".text = builtins.toJSON agySettings;
-        };
-        packages =
-          with pkgs;
-          [
-            binwalk
+        file.".config/direnv/direnvrc".text = ''
+          # Place all direnv layouts in the cache directory. This fixes various
+          # problems with the `.direnv` directory being scanned when placed
+          # in a repo
+          direnv_layout_dir() {
+            echo "$HOME/.cache/direnv/layouts/$(basename "$PWD")"
+          }
+        '';
+        packages = with pkgs; [
+          binwalk
 
-            # Terminal based bitwise calculator in curses
-            # https://github.com/mellowcandle/bitwise
-            bitwise
+          # Terminal based bitwise calculator in curses
+          # https://github.com/mellowcandle/bitwise
+          bitwise
 
-            cmake # Cross-platform, open-source build system generator
+          cmake # Cross-platform, open-source build system generator
 
-            # Command line tool for keeping track of what you’re doing and tracking what you’ve done
-            # https://github.com/ttscoff/doing/
-            doing
+          # Command line tool for keeping track of what you’re doing and tracking what you’ve done
+          # https://github.com/ttscoff/doing/
+          doing
 
-            dos2unix # Convert text files with DOS or Mac line breaks to Unix line breaks and vice versa
-            mdbook # Create books from MarkDown
+          dos2unix # Convert text files with DOS or Mac line breaks to Unix line breaks and vice versa
+          mdbook # Create books from MarkDown
 
-            # Preview GitHub README.md files locally before committing them.
-            # https://github.com/joeyespo/grip
-            grip
+          # Preview GitHub README.md files locally before committing them.
+          # https://github.com/joeyespo/grip
+          grip
 
-            # Modular visual interface for GDB in Python
-            # https://github.com/cyrus-and/gdb-dashboard
-            gdb-dashboard
+          # Modular visual interface for GDB in Python
+          # https://github.com/cyrus-and/gdb-dashboard
+          gdb-dashboard
 
-            nodejs
+          nodejs
 
-            pnpm # Fast, disk space efficient package manager for JavaScript
-            ripsecrets # Command-line tool to prevent committing secret keys into your source code
+          pnpm # Fast, disk space efficient package manager for JavaScript
+          ripsecrets # Command-line tool to prevent committing secret keys into your source code
 
-            # A very fast accurate code counter with complexity calculations
-            # https://github.com/boyter/scc
-            scc
+          # A very fast accurate code counter with complexity calculations
+          # https://github.com/boyter/scc
+          scc
 
-            # Count your code, quickly
-            # https://github.com/XAMPPRocky/tokei
-            tokei
+          # Count your code, quickly
+          # https://github.com/XAMPPRocky/tokei
+          tokei
 
-            xxd
-          ]
-          ++ (with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-            antigravity-cli
-          ]);
+          xxd
+        ];
 
         shellAliases =
           let

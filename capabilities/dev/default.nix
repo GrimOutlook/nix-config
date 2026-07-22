@@ -20,6 +20,7 @@ in
     in
     lib.mkIf cfg.enable (
       lib.mkMerge (enableAll [
+        "ai"
         "git"
         "github-cli"
         "diff"

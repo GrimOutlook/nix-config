@@ -16,7 +16,7 @@ in
         enable = true;
 
         settings = {
-          PermitRootLogin = "prohibit-password";
+          PermitRootLogin = "no";
           PasswordAuthentication = false;
           KbdInteractiveAuthentication = false;
         };
@@ -40,7 +40,6 @@ in
         ];
       in
       {
-        root.openssh.authorizedKeys.keys = keys;
         ${owner}.openssh.authorizedKeys.keys = keys;
       };
   };

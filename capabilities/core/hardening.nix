@@ -176,7 +176,9 @@ in
       "freevxfs"
       "f2fs"
       "hfs"
+      "hfsplus"
       "hpfs"
+      "jffs2"
       "jfs"
       "minix"
       "nilfs2"
@@ -186,6 +188,10 @@ in
       "qnx6"
       "sysv"
       "ufs"
+
+      # Rarely-used network protocols with a history of kernel vulnerabilities
+      "dccp"
+      "sctp"
 
       # Fixes CVE-2026-31431 -> CopyFail
       "algif_aead"
@@ -212,11 +218,33 @@ in
       # Hide kptrs even for processes with CAP_SYSLOG
       "kernel.kptr_restrict" = "2";
 
+      # Restrict dmesg to processes with CAP_SYSLOG
+      "kernel.dmesg_restrict" = true;
+
+      # Only allow tracing/attaching to direct child processes (ptrace_scope
+      # 1). CAP_SYS_PTRACE (i.e. sudo) still bypasses this.
+      "kernel.yama.ptrace_scope" = "1";
+
       # Disable bpf() JIT (to eliminate spray attacks)
       "net.core.bpf_jit_enable" = false;
 
+      # Require CAP_SYS_ADMIN/CAP_BPF to load BPF programs
+      "kernel.unprivileged_bpf_disabled" = true;
+
       # Disable ftrace debugging
       "kernel.ftrace_enabled" = false;
+
+      # Mitigate SYN flood DoS attacks (kernel default, set explicitly)
+      "net.ipv4.tcp_syncookies" = true;
+
+      # Disable source-routed packets, which can be used to bypass network
+      # security controls (kernel default, set explicitly)
+      "net.ipv4.conf.all.accept_source_route" = false;
+      "net.ipv4.conf.default.accept_source_route" = false;
+
+      # Ignore bogus ICMP error responses to reduce log noise (kernel default,
+      # set explicitly)
+      "net.ipv4.icmp_ignore_bogus_error_responses" = true;
 
       # Enable strict reverse path filtering (that is, do not attempt to route
       # packets that "obviously" do not belong to the iface's network; dropped
@@ -244,6 +272,14 @@ in
     };
 
     security.forcePageTableIsolation = true;
+
+    # Confine processes with a default-deny MAC policy where a profile
+    # exists, and kill any process that should be confined but is running
+    # unconfined (e.g. started before AppArmor was up).
+    security.apparmor = {
+      enable = true;
+      killUnconfinedConfinables = true;
+    };
 
     # WARN: Apparently some programs won't work with the allocator. Maybe try
     # later and see if any issues are noticed.

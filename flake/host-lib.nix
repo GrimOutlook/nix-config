@@ -1,7 +1,9 @@
 { self, inputs, ... }:
 let
   # Build a numtide devshell with a `deploy` command that runs
-  # `nh os switch . -H <hostname>`. Built from *this* flake's
+  # `nh os switch . -H <hostname>`. When run on a machine whose own hostname
+  # differs from the target, it also passes `--target-host root@<hostname>`
+  # so the build is activated remotely. Built from *this* flake's
   # nixpkgs/devshell inputs, so downstream flakes need no extra inputs.
   mkDeployShell =
     {
@@ -20,8 +22,15 @@ let
       commands = [
         {
           name = "deploy";
-          help = "nh os switch this host (${hostname})";
-          command = ''nh os switch . -H ${hostname} "$@"'';
+          help = "nh os switch this host (${hostname}); remote-targets if run elsewhere";
+          command = ''
+            target="${hostname}"
+            if [ "$(uname -n)" = "$target" ]; then
+              nh os switch . -H "$target" "$@"
+            else
+              nh os switch . -H "$target" --target-host "root@$target" "$@"
+            fi
+          '';
         }
       ]
       ++ commands;

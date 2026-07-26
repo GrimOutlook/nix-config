@@ -26,8 +26,10 @@ let
           command = ''
             target="${hostname}"
             if [ "$(uname -n)" = "$target" ]; then
+              echo "=> Deploying to local host: $target"
               nh os switch . -H "$target" "$@"
             else
+              echo "=> Deploying to remote host: root@$target"
               nh os switch . -H "$target" --target-host "root@$target" "$@"
             fi
           '';

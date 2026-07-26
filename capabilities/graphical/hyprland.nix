@@ -76,7 +76,6 @@ in
           env = [
             "XCURSOR_SIZE,24"
             "HYPRCURSOR_SIZE,24"
-            "AQ_DRM_DEVICES,/dev/dri/by-path/pci-0000:00:02.0-card"
           ];
 
           #####################

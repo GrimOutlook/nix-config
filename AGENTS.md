@@ -100,13 +100,6 @@ upstream modules (`nixos-wsl`, `microvm`) as flake inputs.
 - A commented-out block in `git-hooks` inputs in `flake.nix` is intentional
   ("inherited... determine if I actually want these") — not dead code to
   clean up without asking.
-- Two hosts in `nix-hosts` (`belfast`, `taipei`) still import
-  `nix-config.modules.flake.host-info` and
-  `(nix-config + "/flakes/systems.nix")` — neither exists in the current
-  `flake/` layout (`flakes/` vs `flake/`, no `host-info` module). These
-  flakes likely predate a restructure here and may not evaluate; worth
-  flagging rather than silently "fixing" since the intended shape of
-  `host-info` isn't obvious from this repo alone.
 - `core/ssh-server.nix` gates root SSH to **local networks only**: global
   `PermitRootLogin no` + a `Match Address` block (RFC1918 + loopback) that
   re-enables it key-only, `AllowUsers = [ owner "root" ]`, and root gets the

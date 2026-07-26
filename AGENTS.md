@@ -107,3 +107,13 @@ upstream modules (`nixos-wsl`, `microvm`) as flake inputs.
   flakes likely predate a restructure here and may not evaluate; worth
   flagging rather than silently "fixing" since the intended shape of
   `host-info` isn't obvious from this repo alone.
+- `core/ssh-server.nix` gates root SSH to **local networks only**: global
+  `PermitRootLogin no` + a `Match Address` block (RFC1918 + loopback) that
+  re-enables it key-only, `AllowUsers = [ owner "root" ]`, and root gets the
+  owner's authorized keys. The `Match` lives in `services.openssh.extraConfig`
+  via `lib.mkAfter` because a `Match` block must be the last thing in
+  `sshd_config`. Verify changes with `sshd -T -C addr=<ip>,user=root,...`.
+- This repo is consumed as a flake input, so any change here reaches hosts only
+  after it's pushed **and** each host runs `just update-homelab-flakes
+  nix-config` (updates the host's `flake.lock` + redeploys) — a local commit +
+  superproject pointer bump alone changes nothing on a host.

@@ -177,6 +177,10 @@ in
             disable_hyprland_logo = false; # If true disables the random hyprland logo / anime girl background. :(
           };
 
+          cursor = {
+            no_hardware_cursors = false;
+          };
+
           #############
           ### INPUT ###
           #############
@@ -193,8 +197,21 @@ in
             touchpad = {
               scroll_factor = 0.8;
               natural_scroll = true;
+              tap-and-drag = false;
+              disable_while_typing = false;
             };
           };
+
+          device = [
+            {
+              name = "ps/2-generic-mouse";
+              enabled = false;
+            }
+            {
+              name = "dll0945:00-04f3:311c-mouse";
+              enabled = false;
+            }
+          ];
 
           # https://wiki.hyprland.org/Configuring/Variables/#gestures
           gesture = [

@@ -61,6 +61,7 @@ let
         "sort"
         "strings"
         "systemctl"
+        "tail"
         "tee"
         "uniq"
         "wc"

@@ -11,6 +11,11 @@ let
     allowNonWorkspaceAccess = true;
     colorScheme = "dark";
     enableTelemetry = false;
+    statusLine = {
+      enabled = true;
+      type = "command";
+      command = "/home/grim/.gemini/antigravity-cli/statusline.sh";
+    };
     ui = {
       showTokenUsage = true;
     };

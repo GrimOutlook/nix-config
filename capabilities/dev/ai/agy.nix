@@ -24,6 +24,8 @@ let
         "awk"
         "cat"
         "cd"
+        "chmod"
+        "chown"
         "docker build"
         "docker exec"
         "docker images"

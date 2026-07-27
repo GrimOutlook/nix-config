@@ -60,6 +60,7 @@ let
         "tee"
         "uniq"
         "wc"
+        "which"
       ];
     };
   };

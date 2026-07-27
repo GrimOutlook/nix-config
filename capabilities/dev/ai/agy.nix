@@ -22,6 +22,7 @@ let
     permissions = {
       allow = builtins.map (cmd: "command(${cmd})") [
         "awk"
+        "binwalk"
         "cat"
         "cd"
         "chmod"
@@ -43,6 +44,7 @@ let
         "head"
         "journalctl"
         "ls"
+        "mkdir"
         "nix build"
         "nix eval"
         "nix flake check"
@@ -53,9 +55,11 @@ let
         "podman images"
         "podman run"
         "rg"
+        "rmdir"
         "sd"
         "sed"
         "sort"
+        "strings"
         "systemctl"
         "tee"
         "uniq"

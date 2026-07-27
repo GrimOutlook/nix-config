@@ -9,7 +9,7 @@ in
 {
   imports = [
     ./agy.nix
-    ./claude.nix
+    ./claude/default.nix
     ./opencode.nix
   ];
 

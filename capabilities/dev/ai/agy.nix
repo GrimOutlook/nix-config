@@ -106,11 +106,28 @@ in
               if model_name:
                   parts.append(f"\033[1;33mModel:\033[0m {model_name}")
 
-              # 5-hour Session Quota Remaining percentage
-              session_rem = None
-              rl = data.get("rate_limits") or data.get("quota") or {}
+              # Quota Extraction
+              quota = data.get("quota") or {}
+              rl = data.get("rate_limits") or {}
 
-              if isinstance(rl, dict):
+              is_3p = False
+              if model_name and any(x in str(model_name).lower() for x in ["claude", "sonnet", "haiku", "opus", "codestral", "3p"]):
+                  is_3p = True
+
+              # 5-hour Session Quota Remaining percentage
+              sess_key = "3p-5h" if is_3p else "gemini-5h"
+              sess_obj = quota.get(sess_key) or quota.get("gemini-5h") or quota.get("3p-5h") or {}
+              session_rem = None
+
+              if isinstance(sess_obj, dict):
+                  if "remaining_fraction" in sess_obj:
+                      session_rem = float(sess_obj["remaining_fraction"]) * 100.0
+                  elif "remaining_percentage" in sess_obj:
+                      session_rem = float(sess_obj["remaining_percentage"])
+                  elif "used_percentage" in sess_obj:
+                      session_rem = 100.0 - float(sess_obj["used_percentage"])
+
+              if session_rem is None and isinstance(rl, dict):
                   sess_rl = rl.get("five_hour") or rl.get("session") or {}
                   if isinstance(sess_rl, dict):
                       if "remaining_percentage" in sess_rl:
@@ -119,8 +136,19 @@ in
                           session_rem = 100.0 - float(sess_rl["used_percentage"])
 
               # Weekly Quota Remaining percentage
+              wk_key = "3p-weekly" if is_3p else "gemini-weekly"
+              wk_obj = quota.get(wk_key) or quota.get("gemini-weekly") or quota.get("3p-weekly") or {}
               weekly_rem = None
-              if isinstance(rl, dict):
+
+              if isinstance(wk_obj, dict):
+                  if "remaining_fraction" in wk_obj:
+                      weekly_rem = float(wk_obj["remaining_fraction"]) * 100.0
+                  elif "remaining_percentage" in wk_obj:
+                      weekly_rem = float(wk_obj["remaining_percentage"])
+                  elif "used_percentage" in wk_obj:
+                      weekly_rem = 100.0 - float(wk_obj["used_percentage"])
+
+              if weekly_rem is None and isinstance(rl, dict):
                   wk_rl = rl.get("weekly") or rl.get("seven_day") or {}
                   if isinstance(wk_rl, dict):
                       if "remaining_percentage" in wk_rl:

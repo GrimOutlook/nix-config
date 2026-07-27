@@ -79,7 +79,7 @@ in
             text = ''
               #!/usr/bin/env bash
               # Antigravity CLI (agy) Statusline Script
-              # Formats current model, effort level, session and weekly token usage percentages from agy JSON payload stdin
+              # Formats current model, session and weekly token usage percentages from agy JSON payload stdin
 
               python3 -c '
               import sys, json
@@ -90,28 +90,21 @@ in
               except Exception:
                   data = {}
 
-              # Model & Effort extraction
+              # Model extraction
               model_name = None
-              effort = None
 
               model_obj = data.get("model")
               if isinstance(model_obj, dict):
                   model_name = model_obj.get("display_name") or model_obj.get("name") or model_obj.get("id")
-                  effort = model_obj.get("effort") or model_obj.get("reasoning_effort")
               elif isinstance(model_obj, str):
                   model_name = model_obj
 
               if not model_name:
                   model_name = data.get("model_name") or data.get("current_model")
 
-              if not effort:
-                  effort = data.get("effort") or data.get("reasoning_effort") or data.get("thinking_effort")
-
               parts = []
               if model_name:
                   parts.append(f"\033[1;33mModel:\033[0m {model_name}")
-              if effort:
-                  parts.append(f"\033[1;32mEffort:\033[0m {effort}")
 
               # Session percentage
               session_pct = None

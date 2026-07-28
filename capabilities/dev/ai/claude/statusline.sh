@@ -66,32 +66,26 @@ segment() {
     "$reset_str"
 }
 
-used=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
+# Every percentage falls back to 0 so the meters stay visible when Claude Code
+# leaves the data out: context_window.used_percentage is null until the first
+# message, and rate_limits is omitted entirely until the API returns both the
+# utilization and reset headers.
+used=$(echo "$input" | jq -r '.context_window.used_percentage // 0')
 
-five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
+five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // 0')
 five_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
 
-week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
+week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // 0')
 week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
 
-parts=()
+parts=(
+  "$(segment "$label_ctx" "Ctx" "$(printf '%.0f' "$used")" "")"
+  "$(segment "$label_ses" "Session" "$(printf '%.0f' "$five_pct")" "$five_reset")"
+  "$(segment "$label_wk" "Week" "$(printf '%.0f' "$week_pct")" "$week_reset")"
+)
 
-if [ -n "$used" ]; then
-  parts+=("$(segment "$label_ctx" "Ctx" "$(printf '%.0f' "$used")" "")")
-fi
-
-if [ -n "$five_pct" ]; then
-  parts+=("$(segment "$label_ses" "Session" "$(printf '%.0f' "$five_pct")" "$five_reset")")
-fi
-
-if [ -n "$week_pct" ]; then
-  parts+=("$(segment "$label_wk" "Week" "$(printf '%.0f' "$week_pct")" "$week_reset")")
-fi
-
-if [ ${#parts[@]} -gt 0 ]; then
-  out="${parts[0]}"
-  for p in "${parts[@]:1}"; do
-    out="${out} ${dim}│${reset} ${p}"
-  done
-  echo "$out"
-fi
+out="${parts[0]}"
+for p in "${parts[@]:1}"; do
+  out="${out} ${dim}│${reset} ${p}"
+done
+echo "$out"

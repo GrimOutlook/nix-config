@@ -38,11 +38,20 @@ bar() {
   printf '%s' "$out"
 }
 
+# "-" stands in for a window the payload has not reported a reset time for, so
+# the suffix keeps its place rather than collapsing.
 fmt_resets() {
   local resets_at="$1" now diff mins hrs
+  if [ "$resets_at" = "-" ]; then
+    printf ' %s(--)%s' "$dim" "$reset"
+    return
+  fi
   now=$(date +%s)
   diff=$((resets_at - now))
-  [ "$diff" -gt 0 ] || return
+  if [ "$diff" -le 0 ]; then
+    printf ' %s(--)%s' "$dim" "$reset"
+    return
+  fi
   mins=$(( diff / 60 ))
   hrs=$(( mins / 60 ))
   mins=$(( mins % 60 ))
@@ -73,10 +82,10 @@ segment() {
 used=$(echo "$input" | jq -r '.context_window.used_percentage // 0')
 
 five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // 0')
-five_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
+five_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // "-"')
 
 week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // 0')
-week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
+week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // "-"')
 
 parts=(
   "$(segment "$label_ctx" "Ctx" "$(printf '%.0f' "$used")" "")"

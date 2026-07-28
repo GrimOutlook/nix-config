@@ -47,9 +47,9 @@ fmt_resets() {
   hrs=$(( mins / 60 ))
   mins=$(( mins % 60 ))
   if [ "$hrs" -gt 0 ]; then
-    printf ' %s(resets %dh%dm)%s' "$dim" "$hrs" "$mins" "$reset"
+    printf ' %s(%dh%dm)%s' "$dim" "$hrs" "$mins" "$reset"
   else
-    printf ' %s(resets %dm)%s' "$dim" "$mins" "$reset"
+    printf ' %s(%dm)%s' "$dim" "$mins" "$reset"
   fi
 }
 

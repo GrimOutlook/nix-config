@@ -17,7 +17,6 @@ in
     ];
 
     environment.shellAliases = {
-      j = "just";
       nix-just-init =
         let
           url = "https://raw.githubusercontent.com/GrimOutlook/nix-config/main/just/default.just";
@@ -28,8 +27,10 @@ in
     programs.fish.interactiveShellInit = ''
       just --completions fish | source
 
-      # Reuse `just`'s completions for the alias we made for it (`j`).
-      complete -c j -w just
+      # Define `j` as a function so fish completions work (abbr/alias won't).
+      function j --wraps just
+        just $argv
+      end
     '';
   };
 }

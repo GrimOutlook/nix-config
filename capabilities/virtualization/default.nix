@@ -29,6 +29,10 @@ in
       # A tool for managing OCI containers and pods.
       # https://github.com/containers/podman
       podman
+
+      # An implementation of Docker Compose spec using Podman
+      # https://github.com/containers/podman-compose
+      podman-compose
     ];
 
     virtualisation = {

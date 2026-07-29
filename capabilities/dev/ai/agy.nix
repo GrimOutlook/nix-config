@@ -29,6 +29,7 @@ let
         "chown"
         "cp"
         "curl"
+        "devenv"
         "df"
         "diff"
         "docker build"
@@ -37,6 +38,7 @@ let
         "docker run"
         "du"
         "echo"
+        "export"
         "fd"
         "file"
         "find"
@@ -45,6 +47,7 @@ let
         "gh repo"
         "gh search"
         "git"
+        "go vet"
         "grep"
         "head"
         "journalctl"
@@ -52,6 +55,7 @@ let
         "just"
         "kill"
         "ls"
+        "mage"
         "mkdir"
         "mv"
         "nix build"
@@ -85,6 +89,9 @@ let
         "which"
         "xargs"
         "zip"
+      ];
+      deny = builtins.map (cmd: "command(${cmd})") [
+        "rm -rf"
       ];
     };
   };

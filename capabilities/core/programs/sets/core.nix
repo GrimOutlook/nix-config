@@ -65,6 +65,7 @@ in
       # Utils
       file
       git
+      kmod # Tools for managing Linux kernel modules
       nfs-utils # Linux user-space NFS utilities
       tree
       wget

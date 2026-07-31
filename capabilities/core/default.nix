@@ -29,6 +29,7 @@ in
         "custom-scripts"
         "default-programs"
         "home-manager"
+        "journald"
         "localization"
         "networking"
         "nix-index-database"

@@ -6,6 +6,8 @@
 }:
 let
   cfg = config.host.screenshot;
+  # Relative to the owner's home directory.
+  screenshotDir = "Pictures/Screenshots";
 in
 {
   options.host.screenshot.enable = lib.mkEnableOption "Enable screenshot tools";
@@ -20,6 +22,9 @@ in
       home.packages = with pkgs; [
         grim
       ];
+      # Flameshot refuses to start (and segfaults on the resulting error dialog)
+      # if `savePath` doesn't already exist, so make sure the directory is there.
+      home.file."${screenshotDir}/.keep".text = "";
       services.flameshot = {
         enable = true;
         settings = {
@@ -28,7 +33,7 @@ in
             # More settings may be found on the Flameshot Github
 
             # Save Path
-            savePath = "/home/${config.host.owner.username}/Pictures/Screenshots";
+            savePath = "/home/${config.host.owner.username}/${screenshotDir}";
             # Tray
             disabledTrayIcon = true;
             # Greeting message

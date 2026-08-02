@@ -25,6 +25,7 @@ in
           type = "command";
           command = "/etc/claude-code/statusline.sh";
         };
+        permissions.defaultMode = "auto";
       };
     };
 

@@ -107,6 +107,9 @@ let
       "agent.action.approve" = [
         "ctrl+y"
       ];
+      "subagent.approve_fast" = [
+        "alt+y"
+      ];
     };
 in
 {

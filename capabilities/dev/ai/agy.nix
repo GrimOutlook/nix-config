@@ -121,7 +121,7 @@ in
             force = true;
           };
           ".gemini/antigravity-cli/keybindings.json" = {
-            text = builtins.toJSON { keybindings = agyKeybindings; };
+            text = builtins.toJSON agyKeybindings;
             force = true;
           };
           ".gemini/config/settings.json" = {
@@ -129,7 +129,7 @@ in
             force = true;
           };
           ".gemini/config/keybindings.json" = {
-            text = builtins.toJSON { keybindings = agyKeybindings; };
+            text = builtins.toJSON agyKeybindings;
             force = true;
           };
           ".gemini/antigravity-cli/statusline.sh" = {

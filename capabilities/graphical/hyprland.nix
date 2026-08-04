@@ -241,7 +241,7 @@ in
             "$mainMod, Tab, hy3:makegroup, tab, toggle, ephemeral"
             "$mainMod SHIFT, Tab, hy3:makegroup, opposite, toggle, ephemeral"
 
-            ", Print, exec, grim -g \"$(slurp -d)\" - | wl-copy"
+            # Print/$mainMod+Print are bound by the screenshot capability.
 
             # Move window location
             "$mainMod SHIFT, h, hy3:movewindow, l"

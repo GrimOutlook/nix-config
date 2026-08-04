@@ -14,7 +14,12 @@ in
     nix.settings = {
       substituters = [ "https://raspberry-pi-nix.cachix.org" ];
       trusted-public-keys = [
-        "raspberry-pi-nix.cachix.org-1:WmV2rdSangxW0KTFjanUjs096+7CwhvL32Ggca9M4w="
+        # Verified against https://raspberry-pi-nix.cachix.org/api/v1/cache/raspberry-pi-nix.
+        # The previous value here decoded to 31 bytes rather than the 32 an
+        # ed25519 key needs, so nix rejected the whole substituter list with
+        # "error: public key is not valid" -- which failed every build on a
+        # raspberry-pi host, not just fetches from this cache.
+        "raspberry-pi-nix.cachix.org-1:WmV2rdSangxW0rZjY/tBvBDSaNFQ3DyEQsVw8EvHn9o="
       ];
     };
   };

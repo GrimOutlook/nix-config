@@ -108,7 +108,7 @@ let
         "ctrl+y"
       ];
       "subagent.approve_fast" = [
-        "alt+y"
+        "ctrl+y"
       ];
     };
 in

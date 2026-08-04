@@ -95,18 +95,19 @@ let
       ];
     };
   };
-  agyKeybindings = [
+  agyKeybindings =
     # Example: Unbind ctrl-k from its default action
     {
-      key = "ctrl+k";
-      command = "-agent.action.approve"; # Unbind default
-    }
-    # Example: Rebind to ctrl-y
-    {
-      key = "ctrl+y";
-      command = "agent.action.approve";
-    }
-  ];
+      # Unbind default
+      "-agent.action.approve" = [
+        "ctrl+k"
+      ];
+
+      # Example: Rebind to ctrl-y
+      "agent.action.approve" = [
+        "ctrl+y"
+      ];
+    };
 in
 {
   options.host.dev.ai.agy.enable = lib.mkEnableOption "Enable Antigravity CLI (agy) configuration";

@@ -34,6 +34,13 @@ let
             fi
           '';
         }
+        {
+          name = "deploy-update";
+          help = "Deploy this host after updating inputs";
+          command = ''
+            nix flake update && deploy "$@"
+          '';
+        }
       ]
       ++ commands;
     };
@@ -73,7 +80,12 @@ let
       };
 
       devShells.${system}.default = mkDeployShell {
-        inherit system hostname commands packages;
+        inherit
+          system
+          hostname
+          commands
+          packages
+          ;
       };
     };
 in

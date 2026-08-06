@@ -41,6 +41,13 @@ let
             nix flake update && deploy "$@"
           '';
         }
+        {
+          name = "commit-update";
+          help = "Commit the flake.lock update";
+          command = ''
+            git commit -m "chore: Update flake.lock" flake.lock
+          '';
+        }
       ]
       ++ commands;
     };

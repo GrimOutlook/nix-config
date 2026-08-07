@@ -6,6 +6,11 @@
 # pfetch is used as the interactive greeting instead of fish's default banner.
 set -g fish_greeting
 
+# Prevent fish from sending OSC escape queries (color palette, DA1, etc.) to
+# the terminal. Under WSL/ConPTY inside tmux, the asynchronous responses race
+# through pane switches and leak as visible garbage text.
+set -g fish_features no-query-terminal
+
 # Migrated from the previous bash setup's `shopt` options. Most of them have
 # no fish equivalent because fish already behaves this way (or better) out of
 # the box:

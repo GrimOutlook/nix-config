@@ -27,8 +27,10 @@ in
       # connected to the *session*, constrain window size to the maximum size of any
       # client connected to *that window*. Much more reasonable.
       aggressiveResize = true;
-      # Allows for faster key repetition
-      escapeTime = 50;
+      # Allows for faster key repetition. Values below ~100 can cause tmux to
+      # misparse multi-byte OSC responses (e.g. terminal color queries) as
+      # literal text, especially under WSL/ConPTY.
+      escapeTime = 100;
       # List of plugins to install.
       plugins = with pkgs.tmuxPlugins; [
         gruvbox

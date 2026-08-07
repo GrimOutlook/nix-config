@@ -30,6 +30,7 @@ in
         "default-programs"
         "home-manager"
         "journald"
+        "kernel"
         "localization"
         "networking"
         "nix-index-database"

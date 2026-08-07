@@ -8,7 +8,7 @@ let
 in
 {
   imports = [
-    ./agy.nix
+    ./agy/default.nix
     ./claude/default.nix
     ./opencode.nix
   ];

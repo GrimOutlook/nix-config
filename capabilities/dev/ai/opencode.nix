@@ -41,10 +41,12 @@ in
           text = builtins.toJSON cfg.settings;
           force = true;
         };
-        packages =
-          with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-            opencode
-          ];
+        packages = with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+          opencode
+        ];
+        shellAliases = {
+          "opencode-commit" = "opencode run 'Commit the changes in this repo'";
+        };
       };
     };
   };

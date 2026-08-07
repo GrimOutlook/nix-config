@@ -28,10 +28,14 @@ in
         permissions.defaultMode = "auto";
       };
     };
-
-    host.home-manager.config.home.packages =
-      with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+    host.home-manager.config.home = {
+      packages = with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
         claude-code
       ];
+
+      shellAliases = {
+        "claude-commit" = "claude -p 'Commit the changes in this repo'";
+      };
+    };
   };
 }

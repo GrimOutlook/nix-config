@@ -143,6 +143,9 @@ in
         packages = with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
           antigravity-cli
         ];
+        shellAliases = {
+          "agy-commit" = "agy -p 'Commit the changes in this repo'";
+        };
       };
     };
   };

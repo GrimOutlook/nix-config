@@ -4,19 +4,17 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.host.dev.ai.opencode;
-in
-{
+in {
   options.host.dev.ai.opencode = {
     enable = lib.mkEnableOption "Enable OpenCode CLI configuration";
 
     settings = lib.mkOption {
       type = lib.types.submodule {
-        freeformType = (pkgs.formats.json { }).type;
+        freeformType = (pkgs.formats.json {}).type;
       };
-      default = { };
+      default = {};
       description = "Settings for OpenCode CLI written to ~/.config/opencode/opencode.json";
     };
   };
@@ -24,7 +22,7 @@ in
   config = lib.mkIf cfg.enable {
     host.dev.ai.opencode.settings = {
       "$schema" = "https://opencode.ai/config.json";
-      disabled_providers = [ "opencode" ];
+      disabled_providers = ["opencode"];
       share = "disabled";
       mcp = {
         nixos = {
@@ -35,7 +33,16 @@ in
       };
     };
 
+    programs.fish.interactiveShellInit = ''
+      complete -c opencode -f -a "(opencode --get-yargs-completions (commandline -opc) (commandline -ct) | string match -v '\$0')"
+      complete -c opencode-commit -w opencode
+    '';
+
     host.home-manager.config = {
+      programs.fish.interactiveShellInit = ''
+        complete -c opencode -f -a "(opencode --get-yargs-completions (commandline -opc) (commandline -ct) | string match -v '\$0')"
+        complete -c opencode-commit -w opencode
+      '';
       home = {
         file.".config/opencode/opencode.json" = {
           text = builtins.toJSON cfg.settings;

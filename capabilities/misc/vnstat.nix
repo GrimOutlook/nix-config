@@ -22,6 +22,7 @@ let
     name = "vnstat-add-default-interface";
     runtimeInputs = [
       pkgs.iproute2
+      pkgs.gawk
       pkgs.vnstat
     ];
     text = ''

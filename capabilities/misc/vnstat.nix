@@ -45,12 +45,25 @@ let
   exportToTextfile = pkgs.writeShellApplication {
     name = "vnstat-prometheus-export";
     runtimeInputs = [
+      pkgs.iproute2
+      pkgs.gawk
       pkgs.vnstat
       pkgs.jq
     ];
     text = ''
+      # Restricted to the current default-route interface, same one
+      # `vnstat-add-default-interface` adds -- a host can have other
+      # interfaces in vnstat's own database too (newyork already tracks its
+      # LAN NIC as well as WAN, from before this module existed), and those
+      # would otherwise export a same-dated series that collides with this
+      # one once Grafana joins hour/day/month/year buckets by date.
+      iface=$(ip route show default | awk '{print $5; exit}')
+      if [ -z "$iface" ]; then
+        echo "no default route yet -- skipping export" >&2
+        exit 0
+      fi
       tmp="${textfileDir}/vnstat.prom.$$"
-      vnstat --json | jq -r '
+      vnstat --json -i "$iface" | jq -r '
         def pad2: if . < 10 then "0" + (. | tostring) else (. | tostring) end;
         def line(iface; period; date; rx; tx):
           "vnstat_rx_bytes{interface=\"\(iface)\",period=\"\(period)\",date=\"\(date)\"} \(rx)\nvnstat_tx_bytes{interface=\"\(iface)\",period=\"\(period)\",date=\"\(date)\"} \(tx)";

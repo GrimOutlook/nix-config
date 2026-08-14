@@ -28,6 +28,7 @@ in
         "agenix"
         "custom-scripts"
         "default-programs"
+        "hardening"
         "home-manager"
         "journald"
         "kernel"

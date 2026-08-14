@@ -14,11 +14,15 @@ in
       mutableUsers = false;
 
       users = {
-        root.isSystemUser = true;
+        root = {
+          isSystemUser = true;
+          hashedPassword = null;
+        };
 
         "${username}" = {
           isNormalUser = true;
           uid = 1000;
+          homeMode = "0750";
 
           group = "${username}";
 
@@ -26,16 +30,12 @@ in
 
           extraGroups = [
             "wheel"
-
-            # Enable ‘sudo’ for the user.
-            "sudo"
           ];
         };
       };
 
       # NOTE: This ensures these groups are created.
       groups.${username} = { };
-      groups.sudo = { };
     };
 
     nix.settings.trusted-users = [ "${username}" ];

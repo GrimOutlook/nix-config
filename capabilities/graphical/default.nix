@@ -19,6 +19,7 @@ in
       lib.mkMerge (enableAll [
         "boot-screen"
         "display-manager"
+        "firefox"
         "graphical-programs"
         "hyprland"
         "hyprpanel"

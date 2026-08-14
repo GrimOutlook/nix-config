@@ -23,9 +23,18 @@ in
   options.host.ssh-server.enable = lib.mkEnableOption "Enable SSH server configurations";
   config = lib.mkIf cfg.enable {
     services = {
-      fail2ban.enable = true;
+      fail2ban = {
+        enable = true;
+        bantime-increment = {
+          enable = true;
+          maxtime = "48h";
+          factor = "2";
+        };
+      };
       openssh = {
         enable = true;
+        authorizedKeysInHomedir = false;
+        allowSFTP = false;
 
         # Root SSH is disabled globally (below) but re-enabled, key-only, for
         # connections from local/private networks via the Match block in
@@ -39,10 +48,12 @@ in
           PermitRootLogin = "no";
           PasswordAuthentication = false;
           KbdInteractiveAuthentication = false;
+          X11Forwarding = false;
+          AllowAgentForwarding = false;
 
-          # Disconnect an unresponsive client after ~10 minutes.
-          ClientAliveInterval = 300;
-          ClientAliveCountMax = 2;
+          # Disconnect an unattended/idle session after 10 minutes (600s * 1).
+          ClientAliveInterval = 600;
+          ClientAliveCountMax = 1;
 
           # Drop the connection after a handful of failed auth attempts
           # instead of the default 6, to slow down brute-forcing.
@@ -59,14 +70,18 @@ in
             "root"
           ];
 
-          # Modern AEAD-only algorithms. Older ciphers/MACs/kex are dropped
-          # rather than kept around for compatibility.
+          # Modern CTR and AEAD-only algorithms and SHA-2 MACs.
           Ciphers = [
+            "aes256-ctr"
+            "aes192-ctr"
+            "aes128-ctr"
             "chacha20-poly1305@openssh.com"
             "aes256-gcm@openssh.com"
             "aes128-gcm@openssh.com"
           ];
           Macs = [
+            "hmac-sha2-512"
+            "hmac-sha2-256"
             "hmac-sha2-512-etm@openssh.com"
             "hmac-sha2-256-etm@openssh.com"
           ];

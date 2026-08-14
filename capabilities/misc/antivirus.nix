@@ -15,7 +15,14 @@ in
       clamav
     ];
     services.clamav = {
-      daemon.enable = true;
+      daemon = {
+        enable = true;
+        settings = {
+          OnAccessIncludePath = [ "/home" ];
+          OnAccessPrevention = true;
+          OnAccessExcludeUname = "clamav";
+        };
+      };
       scanner.enable = true;
       updater.enable = true;
     };

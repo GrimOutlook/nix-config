@@ -39,6 +39,11 @@ in
       oci-containers.backend = "podman";
       podman = {
         enable = true;
+        autoPrune = {
+          enable = true;
+          dates = "daily";
+          flags = [ "--all" "--force" ];
+        };
         defaultNetwork.settings = {
           default-address-pools = [
             {

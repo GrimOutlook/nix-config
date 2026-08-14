@@ -42,6 +42,9 @@ in
     };
 
     nix = {
+      # Disable legacy channel updates (flakes only)
+      channel.enable = lib.mkForce false;
+
       settings = {
         experimental-features = "nix-command flakes";
 

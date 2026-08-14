@@ -21,9 +21,6 @@ in
       # IM
       discord
 
-      # Browser
-      firefox
-
       # Video
       mpv
       vlc

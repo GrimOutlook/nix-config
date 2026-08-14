@@ -11,11 +11,14 @@ in
 
   config = lib.mkIf cfg.enable {
     services.journald.extraConfig = ''
-      # Discard journal entries older than a month. Without this the only bound
-      # is the size cap systemd infers from the filesystem (10% of it), which on
-      # a small root partition still lets the journal grow into the gigabytes
-      # before anything is dropped.
-      MaxRetentionSec=1month
+      # Enforce strict journald storage limits, retention durations, and rate limits to mitigate
+      # log-filling denial-of-service attacks.
+      SystemMaxUse=100M
+      RuntimeMaxUse=100M
+      MaxRetentionSec=1d
+      MaxLevelStore=info
+      RateLimitIntervalSec=30s
+      RateLimitBurst=10000
     '';
   };
 }

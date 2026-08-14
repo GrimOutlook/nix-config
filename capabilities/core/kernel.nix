@@ -11,6 +11,12 @@ in
   options.host.kernel.enable = lib.mkEnableOption "Enable default kernel configurations";
 
   config = lib.mkIf cfg.enable {
+    # Enable CPU microcode security updates for Intel and AMD processors,
+    # along with redistributable hardware firmware.
+    hardware.cpu.intel.updateMicrocode = lib.mkDefault true;
+    hardware.cpu.amd.updateMicrocode = lib.mkDefault true;
+    hardware.enableRedistributableFirmware = lib.mkDefault true;
+
     # Track the newest packaged kernel instead of the release-default one,
     # which otherwise lags behind by a major version or more. `mkDefault` so
     # host.hardening (custom kernel build) and any other host-specific

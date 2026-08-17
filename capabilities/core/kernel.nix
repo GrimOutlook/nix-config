@@ -12,9 +12,13 @@ in
 
   config = lib.mkIf cfg.enable {
     # Enable CPU microcode security updates for Intel and AMD processors,
-    # along with redistributable hardware firmware.
-    hardware.cpu.intel.updateMicrocode = lib.mkDefault true;
-    hardware.cpu.amd.updateMicrocode = lib.mkDefault true;
+    # along with redistributable hardware firmware. Intel/AMD microcode
+    # packages are unavailable outside x86, so gate them by platform --
+    # otherwise evaluation fails outright on aarch64 hosts (e.g. dubai).
+    hardware.cpu.intel.updateMicrocode = lib.mkIf pkgs.stdenv.hostPlatform.isx86 (
+      lib.mkDefault true
+    );
+    hardware.cpu.amd.updateMicrocode = lib.mkIf pkgs.stdenv.hostPlatform.isx86 (lib.mkDefault true);
     hardware.enableRedistributableFirmware = lib.mkDefault true;
 
     # Track the newest packaged kernel instead of the release-default one,

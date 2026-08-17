@@ -11,6 +11,8 @@ in
 
   config = lib.mkIf cfg.enable {
     programs.firefox = {
+      enable = true;
+
       policies = {
         # Performance and security basics
         AppAutoUpdate = false;

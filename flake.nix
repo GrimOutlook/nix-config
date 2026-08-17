@@ -34,6 +34,28 @@
 
     import-tree.url = "github:vic/import-tree";
 
+    # Hardened kernel sources, used by `capabilities/core/hardening.nix`.
+    # Tracked against upstream's per-minor-version branch (rather than a
+    # release tag) so `nix flake update` alone picks up new hardened patch
+    # releases for that kernel line -- bump the branch by hand when upstream
+    # cuts a new minor version.
+    linux-hardened = {
+      url = "github:anthraxx/linux-hardened/7.1";
+      flake = false;
+    };
+
+    # Hardened kernel for ZFS hosts, pinned to the newest hardened release
+    # still on a kernel line that nixpkgs' `zfs`/`zfsUnstable` support
+    # (`kernelMaxSupportedMajorMinor`, currently 7.0). Upstream's 7.0.x line
+    # is EOL and no longer a rolling branch, so this tracks a tag rather than
+    # a branch -- repin to a release on a newer line by hand once nixpkgs'
+    # zfs raises its supported ceiling (capabilities/core/hardening.nix will
+    # fail loudly via an assertion if this ever falls out of sync).
+    linux-hardened-zfs = {
+      url = "github:anthraxx/linux-hardened/v7.0.14-hardened1";
+      flake = false;
+    };
+
     llm-agents.url = "github:numtide/llm-agents.nix";
 
     microvm = {

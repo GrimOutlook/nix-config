@@ -12,6 +12,15 @@ let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.host.hardening;
   nc-inputs = inputs.nix-config.inputs;
+
+  # aarch64's syscall table drops a batch of legacy calls in favor of their
+  # *at (or otherwise renamed) equivalents -- chmod/chown/lchown/open/creat
+  # don't exist there at all. auditctl aborts loading the *entire* ruleset if
+  # any single rule names an unknown syscall, so these must be omitted rather
+  # than just harmlessly never firing. Keep them on x86 for coverage of old
+  # binaries that still call them directly.
+  isx86 = pkgs.stdenv.hostPlatform.isx86;
+  syscallFlags = syscalls: lib.concatMapStrings (s: " -S ${s}") syscalls;
 in
 {
   options.host.hardening = {
@@ -338,9 +347,13 @@ in
           # Restrict userfaultfd to root to eliminate heap use-after-free exploits
           "vm.unprivileged_userfaultfd" = lib.mkDefault 0;
 
-          # Maximize ASLR entropy
-          "vm.mmap_rnd_bits" = lib.mkDefault 32;
-          "vm.mmap_rnd_compat_bits" = lib.mkDefault 16;
+          # Maximize ASLR entropy. The valid range is architecture- (and even
+          # VA-bits-config-) dependent -- 32 is right for x86_64 but exceeds
+          # aarch64's max, which fails with EINVAL and takes the whole
+          # systemd-sysctl unit down with it. Leave aarch64 (e.g. dubai) on
+          # the kernel's own per-arch default instead of guessing a value.
+          "vm.mmap_rnd_bits" = lib.mkIf pkgs.stdenv.hostPlatform.isx86 (lib.mkDefault 32);
+          "vm.mmap_rnd_compat_bits" = lib.mkIf pkgs.stdenv.hostPlatform.isx86 (lib.mkDefault 16);
 
           # Disable ftrace debugging
           "kernel.ftrace_enabled" = lib.mkDefault false;
@@ -491,13 +504,13 @@ in
             "-a always,exit -F arch=b64 -S execve -k execution"
 
             # Discretionary access control modifications (chmod, chown)
-            "-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -k perm_mod"
-            "-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -k perm_mod"
+            "-a always,exit -F arch=b64${syscallFlags ([ "fchmod" "fchmodat" ] ++ lib.optionals isx86 [ "chmod" ])} -k perm_mod"
+            "-a always,exit -F arch=b64${syscallFlags ([ "fchown" "fchownat" ] ++ lib.optionals isx86 [ "chown" "lchown" ])} -k perm_mod"
             "-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -k perm_mod"
 
             # Failed file access tracking (EACCES/EPERM)
-            "-a always,exit -F arch=b64 -S open -S openat -S creat -S truncate -S ftruncate -F exit=-EACCES -k access"
-            "-a always,exit -F arch=b64 -S open -S openat -S creat -S truncate -S ftruncate -F exit=-EPERM -k access"
+            "-a always,exit -F arch=b64${syscallFlags ([ "openat" "truncate" "ftruncate" ] ++ lib.optionals isx86 [ "open" "creat" ])} -F exit=-EACCES -k access"
+            "-a always,exit -F arch=b64${syscallFlags ([ "openat" "truncate" "ftruncate" ] ++ lib.optionals isx86 [ "open" "creat" ])} -F exit=-EPERM -k access"
 
             # Identity and group management tracking
             "-w /etc/group -p wa -k identity"

@@ -25,6 +25,7 @@ in
         "fish"
         "just"
         "nixvim"
+        "puffer"
         "skim"
         "ssh"
         "tide"

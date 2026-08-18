@@ -35,6 +35,14 @@ in
       podman-compose
     ];
 
+    environment.shellAliases = {
+      "pcu" = "podman compose up";
+      "pcud" = "podman compose up -d";
+      "pcudf" = "podman compose up -d && podman compose logs -f";
+      "pcd" = "podman compose down";
+      "pcdv" = "podman compose down --volumes";
+    };
+
     virtualisation = {
       oci-containers.backend = "podman";
       podman = {
@@ -42,7 +50,10 @@ in
         autoPrune = {
           enable = true;
           dates = "daily";
-          flags = [ "--all" "--force" ];
+          flags = [
+            "--all"
+            "--force"
+          ];
         };
         defaultNetwork.settings = {
           default-address-pools = [

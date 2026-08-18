@@ -541,7 +541,17 @@ in
         # Confine processes with a default-deny MAC policy where a profile
         # exists, and kill any process that should be confined but is running
         # unconfined (e.g. started before AppArmor was up).
-        security.apparmor = {
+        #
+        # Disabled on WSL: nixos-wsl sets environment.etc."resolv.conf".enable
+        # = false (WSL manages /etc/resolv.conf itself, outside the Nix
+        # store) without ever setting a `source`. AppArmor's
+        # abstractions/nameservice include unconditionally dereferences
+        # config.environment.etc."resolv.conf".source whenever the attrset
+        # entry exists at all (regardless of `enable`), which throws
+        # "option ... has no value defined" during evaluation. AppArmor
+        # confinement also has little value inside a WSL VM, so just skip it
+        # there rather than trying to patch around the upstream conflict.
+        security.apparmor = lib.mkIf (!(config.wsl.enable or false)) {
           enable = true;
           killUnconfinedConfinables = true;
           packages = [ pkgs.apparmor-profiles ];

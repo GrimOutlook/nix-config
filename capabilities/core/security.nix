@@ -82,6 +82,21 @@ in
           return polkit.Result.YES;
         }
       });
+
+      // Allow the owner to manage systemd units (e.g. via `run0`, used by
+      // `nh`/`deploy` to activate NixOS configurations) without a polkit
+      // password prompt, but only from an active local session so this
+      // can't be abused remotely without already having a shell as the
+      // owner.
+      polkit.addRule(function(action, subject) {
+        if (
+          action.id == "org.freedesktop.systemd1.manage-units" &&
+          subject.user == "${config.host.owner.username}" &&
+          subject.active
+        ) {
+          return polkit.Result.YES;
+        }
+      });
     '';
   };
 }

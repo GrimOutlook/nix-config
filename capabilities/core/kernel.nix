@@ -31,5 +31,8 @@ in
     # hosts need to stay on the release-default kernel nixpkgs knows ZFS
     # supports.
     boot.kernelPackages = lib.mkIf (!config.boot.zfs.enabled) (lib.mkDefault pkgs.linuxPackages_latest);
+
+    # Silence NixOS 26.05 ZFS forceImportRoot warning on ZFS hosts
+    boot.zfs.forceImportRoot = lib.mkIf config.boot.zfs.enabled false;
   };
 }

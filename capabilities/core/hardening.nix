@@ -201,6 +201,7 @@ in
           "uinput"
           "usbhid"
           "usbserial"
+          "cdc_acm"
           # DVD
           "udf"
           "iso9660"
@@ -217,6 +218,7 @@ in
           "nf_reject_ipv4"
           "nf_reject_ipv6"
           "xt_mark"
+          "wireguard"
           "xt_comment"
           "xt_multiport"
           "xt_addrtype"

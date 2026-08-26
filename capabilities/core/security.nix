@@ -50,22 +50,33 @@ in
     };
 
     # Harden GnuPG agent and use it for SSH key management
+    #
+    # NOTE: `programs.gnupg.agent.settings` writes to /etc/gnupg/gpg-agent.conf
+    # and only accepts gpg-agent options (see `gpg-agent --dump-options`).
+    # Options like cert-digest-algo, personal-cipher-preferences,
+    # s2k-cipher-algo, no-comments, etc. belong in gpg.conf, not
+    # gpg-agent.conf. Putting them here causes gpg-agent to fail to start
+    # ("invalid option" for every line, exit status 2).
     programs.gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
-      settings = {
-        personal-cipher-preferences = "AES256";
-        personal-digest-preferences = "SHA512";
-        cert-digest-algo = "SHA512";
-        s2k-digest-algo = "SHA512";
-        s2k-cipher-algo = "AES256";
-        no-comments = true;
-        no-emit-version = true;
-        no-greeting = true;
-        require-secmem = true;
-        require-cross-certification = true;
-        throw-keyids = true;
-      };
+    };
+
+    # gpg.conf hardening. Note: several of these duplicate hardened defaults
+    # already set by home-manager's `programs.gpg` module (via `mkDefault`),
+    # but are listed explicitly here for clarity/documentation purposes.
+    host.home-manager.config.programs.gpg.settings = {
+      personal-cipher-preferences = "AES256";
+      personal-digest-preferences = "SHA512";
+      cert-digest-algo = "SHA512";
+      s2k-digest-algo = "SHA512";
+      s2k-cipher-algo = "AES256";
+      no-comments = true;
+      no-emit-version = true;
+      no-greeting = true;
+      require-secmem = true;
+      require-cross-certification = true;
+      throw-keyids = true;
     };
 
     # Allow the owner to shut down and reboot the system without a polkit

@@ -75,6 +75,18 @@ Notable non-obvious contents:
   `smart-scrolloff`, `tiny-code-action`, `wayfinder`) and wired up in
   `plugins/`.
 - `graphical/hyprpanel/` — ships a raw `config.json` alongside the module.
+  **No longer enabled by default** — `graphical/default.nix` enables
+  `noctalia` instead, which owns the bar/notifications/OSD/dock/wallpaper.
+  The module and its `config.json` are kept so re-enabling is a one-line
+  change, and `hosts/{berlin,paris}/modules/hyprpanel.nix` still carry their
+  old layouts (inert while the capability is off).
+- `graphical/noctalia.nix` — the Noctalia shell. Its `settings` are *seeded*
+  into `~/.config/noctalia/settings.json` on first activation rather than
+  symlinked from the store, because Noctalia rewrites that file itself; see
+  the comment in the module. Editing `settings` therefore does **not** update
+  a host that already has the file. Noctalia's launcher also replaced rofi,
+  whose capability was deleted — `$menu` in `graphical/hyprland.nix` is now a
+  `noctalia-shell ipc call` invocation.
 
 ## Host types
 

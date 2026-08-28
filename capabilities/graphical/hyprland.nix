@@ -47,7 +47,9 @@ in
           ### PROGRAMS ###
           ################
           "$fileManager" = "thunar";
-          "$menu" = "rofi -show drun";
+          # Noctalia's launcher, driven over its quickshell IPC socket. This
+          # replaced rofi, whose capability was dropped with hyprpanel's.
+          "$menu" = "noctalia-shell ipc call launcher toggle";
           "$terminal" = "alacritty";
 
           #################
@@ -60,11 +62,9 @@ in
           exec-once = [
             "$terminal"
             "nm-applet &" # Start the NetworkManager tray applet
-            "hyprpaper"
             "systemctl --user start hyprpolkitagent"
             "wl-paste --type text --watch cliphist store"
             "wl-paste --type image --watch cliphist store"
-            "hyprpanel"
           ];
 
           #############################

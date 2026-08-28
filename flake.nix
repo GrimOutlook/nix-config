@@ -79,6 +79,15 @@
       url = "github:nix-community/nixvim/nixos-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # greetd greeter matching the Noctalia shell, used by
+    # `capabilities/graphical/display-manager.nix`. Not in nixpkgs; its own
+    # flake pins nixos-unstable via a tarball URL, so follow ours to keep the
+    # tree on a single nixpkgs.
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     stylix = {
       url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";

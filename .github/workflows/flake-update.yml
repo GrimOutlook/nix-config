@@ -18,6 +18,15 @@ jobs:
   update-flake-lock:
     runs-on: ubuntu-latest
     steps:
+      - name: Check for BOT_GITHUB_TOKEN
+        env:
+          BOT_GITHUB_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
+        run: |
+          if [ -z "$BOT_GITHUB_TOKEN" ]; then
+            echo "::error::BOT_GITHUB_TOKEN is not set. The default GITHUB_TOKEN cannot be used here: PRs it opens do not trigger the flake-check workflow, so auto-merge would never resolve. Add a PAT with repo scope as the BOT_GITHUB_TOKEN secret."
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v6
 

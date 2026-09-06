@@ -1,0 +1,24 @@
+name: flake-check
+
+on:
+  pull_request:
+    paths:
+      - "flake.nix"
+      - "flake.lock"
+
+permissions:
+  contents: read
+
+jobs:
+  nix-check:
+    name: nix-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@v3
+
+      - name: nix flake check
+        run: nix flake check --print-build-logs --no-update-lock-file

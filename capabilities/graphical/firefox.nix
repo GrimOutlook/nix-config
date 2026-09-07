@@ -62,6 +62,10 @@ in
           "media.ffmpeg.vaapi.enabled" = true; # Enable hardware video acceleration
           "browser.aboutConfig.showWarning" = false;
           "browser.warnOnQuitShortcut" = true;
+          # Strip tracking params (utm_*, fbclid, gclid, ...) natively rather
+          # than via an extension that injects into every page.
+          "privacy.query_stripping.enabled" = true;
+          "privacy.query_stripping.enabled.pbmode" = true;
         };
 
         PopupBlocking = {

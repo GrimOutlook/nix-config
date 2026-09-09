@@ -150,3 +150,5 @@
     }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./flake);
 }
+
+# CI probe: verifying the building flake check. Reverted immediately.

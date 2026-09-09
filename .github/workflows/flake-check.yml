@@ -20,9 +20,5 @@ jobs:
       - name: Install Nix
         uses: DeterminateSystems/determinate-nix-action@v3
 
-      # Eval-only: GitHub-hosted runners get HTTP 403 from crates.io, so
-      # anything built from Rust sources fails here for reasons unrelated to
-      # the flake. This still catches eval errors, bad option names and
-      # assertion failures, which is what a lockfile bump usually breaks.
       - name: nix flake check
-        run: nix flake check --no-build --no-update-lock-file
+        run: nix flake check --print-build-logs --no-update-lock-file

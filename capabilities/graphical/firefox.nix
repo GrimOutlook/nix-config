@@ -10,6 +10,8 @@ in
   options.host.firefox.enable = lib.mkEnableOption "Enable Firefox";
 
   config = lib.mkIf cfg.enable {
+    host.nix.realtimePackages = [ "firefox" ];
+
     programs.firefox = {
       enable = true;
 

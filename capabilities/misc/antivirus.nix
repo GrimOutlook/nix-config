@@ -11,6 +11,8 @@ in
   options.host.antivirus.enable = lib.mkEnableOption "Enable antivirus configurations";
 
   config = lib.mkIf cfg.enable {
+    host.nix.realtimePackages = [ "clamav" ];
+
     environment.systemPackages = with pkgs; [
       clamav
     ];

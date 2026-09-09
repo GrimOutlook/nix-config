@@ -6,6 +6,9 @@
 }:
 let
   modules = [
+    {
+      _module.args.nixpkgsRealtime = inputs.nixpkgs-realtime;
+    }
     (inputs.import-tree ../capabilities)
     (inputs.import-tree ../host-types)
   ];

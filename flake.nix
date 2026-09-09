@@ -72,8 +72,12 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nixos-wsl.url = "github:nix-community/nixos-wsl";
 
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    # Keep the default package set behind Determinate's seven-day cooldown.
+    nixpkgs.url = "https://flakehub.com/f/DeterminateSystems/nixpkgs-26.05-chilled/0.1";
+
+    # A matching, live NixOS 26.05 mirror for packages that need an emergency
+    # update before the cooled mirror has adopted the revision.
+    nixpkgs-realtime.url = "https://flakehub.com/f/NixOS/nixpkgs/0.2605";
 
     nixvim = {
       url = "github:nix-community/nixvim/nixos-26.05";

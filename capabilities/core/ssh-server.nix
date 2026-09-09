@@ -22,6 +22,8 @@ in
 {
   options.host.ssh-server.enable = lib.mkEnableOption "Enable SSH server configurations";
   config = lib.mkIf cfg.enable {
+    host.nix.realtimePackages = [ "openssh" ];
+
     services = {
       fail2ban = {
         enable = true;

@@ -58,12 +58,14 @@ in {
             import type { Plugin } from "@opencode-ai/plugin";
 
             export const TmuxNotify: Plugin = async ({ $ }) => {
+              let userInterrupted = false;
+
               const showPopup = async (message: string) => {
                 const encoded = Buffer.from(message, "utf8").toString("base64");
                 const environment = "OPENCODE_POPUP_B64=" + encoded;
                 const command = 'printf "%s" "$OPENCODE_POPUP_B64" | base64 -d; printf "\\n"';
 
-                await $`tmux display-popup -k -T OpenCode -e ''${environment} sh -c ''${command}`
+                await $`tmux display-popup -T OpenCode -e ''${environment} sh -c ''${command}`
                   .quiet()
                   .nothrow();
               };
@@ -74,9 +76,20 @@ in {
 
                   const type = event.type as string;
                   const properties = event.properties as {
+                    command?: string;
                     permission?: string;
                     questions?: Array<{ header?: string }>;
                   };
+
+                  if (type === "tui.command.execute" && properties.command === "session.interrupt") {
+                    userInterrupted = true;
+                    return;
+                  }
+
+                  if (type === "session.idle" && userInterrupted) {
+                    userInterrupted = false;
+                    return;
+                  }
 
                   const message =
                     type === "session.idle"

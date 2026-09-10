@@ -15,5 +15,11 @@ in
 
       settings.git_protocol = "ssh";
     };
+
+    programs.ssh.settings."github.com" = {
+      ControlMaster = "auto";
+      ControlPath = "~/.ssh/master-%C";
+      ControlPersist = "5m";
+    };
   };
 }

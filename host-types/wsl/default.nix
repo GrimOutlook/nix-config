@@ -7,6 +7,25 @@
 }:
 let
   cfg = config.host.type.wsl;
+
+  # Windows interop binaries aren't on $PATH since interop.includePath is
+  # disabled above. shellAliases (fish functions) cover interactive use, but
+  # tools like tmux shell out via `command -v <name>`/`sh -c`, which only see
+  # real executables on $PATH, not fish functions. Wrap both binaries as real
+  # executables so every caller -- interactive shell, tmux, scripts -- finds
+  # them the same way.
+  clipExe = pkgs.writeShellApplication {
+    name = "clip.exe";
+    text = ''
+      exec '/mnt/c/Windows/System32/clip.exe' "$@"
+    '';
+  };
+  powershellExe = pkgs.writeShellApplication {
+    name = "powershell.exe";
+    text = ''
+      exec '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe' "$@"
+    '';
+  };
 in
 {
   imports = [
@@ -25,10 +44,9 @@ in
       wslConf.interop.appendWindowsPath = false;
     };
     environment = {
-      shellAliases = {
-        "powershell.exe" = "'/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'";
-      };
       systemPackages = with pkgs; [
+        clipExe
+        powershellExe
         wl-clipboard
       ];
     };

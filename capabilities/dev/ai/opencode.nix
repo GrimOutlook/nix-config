@@ -24,6 +24,11 @@ in {
       "$schema" = "https://opencode.ai/config.json";
       disabled_providers = ["opencode"];
       share = "disabled";
+      permission = {
+        external_directory = {
+          "/tmp/opencode/**" = "allow";
+        };
+      };
       mcp = {
         nixos = {
           enabled = true;

@@ -59,20 +59,23 @@ in {
 
             export const TmuxNotify: Plugin = async ({ $ }) => {
               let userInterrupted = false;
+              const targetPane = process.env.TMUX_PANE;
 
               const showPopup = async (message: string) => {
                 const encoded = Buffer.from(message, "utf8").toString("base64");
                 const environment = "OPENCODE_POPUP_B64=" + encoded;
                 const command = 'printf "%s" "$OPENCODE_POPUP_B64" | base64 -d; printf "\\n"';
 
-                await $`tmux display-popup -T OpenCode -e ''${environment} sh -c ''${command}`
+                await $`tmux display-popup -t ''${targetPane} -T OpenCode -e ''${environment} sh -c ''${command}`
                   .quiet()
                   .nothrow();
+
+                await $`tmux switch-client -t ''${targetPane}`.quiet().nothrow();
               };
 
               return {
                 event: async ({ event }) => {
-                  if (!process.env.TMUX) return;
+                  if (!process.env.TMUX || !targetPane) return;
 
                   const type = event.type as string;
                   const properties = event.properties as {

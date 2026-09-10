@@ -48,6 +48,47 @@ in {
           text = builtins.toJSON cfg.settings;
           force = true;
         };
+        file.".config/opencode/plugins/tmux-notify.ts" = {
+          text = ''
+            import type { Plugin } from "@opencode-ai/plugin";
+
+            export const TmuxNotify: Plugin = async ({ $ }) => {
+              const showPopup = async (message: string) => {
+                const encoded = Buffer.from(message, "utf8").toString("base64");
+                const environment = "OPENCODE_POPUP_B64=" + encoded;
+                const command = 'printf "%s" "$OPENCODE_POPUP_B64" | base64 -d; printf "\\n"';
+
+                await $`tmux display-popup -k -T OpenCode -e ''${environment} sh -c ''${command}`
+                  .quiet()
+                  .nothrow();
+              };
+
+              return {
+                event: async ({ event }) => {
+                  if (!process.env.TMUX) return;
+
+                  const type = event.type as string;
+                  const properties = event.properties as {
+                    permission?: string;
+                    questions?: Array<{ header?: string }>;
+                  };
+
+                  const message =
+                    type === "session.idle"
+                      ? "OpenCode: completed"
+                      : type === "permission.asked"
+                        ? "OpenCode: permission needed (" + (properties.permission ?? "approval") + ")"
+                        : type === "question.asked"
+                          ? "OpenCode: input needed (" + (properties.questions?.[0]?.header ?? "question") + ")"
+                          : undefined;
+
+                  if (message) await showPopup(message);
+                },
+              };
+            };
+          '';
+          force = true;
+        };
         packages = with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
           opencode
         ];

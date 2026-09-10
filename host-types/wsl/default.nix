@@ -57,5 +57,8 @@ in
     # wpa_supplicant fails to start in WSL due to namespace restrictions and is not needed
     networking.wireless.enable = lib.mkForce false;
     systemd.services.wpa_supplicant.enable = lib.mkForce false;
+
+    # WSL does not expose the USB device tree that usbguard requires.
+    services.usbguard.enable = false;
   };
 }

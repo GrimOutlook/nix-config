@@ -60,5 +60,9 @@ in
 
     # WSL does not expose the USB device tree that usbguard requires.
     services.usbguard.enable = false;
+
+    # WSL's managed kernel does not expose all of the hardening sysctl knobs.
+    # Applying them makes systemd-sysctl fail during activation.
+    boot.kernel.sysctl = lib.mkForce { };
   };
 }

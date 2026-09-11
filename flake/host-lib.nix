@@ -25,12 +25,15 @@ let
           help = "nh os switch this host (${hostname}); remote-targets if run elsewhere";
           command = ''
             target="${hostname}"
+            run_deploy() {
+              nh os switch . -H "$target" "$@"
+            }
             if [ "$(uname -n)" = "$target" ]; then
               echo "=> Deploying to local host: $target"
-              nh os switch . -H "$target" "$@"
+              run_deploy "$@"
             else
               echo "=> Deploying to remote host: root@$target"
-              nh os switch . -H "$target" --target-host "root@$target" "$@"
+              run_deploy --target-host "root@$target" "$@"
             fi
           '';
         }

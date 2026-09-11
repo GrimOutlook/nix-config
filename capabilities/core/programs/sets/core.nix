@@ -92,6 +92,7 @@ in
       cdtmp = "cd $(mktemp -d)";
       cp = "xcp --verbose";
       mkdir = "mkdir --parents";
+      sudo = "run0";
 
       # NOTE: Don't make an `rm` alias. Moving to a new system that doesn't
       # have trashy would result in unintended unrecoverable deletes.

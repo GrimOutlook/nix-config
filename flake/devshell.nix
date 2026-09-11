@@ -54,7 +54,7 @@
                   1)
                     hostname=$(jq -r '.[0]' <<< "$configs")
                     if [ "$hostname" != "$HOSTNAME" ]; then
-                      command=$(echo "$command" '--target-host root@$hostname --build-host root@$hostname')
+                       command=$(echo "$command" '--target-host grim@$hostname --build-host grim@$hostname')
                     fi
                     ;;
                   *)

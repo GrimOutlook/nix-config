@@ -6,6 +6,11 @@
 let
   cfg = config.host.ssh-server;
   owner = config.host.owner.username;
+  localNetworks = [
+    "10.0.0.0/8"
+    "172.16.0.0/12"
+    "192.168.0.0/16"
+  ];
 
   # sshd is reachable from the internet, so it tracks the live Nixpkgs mirror
   # rather than the cooled pin. Pinning just the consumers we care about -- the
@@ -16,17 +21,6 @@ let
   # from the binary cache.
   realtimeOpenssh = config.host.nix.realtimePkgs.openssh;
 
-  # Private/loopback ranges treated as "local". Root SSH is permitted only from
-  # these; from anywhere else (the public internet) it stays disabled.
-  localNetworks = builtins.concatStringsSep "," [
-    "127.0.0.0/8"
-    "::1"
-    "10.0.0.0/8"
-    "172.16.0.0/12"
-    "192.168.0.0/16"
-    "fc00::/7"
-    "fe80::/10"
-  ];
 in
 {
   options.host.ssh-server.enable = lib.mkEnableOption "Enable SSH server configurations";
@@ -49,14 +43,6 @@ in
         authorizedKeysInHomedir = false;
         allowSFTP = false;
 
-        # Root SSH is disabled globally (below) but re-enabled, key-only, for
-        # connections from local/private networks via the Match block in
-        # extraConfig. So non-local IPs can never log in as root, local ones can.
-        extraConfig = lib.mkAfter ''
-          Match Address ${localNetworks}
-            PermitRootLogin prohibit-password
-        '';
-
         settings = {
           PermitRootLogin = "no";
           PasswordAuthentication = false;
@@ -75,13 +61,10 @@ in
           # Log enough to be useful for incident response and fail2ban.
           LogLevel = "VERBOSE";
 
-          # Allow only the owner and root; any other local/system accounts are
-          # rejected. root is further gated to local networks by the Match block
-          # above (PermitRootLogin), so it can only be used from the LAN/VPN.
-          AllowUsers = [
-            owner
-            "root"
-          ];
+          # The owner may log in from anywhere; the deployment credential is
+          # accepted only from private LAN/VPN address space. Root has no SSH
+          # entry point at all.
+          AllowUsers = [ owner ] ++ map (network: "deploy@${network}") localNetworks;
 
           # Modern CTR and AEAD-only algorithms and SHA-2 MACs.
           Ciphers = [
@@ -130,9 +113,6 @@ in
       in
       {
         ${owner}.openssh.authorizedKeys.keys = keys;
-        # root needs the same keys to be reachable for deploys; the Match block
-        # above restricts root logins to local networks regardless.
-        root.openssh.authorizedKeys.keys = keys;
       };
   };
 }

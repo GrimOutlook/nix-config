@@ -21,6 +21,20 @@ let
   # binaries that still call them directly.
   isx86 = pkgs.stdenv.hostPlatform.isx86;
   syscallFlags = syscalls: lib.concatMapStrings (s: " -S ${s}") syscalls;
+  owner = config.host.owner.username;
+  ownerUid = config.users.users.${owner}.uid;
+  ownerGroups = lib.unique (
+    [ config.users.users.${owner}.group ]
+    ++ config.users.users.${owner}.extraGroups
+  );
+  ownerGroupIds = lib.filter (gid: gid != null) (
+    map (group: config.users.groups.${group}.gid or null) ownerGroups
+  );
+  ownerIdentifiers = [ owner "ALL" ] ++ lib.optional (ownerUid != null) ownerUid;
+  ownerGroupIdentifiers = ownerGroups ++ [ "ALL" ] ++ ownerGroupIds;
+  ownerMatchesSudoRsRule = rule:
+    lib.any (user: lib.elem user ownerIdentifiers) rule.users
+    || lib.any (group: lib.elem group ownerGroupIdentifiers) rule.groups;
 in
 {
   options.host.hardening = {
@@ -566,8 +580,12 @@ in
             message = "Hardening Assertion: Root password login must be disabled (hashedPassword = null).";
           }
           {
-            assertion = !config.security.sudo.enable && !config.security.sudo-rs.enable;
-            message = "Hardening Assertion: Sudo must be disabled in favor of run0/polkit.";
+            assertion = !config.security.sudo.enable && config.security.sudo-rs.enable;
+            message = "Hardening Assertion: sudo-rs must be enabled while sudo remains disabled.";
+          }
+          {
+            assertion = !(lib.any ownerMatchesSudoRsRule config.security.sudo-rs.extraRules);
+            message = "Hardening Assertion: The host owner must not match any sudo-rs user or group rule.";
           }
           {
             assertion = config.services.openssh.settings.PasswordAuthentication == false;

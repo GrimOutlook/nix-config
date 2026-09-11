@@ -112,12 +112,11 @@ upstream modules (`nixos-wsl`, `microvm`) as flake inputs.
 - A commented-out block in `git-hooks` inputs in `flake.nix` is intentional
   ("inherited... determine if I actually want these") — not dead code to
   clean up without asking.
-- `core/ssh-server.nix` gates root SSH to **local networks only**: global
-  `PermitRootLogin no` + a `Match Address` block (RFC1918 + loopback) that
-  re-enables it key-only, `AllowUsers = [ owner "root" ]`, and root gets the
-  owner's authorized keys. The `Match` lives in `services.openssh.extraConfig`
-  via `lib.mkAfter` because a `Match` block must be the last thing in
-  `sshd_config`. Verify changes with `sshd -T -C addr=<ip>,user=root,...`.
+- `core/ssh-server.nix` disables root SSH entirely with `PermitRootLogin no`.
+  `AllowUsers` contains the owner and a restricted `deploy` account limited to
+  private LAN/VPN addresses; fleet
+  activation uses deploy-rs plus limited NOPASSWD sudo-rs. Bootstrap a host over
+  its existing root/admin path before applying this configuration.
 - This repo is consumed as a flake input, so any change here reaches hosts only
   after it's pushed **and** each host runs `just update-homelab-flakes
   nix-config` (updates the host's `flake.lock` + redeploys) — a local commit +

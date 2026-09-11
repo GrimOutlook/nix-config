@@ -15,6 +15,9 @@ in
     in
     {
       inherit hostname;
+      sshUser = "deploy";
+      sudo = "sudo -n -u root /run/current-system/sw/bin/deploy-rs-sudo-bridge";
+      interactiveSudo = false;
       profiles.system = {
         user = "root";
         path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations.${hostname};

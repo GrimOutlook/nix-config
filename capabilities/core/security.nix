@@ -6,22 +6,76 @@
 }:
 let
   cfg = config.host.security;
+  deployRsBridge = pkgs.writeShellScriptBin "deploy-rs-sudo-bridge" ''
+    if [ "$#" -lt 2 ] || [ "$1" != root ]; then
+      exit 64
+    fi
+
+    shift
+    case "$1" in
+      /nix/store/*/activate-rs)
+        exec "$@"
+        ;;
+      rm)
+        if [ "$#" -eq 2 ]; then
+          case "$2" in
+            /tmp/deploy-rs-canary-*)
+              exec /run/current-system/sw/bin/rm "$2"
+              ;;
+          esac
+        fi
+        ;;
+    esac
+
+    exit 1
+  '';
 in
 {
   options.host.security = {
     enable = lib.mkEnableOption "Enable default security configurations";
   };
   config = lib.mkIf cfg.enable {
-    # Disable sudo and sudo-rs entirely; privilege escalation uses systemd run0 and Polkit
+    # sudo-rs is retained only for the restricted deploy account below. The
+    # owner uses run0/Polkit for local elevation instead of generic sudo.
     security.sudo.enable = false;
-    security.sudo-rs.enable = false;
-
-    # Alias sudo to run0 for shell compatibility
-    environment.shellAliases = {
-      sudo = "run0";
+    security.sudo-rs = {
+      enable = true;
+      wheelNeedsPassword = true;
+      extraRules = lib.mkForce [
+        {
+          users = [ "deploy" ];
+          runAs = "root";
+          commands = [
+            {
+              # sudo-rs does not support the dynamic wildcards used by the
+              # deploy-rs activation closure. The fixed bridge validates the
+              # activation or canary command before executing it as root.
+              command = "/run/current-system/sw/bin/deploy-rs-sudo-bridge";
+              options = [
+                "NOPASSWD"
+                "NOSETENV"
+              ];
+            }
+          ];
+        }
+      ];
     };
 
-    # Enforce password requirement for wheel group escalation in Polkit and PAM services
+    environment.systemPackages = [ deployRsBridge ];
+
+    # Restrict the privileged wrappers themselves to the deploy group. The
+    # package in the Nix store remains world-readable/executable, but it is not
+    # setuid and cannot elevate without these wrappers.
+    security.wrappers.sudo = {
+      group = lib.mkForce "deploy";
+      permissions = lib.mkForce "u+rx,g+x";
+    };
+    security.wrappers.sudoedit = {
+      group = lib.mkForce "deploy";
+      permissions = lib.mkForce "u+rx,g+x";
+    };
+    # Require local run0 users to be in wheel; the active-session Polkit rule
+    # below remains the gate that prevents remote owner SSH sessions escalating.
     security.pam.services.run0.requireWheel = true;
 
     # Lock accounts on failure and enforce 3s delay on login failures

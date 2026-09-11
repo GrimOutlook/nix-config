@@ -114,6 +114,7 @@ in
 
             export const TmuxNotify: Plugin = async ({ $ }) => {
               let userInterrupted = false;
+              const subagentSessions = new Set<string>();
               const targetPane = process.env.TMUX_PANE;
 
               const isTargetVisible = async () => {
@@ -160,7 +161,23 @@ in
                     command?: string;
                     permission?: string;
                     questions?: Array<{ header?: string }>;
+                    sessionID?: string;
+                    info?: { id?: string; parentID?: string };
                   };
+
+                  if (type === "session.created" && properties.info?.id && properties.info.parentID) {
+                    subagentSessions.add(properties.info.id);
+                    return;
+                  }
+
+                  if (type === "session.deleted" && properties.info?.id) {
+                    subagentSessions.delete(properties.info.id);
+                    return;
+                  }
+
+                  if (type === "session.idle" && properties.sessionID && subagentSessions.has(properties.sessionID)) {
+                    return;
+                  }
 
                   if (type === "tui.command.execute" && properties.command === "session.interrupt") {
                     userInterrupted = true;

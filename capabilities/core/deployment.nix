@@ -23,13 +23,18 @@ in
     ];
 
     # Keep the decrypted key in /run rather than the home directory. It is
-    # owned by the interactive user and can be loaded into ssh-agent once per
-    # session with `ssh-add /run/agenix/nix-deploy-key`.
+    # owned by the interactive user and is added to ssh-agent on first use for
+    # deployment connections.
     age.secrets.nix-deploy-key = {
       file = ../../secrets/deploy-key.age;
       owner = owner;
       group = owner;
       mode = "0400";
+    };
+
+    host.home-manager.config.programs.ssh.settings."Match user deploy" = {
+      IdentityFile = "/run/agenix/nix-deploy-key";
+      AddKeysToAgent = "yes";
     };
   };
 }

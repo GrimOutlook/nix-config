@@ -51,6 +51,24 @@ in
         Package attributes to take from the live Nixpkgs mirror instead of the
         cooled default. Prefer leaf packages; selecting a library can rebuild
         its consumers against the live package set.
+
+        This replaces the attribute globally via an overlay, so every consumer
+        of the package -- including build-time dependents -- is rebuilt against
+        it and loses its binary-cache hits. When only one consumer needs the
+        live version (a daemon whose service you expose, say), point that
+        consumer at `host.nix.realtimePkgs.<name>` instead of listing it here.
+      '';
+    };
+
+    realtimePkgs = lib.mkOption {
+      type = lib.types.pkgs;
+      readOnly = true;
+      default = realtimePkgs;
+      defaultText = lib.literalMD "the live Nixpkgs mirror, instantiated for this host";
+      description = ''
+        The live Nixpkgs mirror as a package set, for pinning a single consumer
+        to a live package without the global rebuild that
+        `host.nix.realtimePackages` causes.
       '';
     };
   };

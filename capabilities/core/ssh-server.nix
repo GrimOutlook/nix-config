@@ -7,6 +7,15 @@ let
   cfg = config.host.ssh-server;
   owner = config.host.owner.username;
 
+  # sshd is reachable from the internet, so it tracks the live Nixpkgs mirror
+  # rather than the cooled pin. Pinning just the consumers we care about -- the
+  # daemon and the client -- leaves `pkgs.openssh` itself on the pin. Listing
+  # openssh in host.nix.realtimePackages would overlay the attribute globally
+  # instead, and because gnupg takes openssh as a *build* input that orphaned
+  # gnupg -> gpgme -> kwallet -> kio, and every KDE package downstream of kio,
+  # from the binary cache.
+  realtimeOpenssh = config.host.nix.realtimePkgs.openssh;
+
   # Private/loopback ranges treated as "local". Root SSH is permitted only from
   # these; from anywhere else (the public internet) it stays disabled.
   localNetworks = builtins.concatStringsSep "," [
@@ -22,7 +31,8 @@ in
 {
   options.host.ssh-server.enable = lib.mkEnableOption "Enable SSH server configurations";
   config = lib.mkIf cfg.enable {
-    host.nix.realtimePackages = [ "openssh" ];
+    # The ssh client, pinned to the same build as the daemon below.
+    programs.ssh.package = realtimeOpenssh;
 
     services = {
       fail2ban = {
@@ -35,6 +45,7 @@ in
       };
       openssh = {
         enable = true;
+        package = realtimeOpenssh;
         authorizedKeysInHomedir = false;
         allowSFTP = false;
 

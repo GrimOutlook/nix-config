@@ -29,6 +29,12 @@ in {
           "/tmp/opencode/**" = "allow";
         };
       };
+      references = {
+        claude-projects = {
+          path = "~/.claude/projects";
+          description = "Claude Code auto-memory for all projects. Use only the memory for the current repository when relevant; start with MEMORY.md and read topic files only as needed.";
+        };
+      };
       mcp = {
         nixos = {
           enabled = true;

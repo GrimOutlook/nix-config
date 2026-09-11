@@ -2,7 +2,7 @@
 let
   # Build a numtide devshell with a `deploy` command that runs
   # `nh os switch . -H <hostname>`. When run on a machine whose own hostname
-  # differs from the target, it also passes `--target-host grim@<hostname>`
+  # differs from the target, it also passes `--target-host deploy@<hostname>`
   # so the build is activated remotely. Built from *this* flake's
   # nixpkgs/devshell inputs, so downstream flakes need no extra inputs.
   mkDeployShell =
@@ -32,8 +32,8 @@ let
               echo "=> Deploying to local host: $target"
               run_deploy "$@"
             else
-              echo "=> Deploying to remote host: grim@$target"
-              run_deploy --target-host "grim@$target" "$@"
+              echo "=> Deploying to remote host: deploy@$target"
+              run_deploy --target-host "deploy@$target" "$@"
             fi
           '';
         }

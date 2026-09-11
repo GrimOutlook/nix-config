@@ -89,9 +89,12 @@ in
                 const targetEnvironment = "OPENCODE_TARGET_PANE=" + targetPane;
                 const command = [
                   'printf "%s" "$OPENCODE_POPUP_B64" | base64 -d',
-                  'printf "\\n"',
+                  'printf "\\n\\nEnter: switch to OpenCode | Esc: close popup\\n"',
+                  'escape=$(printf "\\033")',
                   'while IFS= read -r -s -n 1 key; do',
-                  '  if [ -z "$key" ]; then',
+                  '  if [ "$key" = "$escape" ]; then',
+                  '    exit',
+                  '  elif [ -z "$key" ]; then',
                   '    tmux switch-client -t "$OPENCODE_TARGET_PANE"',
                   '    exit',
                   '  fi',

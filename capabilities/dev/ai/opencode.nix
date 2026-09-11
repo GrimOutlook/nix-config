@@ -61,6 +61,18 @@ in {
               let userInterrupted = false;
               const targetPane = process.env.TMUX_PANE;
 
+              const isTargetVisible = async () => {
+                const result = await $`tmux display-message -p -t ''${targetPane} '#{pane_active} #{window_active_clients}'`
+                  .quiet()
+                  .nothrow();
+
+                return result.exitCode === 0 && result.text().trim() === "1 1";
+              };
+
+              const showMessage = async (message: string) => {
+                await $`tmux display-message -t ''${targetPane} ''${message}`.quiet().nothrow();
+              };
+
               const showPopup = async (message: string) => {
                 const encoded = Buffer.from(message, "utf8").toString("base64");
                 const environment = "OPENCODE_POPUP_B64=" + encoded;
@@ -103,7 +115,14 @@ in {
                           ? "OpenCode: input needed (" + (properties.questions?.[0]?.header ?? "question") + ")"
                           : undefined;
 
-                  if (message) await showPopup(message);
+                  if (!message) return;
+
+                  if (await isTargetVisible()) {
+                    if (type === "session.idle") await showMessage(message);
+                    return;
+                  }
+
+                  await showPopup(message);
                 },
               };
             };

@@ -772,6 +772,23 @@
         "type": "github"
       }
     },
+    "opentui": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788179967,
+        "narHash": "sha256-aj/1pLKRtLeVauQvd9xVqahPnhpcPK4halvWR2/6gAU=",
+        "ref": "refs/heads/main",
+        "rev": "57bd9b338f4f081237e712d1eda45749aaa246fb",
+        "revCount": 1126,
+        "type": "git",
+        "url": "https://github.com/clang-engineer/opentui.git"
+      },
+      "original": {
+        "rev": "57bd9b338f4f081237e712d1eda45749aaa246fb",
+        "type": "git",
+        "url": "https://github.com/clang-engineer/opentui.git"
+      }
+    },
     "root": {
       "inputs": {
         "agenix": "agenix",
@@ -795,6 +812,7 @@
         "nixpkgs-realtime": "nixpkgs-realtime",
         "nixvim": "nixvim",
         "noctalia-greeter": "noctalia-greeter",
+        "opentui": "opentui",
         "smart-scrolloff-nvim": "smart-scrolloff-nvim",
         "stylix": "stylix",
         "tiny-code-action-nvim": "tiny-code-action-nvim",

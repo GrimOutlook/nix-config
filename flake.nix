@@ -58,6 +58,15 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    # Temporary native OpenTUI fix for tmux capability-reply routing. Pin the
+    # reviewed PR commit until the fix is released upstream.
+    # TODO: Remove this input and the matching override in
+    # capabilities/dev/ai/opencode.nix once the fix is upstream.
+    opentui = {
+      flake = false;
+      url = "git+https://github.com/clang-engineer/opentui.git?rev=57bd9b338f4f081237e712d1eda45749aaa246fb";
+    };
+
     microvm = {
       url = "github:microvm-nix/microvm.nix";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -7,6 +7,51 @@
 }:
 let
   cfg = config.host.dev.ai.opencode;
+  system = pkgs.stdenv.hostPlatform.system;
+  opentuiTarget =
+    {
+      x86_64-linux = {
+        zig = "x86_64-linux-gnu.2.17";
+        asset = "core-linux-x64";
+        output = "x86_64-linux";
+      };
+      aarch64-linux = {
+        zig = "aarch64-linux-gnu.2.17";
+        asset = "core-linux-arm64";
+        output = "aarch64-linux";
+      };
+    }
+    .${system} or (throw "OpenTUI PR override is unsupported on ${system}");
+  opentuiNative = pkgs.stdenv.mkDerivation {
+    pname = "opentui-native-pr-1460";
+    version = "0.5.9-pr1460";
+    src = inputs.nix-config.inputs.opentui;
+    sourceRoot = "source/packages/native";
+
+    nativeBuildInputs = [ pkgs.buildPackages.zig ];
+
+    dontConfigure = true;
+    buildPhase = ''
+      runHook preBuild
+      export ZIG_GLOBAL_CACHE_DIR="$TMPDIR/zig-global-cache"
+      export ZIG_LOCAL_CACHE_DIR="$TMPDIR/zig-local-cache"
+      mkdir zig-deps
+      tar -xzf src/vendor/zig-deps.tar.gz -C zig-deps
+      zig build -Doptimize=ReleaseFast -Dlibrary-target=${opentuiTarget.zig}
+      runHook postBuild
+    '';
+    installPhase = ''
+      runHook preInstall
+      install -Dm755 lib/${opentuiTarget.output}/libopentui.so \
+        $out/lib/@opentui/${opentuiTarget.asset}/libopentui.so
+      runHook postInstall
+    '';
+  };
+  opencode = (inputs.nix-config.inputs.llm-agents.packages.${system}.opencode).overrideAttrs (old: {
+    postInstall = (old.postInstall or "") + ''
+      wrapProgram $out/bin/opencode --set OTUI_ASSET_ROOT ${opentuiNative}/lib
+    '';
+  });
 in
 {
   options.host.dev.ai.opencode = {
@@ -150,9 +195,7 @@ in
           '';
           force = true;
         };
-        packages = with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-          opencode
-        ];
+        packages = [ opencode ];
         shellAliases = {
           "opencode-commit" = "opencode run 'Commit the changes in this repo'";
         };

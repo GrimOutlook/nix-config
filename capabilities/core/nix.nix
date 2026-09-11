@@ -108,6 +108,8 @@ in
         };
       };
 
+      environment.sessionVariables.NH_ELEVATION_STRATEGY = "run0";
+
       nix = {
         # Disable legacy channel updates (flakes only)
         channel.enable = lib.mkForce false;

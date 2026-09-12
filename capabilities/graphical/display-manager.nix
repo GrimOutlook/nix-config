@@ -19,6 +19,15 @@ in
 
     settings = lib.mkOption {
       inherit (settingsFormat) type;
+      # Hyprland exposes both direct and UWSM-managed sessions. Prefer the
+      # direct session for every host using the Hyprland capability while
+      # preserving any host-specific greeter settings.
+      apply =
+        settings:
+        if config.host.hyprland.enable then
+          lib.recursiveUpdate { session.default = "Hyprland"; } settings
+        else
+          settings;
       description = ''
         Rendered to `/var/lib/noctalia-greeter/greeter.toml`. The greeter falls
         back to its own defaults for anything absent, so this only needs to

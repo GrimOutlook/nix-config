@@ -16,7 +16,7 @@ in
     ];
     programs.hyprland = {
       enable = true;
-      withUWSM = true;
+      withUWSM = false;
       xwayland.enable = true;
     };
 
@@ -29,6 +29,9 @@ in
       wayland.windowManager.hyprland = {
         enable = true;
         configType = "hyprlang";
+        # The NixOS module owns Hyprland. Letting Home Manager manage a second
+        # package path can trigger a compositor reload during activation.
+        package = null;
         plugins = with pkgs.hyprlandPlugins; [
           hy3
         ];

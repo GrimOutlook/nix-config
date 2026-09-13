@@ -73,6 +73,11 @@ in
       share = "disabled";
       permission = {
         external_directory = {
+          "/nix/store/**" = "allow";
+          "/nix/var/log/nix/**" = "allow";
+          "/nix/var/nix/profiles/**" = "allow";
+          "/run/current-system/**" = "allow";
+          "~/.local/state/nix/profiles/**" = "allow";
           "/tmp/opencode/**" = "allow";
           # Allow access to Claude memory by default
           "~/.claude/projects/**" = "allow";

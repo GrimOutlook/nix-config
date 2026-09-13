@@ -20,7 +20,14 @@ let
       showTokenUsage = true;
     };
     permissions = {
-      allow = builtins.map (cmd: "command(${cmd})") [
+      allow = [
+        "read_file(/nix/store)"
+        "read_file(/nix/var/log/nix)"
+        "read_file(/nix/var/nix/profiles)"
+        "read_file(/run/current-system)"
+        "read_file(/home/grim/.local/state/nix/profiles)"
+        "read_file(/tmp/antigravity)"
+      ] ++ builtins.map (cmd: "command(${cmd})") [
         "awk"
         "binwalk"
         "cat"

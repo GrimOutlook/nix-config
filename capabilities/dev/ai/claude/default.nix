@@ -26,6 +26,14 @@ in
           command = "/etc/claude-code/statusline.sh";
         };
         permissions.defaultMode = "auto";
+        permissions.additionalDirectories = [
+          "/nix/store"
+          "/nix/var/log/nix"
+          "/nix/var/nix/profiles"
+          "/run/current-system"
+          "/home/grim/.local/state/nix/profiles"
+          "/tmp/claude"
+        ];
       };
     };
     host.home-manager.config.home = {

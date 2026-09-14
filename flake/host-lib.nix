@@ -1,8 +1,10 @@
 { self, inputs, ... }:
 let
-  # Build a numtide devshell with repository maintenance commands. Built from
-  # *this* flake's nixpkgs/devshell inputs, so downstream flakes need no extra
-  # inputs.
+  # Build a numtide devshell with a `deploy` command that runs
+  # `nh os switch . -H <hostname>`. When run on a machine whose own hostname
+  # differs from the target, it also passes `--target-host deploy@<hostname>`
+  # so the build is activated remotely. Built from *this* flake's
+  # nixpkgs/devshell inputs, so downstream flakes need no extra inputs.
   mkDeployShell =
     {
       system,
@@ -18,6 +20,30 @@ let
     inputs.devshell.legacyPackages.${system}.mkShell {
       packages = [ pkgs.nh ] ++ packages;
       commands = [
+        {
+          name = "deploy";
+          help = "nh os switch this host (${hostname}); remote-targets if run elsewhere";
+          command = ''
+            target="${hostname}"
+            run_deploy() {
+              nh os switch . -H "$target" --keep-going --show-activation-logs --elevation-strategy=run0 "$@"
+            }
+            if [ "$(uname -n)" = "$target" ]; then
+              echo "=> Deploying to local host: $target"
+              run_deploy "$@"
+            else
+              echo "=> Deploying to remote host: deploy@$target"
+              run_deploy --target-host "deploy@$target" "$@"
+            fi
+          '';
+        }
+        {
+          name = "deploy-update";
+          help = "Deploy this host with updated inputs";
+          command = ''
+            deploy --update "$@"
+          '';
+        }
         {
           name = "commit-update";
           help = "Commit the flake.lock update";
@@ -43,8 +69,8 @@ let
   #     };
   #
   # `nix-config.nixosModules.default` is included automatically, so `modules`
-  # only needs the host-specific bits. The devShell provides repository
-  # maintenance commands.
+  # only needs the host-specific bits. The devShell's `deploy` command targets
+  # this host.
   mkHost =
     {
       hostname,

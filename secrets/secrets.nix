@@ -17,4 +17,16 @@ in
     ];
     armor = true;
   };
+
+  # Bitwarden/Vaultwarden managed-storage manifest for Firefox -- seeds the
+  # self-hosted server URL so it never lands in this public repo in clear.
+  # See `capabilities/graphical/firefox.nix`.
+  "firefox-bitwarden-managed-storage.age" = {
+    publicKeys = [
+      berlin
+      paris
+      personal
+    ];
+    armor = true;
+  };
 }

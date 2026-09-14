@@ -7,7 +7,25 @@ let
   cfg = config.host.firefox;
 in
 {
-  options.host.firefox.enable = lib.mkEnableOption "Enable Firefox";
+  options.host.firefox = {
+    enable = lib.mkEnableOption "Enable Firefox";
+
+    # On by default: the only hosts that reach this module are the ones
+    # enabling `host.graphical` (berlin, paris), and both are recipients of
+    # the secret. A NEW graphical host must be added to
+    # `secrets/firefox-bitwarden-managed-storage.age`'s `publicKeys` before
+    # its first switch -- agenix cannot decrypt for a non-recipient and fails
+    # at activation time, which the build will not catch. Set this to false on
+    # such a host if you would rather not hold the secret there.
+    bitwardenManagedEnvironment =
+      lib.mkEnableOption ''
+        seeding the Bitwarden extension with the self-hosted Vaultwarden
+        server URL, from an agenix secret
+      ''
+      // {
+        default = true;
+      };
+  };
 
   config = lib.mkIf cfg.enable {
     host.nix.realtimePackages = [ "firefox" ];
@@ -127,6 +145,33 @@ in
           ImproveSuggest = false;
           Locked = true;
         };
+      };
+    };
+
+    # Point the Bitwarden extension at the self-hosted Vaultwarden instance.
+    #
+    # This deliberately does NOT go through `programs.firefox.policies`. The
+    # policy route (`3rdparty.Extensions.<id>`) would work, but policies.json
+    # is rendered at eval time into the world-readable Nix store, so the URL
+    # would end up in this public repo. Instead the whole WebExtension
+    # managed-storage manifest is the secret, decrypted at activation.
+    #
+    # Firefox looks for native manifests in `/usr/lib/mozilla/managed-storage/`
+    # (hardcoded in gecko's `nsXREDirProvider.cpp`; there is no NixOS option
+    # for it, hence the absolute path), named after the extension ID. Bitwarden
+    # reads `environment.base` out of `browser.storage.managed` on startup and
+    # fills in the server URL before the login screen -- see
+    # `browser-environment.service.ts` in bitwarden/clients. It seeds the URL
+    # only; email, master password and 2FA stay manual.
+    #
+    # Mode 0444 because Firefox reads this as the desktop user: the URL is
+    # readable by anyone with an account on the machine. agenix is keeping it
+    # out of git, not off the host.
+    age.secrets = lib.mkIf cfg.bitwardenManagedEnvironment {
+      firefox-bitwarden-managed-storage = {
+        file = ../../secrets/firefox-bitwarden-managed-storage.age;
+        path = "/usr/lib/mozilla/managed-storage/{446900e4-71c2-419f-a6a7-df9c091e268b}.json";
+        mode = "0444";
       };
     };
 

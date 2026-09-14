@@ -49,6 +49,12 @@ in
       # NOTE: This ensures these groups are created.
       groups.${username} = { };
       groups.${deployUser} = { };
+      groups."sudo-rs-callers" = {
+        members = [
+          username
+          deployUser
+        ];
+      };
     };
 
     nix.settings.trusted-users = [

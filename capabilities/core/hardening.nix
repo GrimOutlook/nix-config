@@ -584,8 +584,21 @@ in
             message = "Hardening Assertion: sudo-rs must be enabled while sudo remains disabled.";
           }
           {
-            assertion = !(lib.any ownerMatchesSudoRsRule config.security.sudo-rs.extraRules);
-            message = "Hardening Assertion: The host owner must not match any sudo-rs user or group rule.";
+            assertion = lib.all (
+              rule:
+                !(ownerMatchesSudoRsRule rule)
+                || (
+                  rule.runAs == "root"
+                  && lib.all (
+                    command:
+                      lib.elem "PASSWD" command.options
+                      && lib.elem "NOSETENV" command.options
+                      && !(lib.elem "NOPASSWD" command.options)
+                      && !(lib.elem "SETENV" command.options)
+                  ) rule.commands
+                )
+            ) config.security.sudo-rs.extraRules;
+            message = "Hardening Assertion: The owner sudo-rs rule must require a password and disable environment changes.";
           }
           {
             assertion = config.services.openssh.settings.PasswordAuthentication == false;

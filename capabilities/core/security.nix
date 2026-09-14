@@ -35,8 +35,8 @@ in
     enable = lib.mkEnableOption "Enable default security configurations";
   };
   config = lib.mkIf cfg.enable {
-    # sudo-rs is retained only for the restricted deploy account below. The
-    # owner has no configured privilege-elevation path.
+    # sudo-rs provides password-protected owner elevation and a separate
+    # restricted deploy account below.
     security.sudo.enable = false;
     security.sudo-rs = {
       enable = true;
@@ -58,22 +58,37 @@ in
             }
           ];
         }
+        {
+          users = [ config.host.owner.username ];
+          runAs = "root";
+          commands = [
+            {
+              command = "ALL";
+              options = [
+                "PASSWD"
+                "NOSETENV"
+              ];
+            }
+          ];
+        }
       ];
     };
 
     environment.systemPackages = [ deployRsBridge ];
 
-    # Restrict the privileged wrappers themselves to the deploy group. The
+    # Restrict the privileged wrappers themselves to owner and deploy. The
     # package in the Nix store remains world-readable/executable, but it is not
     # setuid and cannot elevate without these wrappers.
     security.wrappers.sudo = {
-      group = lib.mkForce "deploy";
+      group = lib.mkForce "sudo-rs-callers";
       permissions = lib.mkForce "u+rx,g+x";
     };
     security.wrappers.sudoedit = {
-      group = lib.mkForce "deploy";
+      group = lib.mkForce "sudo-rs-callers";
       permissions = lib.mkForce "u+rx,g+x";
     };
+    # Require local run0 users to be in wheel.
+    security.pam.services.run0.requireWheel = true;
     # Lock accounts on failure and enforce 3s delay on login failures
     security.pam.services.login.failDelay.enable = true;
     security.pam.services.login.failDelay.delay = 3000000;
@@ -127,32 +142,5 @@ in
       throw-keyids = true;
     };
 
-    # Allow the owner to shut down and reboot the system without a polkit
-    # prompt, even without an active local session (e.g. over SSH).
-    security.polkit.extraConfig = ''
-      polkit.addRule(function(action, subject) {
-        if (
-          (action.id == "org.freedesktop.login1.power-off" ||
-           action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
-           action.id == "org.freedesktop.login1.reboot" ||
-           action.id == "org.freedesktop.login1.reboot-multiple-sessions") &&
-          subject.user == "${config.host.owner.username}"
-        ) {
-          return polkit.Result.YES;
-        }
-      });
-
-      // Prevent the owner from using systemd unit management as a generic
-      // privilege-elevation path. The explicit denial prevents systemd's
-      // default administrator-authentication policy from restoring it.
-      polkit.addRule(function(action, subject) {
-        if (
-          action.id == "org.freedesktop.systemd1.manage-units" &&
-          subject.user == "${config.host.owner.username}"
-        ) {
-          return polkit.Result.NO;
-        }
-      });
-    '';
   };
 }

@@ -55,5 +55,8 @@ in
       "networkmanager"
     ];
 
+    environment.shellAliases = {
+      "clear-dns" = "run0 nscd -i hosts";
+    };
   };
 }

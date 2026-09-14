@@ -22,6 +22,12 @@ in
       default = { };
       description = "home-manager configurations that are passed to the `home-manager.users.\${owner}` field";
     };
+
+    sharedConfig = mkOption {
+      type = types.deferredModule;
+      default = { };
+      description = "home-manager configurations that are passed to the `home-manager.sharedModules` field";
+    };
   };
 
   config.home-manager =
@@ -32,6 +38,7 @@ in
       backupFileExtension = "hm-bkp";
       useGlobalPkgs = true;
       useUserPackages = true;
+      sharedModules = [ cfg.sharedConfig ];
       users.${username} = {
         home.homeDirectory = "/home/${username}";
 

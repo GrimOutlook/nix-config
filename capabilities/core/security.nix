@@ -36,7 +36,7 @@ in
   };
   config = lib.mkIf cfg.enable {
     # sudo-rs is retained only for the restricted deploy account below. The
-    # owner uses run0/Polkit for local elevation instead of generic sudo.
+    # owner has no configured privilege-elevation path.
     security.sudo.enable = false;
     security.sudo-rs = {
       enable = true;
@@ -74,10 +74,6 @@ in
       group = lib.mkForce "deploy";
       permissions = lib.mkForce "u+rx,g+x";
     };
-    # Require local run0 users to be in wheel; the active-session Polkit rule
-    # below remains the gate that prevents remote owner SSH sessions escalating.
-    security.pam.services.run0.requireWheel = true;
-
     # Lock accounts on failure and enforce 3s delay on login failures
     security.pam.services.login.failDelay.enable = true;
     security.pam.services.login.failDelay.delay = 3000000;
@@ -91,8 +87,6 @@ in
         value = "10";
       }
     ];
-
-
 
     # Physical port defense via USBGuard (block unauthorized peripherals, allow internal input devices)
     services.usbguard = {
@@ -148,18 +142,15 @@ in
         }
       });
 
-      // Allow the owner to manage systemd units (e.g. via `run0`, used by
-      // `nh`/`deploy` to activate NixOS configurations) without a polkit
-      // password prompt, but only from an active local session so this
-      // can't be abused remotely without already having a shell as the
-      // owner.
+      // Prevent the owner from using systemd unit management as a generic
+      // privilege-elevation path. The explicit denial prevents systemd's
+      // default administrator-authentication policy from restoring it.
       polkit.addRule(function(action, subject) {
         if (
           action.id == "org.freedesktop.systemd1.manage-units" &&
-          subject.user == "${config.host.owner.username}" &&
-          subject.active
+          subject.user == "${config.host.owner.username}"
         ) {
-          return polkit.Result.YES;
+          return polkit.Result.NO;
         }
       });
     '';

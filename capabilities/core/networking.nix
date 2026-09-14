@@ -56,7 +56,7 @@ in
     ];
 
     environment.shellAliases = {
-      "clear-dns" = "run0 nscd -i hosts";
+      "clear-dns" = "sudo nscd -i hosts";
     };
   };
 }

@@ -108,7 +108,10 @@ in
         };
       };
 
-      environment.sessionVariables.NH_ELEVATION_STRATEGY = "run0";
+      # run0 authorizes through Polkit, which the owner no longer has a path
+      # through: it is not in wheel, and wheel is denied manage-units outright.
+      # Elevation goes through the password-protected sudo-rs rule instead.
+      environment.sessionVariables.NH_ELEVATION_STRATEGY = "sudo";
 
       nix = {
         # Disable legacy channel updates (flakes only)

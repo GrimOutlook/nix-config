@@ -145,7 +145,7 @@ let
   # watchdog compare them, and a mismatch makes the overlay disagree with the
   # decision it is rendering.
   permissionReviewerPlugin = [
-    "${permissionReviewer}"
+    "./plugins/opencode-permission-reviewer"
     {
       model = "openai/gpt-5.6-luna";
       variant = "max";
@@ -218,6 +218,11 @@ in
         complete -c opencode-commit -w opencode
       '';
       home = {
+        # OpenCode's status dialog derives the display name from the plugin
+        # path, so expose the store-built plugin through a stable basename.
+        file.".config/opencode/plugins/opencode-permission-reviewer" = {
+          source = permissionReviewer;
+        };
         file.".config/opencode/opencode.json" = {
           text = builtins.toJSON cfg.settings;
           force = true;

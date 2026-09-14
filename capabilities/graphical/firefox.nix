@@ -5,6 +5,13 @@
 }:
 let
   cfg = config.host.firefox;
+
+  bitwardenExtensionId = "{446900e4-71c2-419f-a6a7-df9c091e268b}";
+
+  ownerUser = config.host.owner.username;
+  ownerGroup = config.users.users.${ownerUser}.group;
+  ownerHome = config.users.users.${ownerUser}.home;
+  managedStorageDir = "${ownerHome}/.mozilla/managed-storage";
 in
 {
   options.host.firefox = {
@@ -86,7 +93,7 @@ in
             installation_mode = "force_installed";
           };
 
-          "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+          ${bitwardenExtensionId} = {
             install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
             installation_mode = "force_installed";
           };
@@ -156,22 +163,35 @@ in
     # would end up in this public repo. Instead the whole WebExtension
     # managed-storage manifest is the secret, decrypted at activation.
     #
-    # Firefox looks for native manifests in `/usr/lib/mozilla/managed-storage/`
-    # (hardcoded in gecko's `nsXREDirProvider.cpp`; there is no NixOS option
-    # for it, hence the absolute path), named after the extension ID. Bitwarden
-    # reads `environment.base` out of `browser.storage.managed` on startup and
-    # fills in the server URL before the login screen -- see
-    # `browser-environment.service.ts` in bitwarden/clients. It seeds the URL
-    # only; email, master password and 2FA stay manual.
+    # Firefox searches exactly two directories for native manifests
+    # (`NativeManifests.sys.mjs`): the per-user one, `~/.mozilla/`, and a
+    # system one. On stock Linux the system one is `/usr/lib/mozilla/`, but
+    # nixpkgs' wrapper repoints it at `<firefox>/lib/mozilla/` -- inside the
+    # store, so nothing can be dropped there, and a manifest under
+    # `/usr/lib/mozilla/` is never read. Confirmed by strace: Firefox opens
+    # only `~/.mozilla/managed-storage/<id>.json` and
+    # `/nix/store/...-firefox-<v>/lib/mozilla/managed-storage/<id>.json`.
+    # Hence the per-user path, named after the extension ID.
     #
-    # Mode 0444 because Firefox reads this as the desktop user: the URL is
-    # readable by anyone with an account on the machine. agenix is keeping it
-    # out of git, not off the host.
+    # Bitwarden reads `environment.base` out of `browser.storage.managed` and
+    # calls `setUrlsToManagedEnvironment()` -- but only from its
+    # `runtime.onInstalled` handler, gated on its own `extensionInstalled`
+    # flag. It is a one-shot at first install: a profile that already has the
+    # add-on will NOT pick up a manifest added later; the extension has to be
+    # reinstalled (or the profile recreated). It seeds the URL only; email,
+    # master password and 2FA stay manual.
+    systemd.tmpfiles.rules = lib.mkIf cfg.bitwardenManagedEnvironment [
+      "d ${ownerHome}/.mozilla 0755 ${ownerUser} ${ownerGroup} -"
+      "d ${managedStorageDir} 0755 ${ownerUser} ${ownerGroup} -"
+    ];
+
     age.secrets = lib.mkIf cfg.bitwardenManagedEnvironment {
       firefox-bitwarden-managed-storage = {
         file = ../../secrets/firefox-bitwarden-managed-storage.age;
-        path = "/usr/lib/mozilla/managed-storage/{446900e4-71c2-419f-a6a7-df9c091e268b}.json";
-        mode = "0444";
+        path = "${managedStorageDir}/${bitwardenExtensionId}.json";
+        owner = ownerUser;
+        group = ownerGroup;
+        mode = "0400";
       };
     };
 

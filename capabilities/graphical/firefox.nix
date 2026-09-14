@@ -52,6 +52,50 @@ in
           SkipOnboarding = true;
         };
 
+        # Declaratively installed add-ons. Firefox fetches each XPI from AMO on
+        # first run (so versions are not pinned by the flake); everything not
+        # listed here is blocked from installing.
+        ExtensionSettings = {
+          "*".installation_mode = "blocked";
+
+          "uBlock0@raymondhill.net" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
+            installation_mode = "force_installed";
+          };
+
+          "addon@darkreader.org" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi";
+            installation_mode = "force_installed";
+          };
+
+          "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
+            installation_mode = "force_installed";
+          };
+
+          # Overlaps with the native `privacy.query_stripping` prefs below;
+          # ClearURLs covers more rules but does so by injecting into pages.
+          "{74145f27-f039-47ce-a470-a662b129930a}" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
+            installation_mode = "force_installed";
+          };
+
+          "firefox-extension@steamdb.info" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/steam-database/latest.xpi";
+            installation_mode = "force_installed";
+          };
+
+          "{6b733b82-9261-47ee-a595-2dda294a4d08}" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/yomitan/latest.xpi";
+            installation_mode = "force_installed";
+          };
+
+          "sponsorBlocker@ajay.app" = {
+            install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
+            installation_mode = "force_installed";
+          };
+        };
+
         DisableAppUpdate = true;
         OverrideFirstRunPage = "";
         PictureInPicture.Enabled = false;
@@ -64,8 +108,9 @@ in
           "media.ffmpeg.vaapi.enabled" = true; # Enable hardware video acceleration
           "browser.aboutConfig.showWarning" = false;
           "browser.warnOnQuitShortcut" = true;
-          # Strip tracking params (utm_*, fbclid, gclid, ...) natively rather
-          # than via an extension that injects into every page.
+          # Strip the common tracking params (utm_*, fbclid, gclid, ...)
+          # natively, so the cheap cases never need a content script.
+          # ClearURLs (see ExtensionSettings above) handles the long tail.
           "privacy.query_stripping.enabled" = true;
           "privacy.query_stripping.enabled.pbmode" = true;
         };

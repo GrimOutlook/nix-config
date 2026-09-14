@@ -28,7 +28,6 @@ in
           homeMode = "0750";
 
           group = "${username}";
-          extraGroups = [ "wheel" ];
 
           initialHashedPassword = "$y$j9T$B1twhXiwjRRijxI5.sKdD.$ezIbul2rpq59cT/zHUDgeVygGVXcq01LDiyb4GFc79/";
         };
@@ -49,6 +48,12 @@ in
       # NOTE: This ensures these groups are created.
       groups.${username} = { };
       groups.${deployUser} = { };
+      groups."sudo-rs-callers" = {
+        members = [
+          username
+          deployUser
+        ];
+      };
     };
 
     nix.settings.trusted-users = [

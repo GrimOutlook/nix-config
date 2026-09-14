@@ -241,9 +241,26 @@ in
             import type { Plugin } from "@opencode-ai/plugin";
 
             export const TmuxNotify: Plugin = async ({ $ }) => {
+              const reviewerStatusPrefix = "opencode-permission-reviewer.status.";
               let userInterrupted = false;
               const subagentSessions = new Set<string>();
               const targetPane = process.env.TMUX_PANE;
+
+              const decodeReviewerManualStatus = (command?: string) => {
+                if (!command?.startsWith(reviewerStatusPrefix)) return;
+
+                try {
+                  const status = JSON.parse(
+                    Buffer.from(command.slice(reviewerStatusPrefix.length), "base64url").toString("utf8"),
+                  ) as { phase?: unknown; permission?: unknown };
+                  if (status.phase !== "manual") return;
+                  return {
+                    permission: typeof status.permission === "string" ? status.permission : undefined,
+                  };
+                } catch {
+                  return;
+                }
+              };
 
               const isTargetVisible = async () => {
                 const result = await $`tmux display-message -p -t ''${targetPane} '#{pane_active} #{window_active_clients}'`
@@ -312,6 +329,9 @@ in
                     return;
                   }
 
+                  const reviewerManualStatus =
+                    type === "tui.command.execute" ? decodeReviewerManualStatus(properties.command) : undefined;
+
                   if (type === "session.idle" && userInterrupted) {
                     userInterrupted = false;
                     return;
@@ -320,8 +340,8 @@ in
                   const message =
                     type === "session.idle"
                       ? "OpenCode: completed"
-                      : type === "permission.asked"
-                        ? "OpenCode: permission needed (" + (properties.permission ?? "approval") + ")"
+                      : reviewerManualStatus
+                        ? "OpenCode: permission needed (" + (reviewerManualStatus.permission ?? "approval") + ")"
                         : type === "question.asked"
                           ? "OpenCode: input needed (" + (properties.questions?.[0]?.header ?? "question") + ")"
                           : undefined;

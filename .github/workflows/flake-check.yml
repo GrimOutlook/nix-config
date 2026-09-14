@@ -2,9 +2,8 @@ name: flake-check
 
 on:
   pull_request:
-    paths:
-      - "flake.nix"
-      - "flake.lock"
+    paths-ignore:
+      - "**/*.md"
 
 permissions:
   contents: read

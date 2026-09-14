@@ -88,6 +88,14 @@ Notable non-obvious contents:
   whose capability was deleted — `$menu` in `graphical/hyprland.nix` is now a
   `noctalia-shell ipc call` invocation.
 
+  Its colours follow stylix: the module writes a `Stylix` colour scheme to
+  `~/.config/noctalia/colorschemes/Stylix/Stylix.json` from
+  `config.lib.stylix.colors` (that one *is* store-linked, so it tracks stylix
+  on every rebuild) and seeds `colorSchemes.predefinedScheme = "Stylix"` plus
+  the stylix fonts into settings.json. Stylix's own `noctalia-shell` target is
+  inert here — it only writes into the upstream `programs.noctalia-shell`
+  home-manager module, which this module doesn't use.
+
 ## Host types
 
 Each host sets exactly one `host.type.<type>.enable = true`. Types are

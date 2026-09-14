@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.host.dev.ai.opencode;
+  render = (import ./_render.nix { inherit lib; }) config.host.dev.ai.shared;
   system = pkgs.stdenv.hostPlatform.system;
   opentuiTarget =
     {
@@ -181,18 +182,15 @@ in
         # The reviewer only ever sees actions the policy classifies as `ask`;
         # with no ask rule it is installed but inert. `bash` is the surface it
         # is built for -- the deterministic emergency brake runs before any
-        # model call, and everything else goes to the reviewer.
-        bash = "ask";
-        external_directory = {
-          "/nix/store/**" = "allow";
-          "/nix/var/log/nix/**" = "allow";
-          "/nix/var/nix/profiles/**" = "allow";
-          "/run/current-system/**" = "allow";
-          "~/.local/state/nix/profiles/**" = "allow";
-          "/tmp/opencode/**" = "allow";
+        # model call, and everything else goes to the reviewer. The shared
+        # allowlist short-circuits the reviewer for routine commands; the `*`
+        # catch-all in `render.opencode.bash` keeps every other command on it.
+        bash = render.opencode.bash;
+        external_directory = render.opencode.directories [
+          "/tmp/opencode"
           # Allow access to Claude memory by default
-          "~/.claude/projects/**" = "allow";
-        };
+          "~/.claude/projects"
+        ];
       };
       references = {
         claude-projects = {

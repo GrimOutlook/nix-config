@@ -35,41 +35,6 @@
             help = "Update all flakes + commit and push";
           }
           {
-            name = "switch";
-            command = ''
-              hostname=''${1:-""}
-
-              command='nh os switch . --hostname $hostname'
-
-              if [ -z "$hostname" ]; then
-                configs=$(
-                  nix eval .#nixosConfigurations --apply 'builtins.attrNames' --json |
-                  jq '[ .[] | select(. != "default") ]'
-                )
-                case "$(jq 'length' <<< $configs)" in
-                  0) 
-                    echo "No hostname found. Building default and switching locally..."
-                    hostname="default"
-                    ;;
-                  1)
-                    hostname=$(jq -r '.[0]' <<< "$configs")
-                    if [ "$hostname" != "$HOSTNAME" ]; then
-                       command=$(echo "$command" '--target-host grim@$hostname --build-host grim@$hostname')
-                    fi
-                    ;;
-                  *)
-                    echo "Failed to get hostname to build from flake.nix. Available hosts: $configs" >&2
-                    exit 1
-                    ;;
-                esac
-              fi
-
-              echo "=> Deploying host: $hostname"
-              eval "$command"
-            '';
-            help = "Rebuild nix configuration for host";
-          }
-          {
             name = "unlink-results";
             # packages = [ "fd" ];
             command = ''

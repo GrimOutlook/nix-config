@@ -47,6 +47,111 @@ let
       runHook postInstall
     '';
   };
+  # Policy-aware permission reviewer plugin. Built from source rather than
+  # pulled from npm: the published 1.3.1 predates the fixes we depend on, and
+  # the pinned input is the integration branch that carries them (see the input
+  # comment in flake.nix).
+  #
+  # Only `dist/` and `package.json` are installed. Everything the plugin needs
+  # at runtime -- @opencode-ai/plugin, @opentui/*, solid-js -- is declared
+  # `external` in its tsup config and supplied by the OpenCode host, so the
+  # store path needs no node_modules. The dependencies below are build-time
+  # only (tsup, typescript).
+  permissionReviewerSrc = inputs.nix-config.inputs.opencode-permission-reviewer;
+  permissionReviewerModules = pkgs.stdenv.mkDerivation {
+    pname = "opencode-permission-reviewer-node-modules";
+    version = "1.3.1";
+    src = permissionReviewerSrc;
+
+    nativeBuildInputs = [ pkgs.bun ];
+    dontConfigure = true;
+
+    buildPhase = ''
+      runHook preBuild
+      export HOME="$TMPDIR"
+      bun install --frozen-lockfile --no-progress --ignore-scripts
+      runHook postBuild
+    '';
+    installPhase = ''
+      runHook preInstall
+      cp -R node_modules $out
+      runHook postInstall
+    '';
+
+    # `bun install` writes store paths into node_modules (bun's own binary lands
+    # in the .bin shims), and a fixed-output derivation may not reference the
+    # store. The scan is what forbids it, not the paths themselves, so discard
+    # the reference set -- the outer derivation rebuilds anything it needs.
+    __structuredAttrs = true;
+    unsafeDiscardReferences.out = true;
+
+    # Fixed-output: `bun install` is the only step that needs the network.
+    # Bump this hash whenever the pinned plugin revision changes its lockfile.
+    outputHashMode = "recursive";
+    outputHashAlgo = "sha256";
+    outputHash = "sha256-fnVOl24vROpKNT/zTlwZpk2C4Ha6SGliibv38gtXZJ8=";
+  };
+  permissionReviewer = pkgs.stdenv.mkDerivation {
+    pname = "opencode-permission-reviewer";
+    version = "1.3.1-integration";
+    src = permissionReviewerSrc;
+
+    # nodejs is not a runtime dependency of the plugin; patchShebangs needs it
+    # on PATH to resolve the `#!/usr/bin/env node` lines below.
+    nativeBuildInputs = [
+      pkgs.bun
+      pkgs.nodejs
+    ];
+    dontConfigure = true;
+
+    buildPhase = ''
+      runHook preBuild
+      export HOME="$TMPDIR"
+      cp -R ${permissionReviewerModules} node_modules
+      chmod -R u+w node_modules
+
+      # The sandbox has no /usr/bin/env, so the `#!/usr/bin/env node` shebangs
+      # in the dependency CLIs (tsup) abort the build with "bad interpreter".
+      # patchShebangs skips symlinks, and every node_modules/.bin entry is one,
+      # so patch the real files they resolve to instead.
+      for shim in node_modules/.bin/*; do
+        target=$(readlink -f "$shim")
+        if [ -f "$target" ]; then
+          patchShebangs --build "$target"
+        fi
+      done
+
+      bun run build
+      runHook postBuild
+    '';
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out
+      cp -R dist $out/dist
+      cp package.json $out/package.json
+      runHook postInstall
+    '';
+
+    # The overlay entry ships as raw TSX for the host to compile; a missing
+    # dist/tui means the build silently dropped it.
+    doInstallCheck = true;
+    installCheckPhase = ''
+      test -f $out/dist/index.js
+      test -f $out/dist/tui/tui.tsx
+    '';
+  };
+  # Keep these identical in opencode.json and tui.json: the server and the TUI
+  # watchdog compare them, and a mismatch makes the overlay disagree with the
+  # decision it is rendering.
+  permissionReviewerPlugin = [
+    "${permissionReviewer}"
+    {
+      model = "openai/gpt-5.6-luna";
+      variant = "max";
+      timeoutMs = 120000;
+    }
+  ];
+
   opencode = (inputs.nix-config.inputs.llm-agents.packages.${system}.opencode).overrideAttrs (old: {
     postInstall = (old.postInstall or "") + ''
       wrapProgram $out/bin/opencode --set OTUI_ASSET_ROOT ${opentuiNative}/lib
@@ -71,7 +176,13 @@ in
       "$schema" = "https://opencode.ai/config.json";
       disabled_providers = [ "opencode" ];
       share = "disabled";
+      plugin = [ permissionReviewerPlugin ];
       permission = {
+        # The reviewer only ever sees actions the policy classifies as `ask`;
+        # with no ask rule it is installed but inert. `bash` is the surface it
+        # is built for -- the deterministic emergency brake runs before any
+        # model call, and everything else goes to the reviewer.
+        bash = "ask";
         external_directory = {
           "/nix/store/**" = "allow";
           "/nix/var/log/nix/**" = "allow";
@@ -111,6 +222,15 @@ in
       home = {
         file.".config/opencode/opencode.json" = {
           text = builtins.toJSON cfg.settings;
+          force = true;
+        };
+        # The overlay is registered separately from the server plugin, with an
+        # identical options block (see permissionReviewerPlugin).
+        file.".config/opencode/tui.json" = {
+          text = builtins.toJSON {
+            "$schema" = "https://opencode.ai/tui.json";
+            plugin = [ permissionReviewerPlugin ];
+          };
           force = true;
         };
         file.".config/opencode/plugins/tmux-notify.ts" = {

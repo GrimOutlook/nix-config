@@ -772,6 +772,24 @@
         "type": "github"
       }
     },
+    "opencode-permission-reviewer": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789344061,
+        "narHash": "sha256-555QHF+174e0zSMQgSv3cJs98hk0Wcvc53P7x9oBADQ=",
+        "ref": "integration/all-prs",
+        "rev": "31cb5e45805662371c73245661e500ec04e91334",
+        "revCount": 132,
+        "type": "git",
+        "url": "https://github.com/GrimOutlook/opencode-permission-reviewer.git"
+      },
+      "original": {
+        "ref": "integration/all-prs",
+        "rev": "31cb5e45805662371c73245661e500ec04e91334",
+        "type": "git",
+        "url": "https://github.com/GrimOutlook/opencode-permission-reviewer.git"
+      }
+    },
     "opentui": {
       "flake": false,
       "locked": {
@@ -812,6 +830,7 @@
         "nixpkgs-realtime": "nixpkgs-realtime",
         "nixvim": "nixvim",
         "noctalia-greeter": "noctalia-greeter",
+        "opencode-permission-reviewer": "opencode-permission-reviewer",
         "opentui": "opentui",
         "smart-scrolloff-nvim": "smart-scrolloff-nvim",
         "stylix": "stylix",

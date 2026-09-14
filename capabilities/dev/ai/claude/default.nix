@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.host.dev.ai.claude;
+  render = (import ../_render.nix { inherit lib; }) config.host.dev.ai.shared;
 in
 {
   options.host.dev.ai.claude.enable = lib.mkEnableOption "Enable Claude Code CLI configuration";
@@ -26,14 +27,9 @@ in
           command = "/etc/claude-code/statusline.sh";
         };
         permissions.defaultMode = "auto";
-        permissions.additionalDirectories = [
-          "/nix/store"
-          "/nix/var/log/nix"
-          "/nix/var/nix/profiles"
-          "/run/current-system"
-          "/home/grim/.local/state/nix/profiles"
-          "/tmp/claude"
-        ];
+        permissions.additionalDirectories = render.claude.directories [ "/tmp/claude" ];
+        permissions.allow = render.claude.commands;
+        permissions.deny = render.claude.deniedCommands;
       };
     };
     host.home-manager.config.home = {

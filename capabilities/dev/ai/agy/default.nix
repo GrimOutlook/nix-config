@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.host.dev.ai.agy;
+  render = (import ../_render.nix { inherit lib; }) config.host.dev.ai.shared;
   agySettings = {
     allowNonWorkspaceAccess = true;
     colorScheme = "dark";
@@ -20,86 +21,8 @@ let
       showTokenUsage = true;
     };
     permissions = {
-      allow = [
-        "read_file(/nix/store)"
-        "read_file(/nix/var/log/nix)"
-        "read_file(/nix/var/nix/profiles)"
-        "read_file(/run/current-system)"
-        "read_file(/home/grim/.local/state/nix/profiles)"
-        "read_file(/tmp/antigravity)"
-      ] ++ builtins.map (cmd: "command(${cmd})") [
-        "awk"
-        "binwalk"
-        "cat"
-        "cd"
-        "chmod"
-        "chown"
-        "cp"
-        "curl"
-        "devenv"
-        "df"
-        "diff"
-        "docker build"
-        "docker exec"
-        "docker images"
-        "docker run"
-        "du"
-        "echo"
-        "export"
-        "fd"
-        "file"
-        "find"
-        "gh issue"
-        "gh pr"
-        "gh repo"
-        "gh search"
-        "git"
-        "go vet"
-        "grep"
-        "head"
-        "journalctl"
-        "jq"
-        "just"
-        "kill"
-        "ls"
-        "mage"
-        "mkdir"
-        "mv"
-        "nix build"
-        "nix eval"
-        "nix flake check"
-        "nix flake upgrade"
-        "nix-instantiate"
-        "podman build"
-        "podman exec"
-        "podman images"
-        "podman run"
-        "ps"
-        "rg"
-        "rmdir"
-        "sd"
-        "sed"
-        "sort"
-        "stat"
-        "strings"
-        "systemctl"
-        "tail"
-        "tar"
-        "tee"
-        "top"
-        "touch"
-        "tree"
-        "uniq"
-        "unzip"
-        "wc"
-        "wget"
-        "which"
-        "xargs"
-        "zip"
-      ];
-      deny = builtins.map (cmd: "command(${cmd})") [
-        "rm -rf"
-      ];
+      allow = render.agy.directories [ "/tmp/antigravity" ] ++ render.agy.commands;
+      deny = render.agy.deniedCommands;
     };
   };
   agyKeybindings =

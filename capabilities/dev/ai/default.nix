@@ -11,6 +11,7 @@ in
     ./agy/default.nix
     ./claude/default.nix
     ./opencode.nix
+    ./shared.nix
   ];
 
   options.host.dev.ai.enable = lib.mkEnableOption "Enable AI development configurations";

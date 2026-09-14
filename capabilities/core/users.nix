@@ -16,6 +16,13 @@ in
     users = {
       mutableUsers = false;
 
+      # The owner is deliberately not in wheel; elevation goes through the
+      # password-protected sudo-rs rule in security.nix and login through the
+      # SSH key set in ssh-server.nix. The stock lockout assertion only counts
+      # hashedPassword/hashedPasswordFile/authorized keys on root or wheel
+      # accounts, so it sees neither and would otherwise fail every build.
+      allowNoPasswordLogin = true;
+
       users = {
         root = {
           isSystemUser = true;

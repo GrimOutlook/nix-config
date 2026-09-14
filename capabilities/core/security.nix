@@ -136,6 +136,18 @@ in
     programs.gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
+
+      # `max-cache-ttl-ssh` is a hard ceiling: gpg-agent drops a cached SSH
+      # passphrase once the entry is this old, "even if it has been accessed
+      # recently", so it overrides both `default-cache-ttl-ssh` and any
+      # per-key TTL in ~/.gnupg/sshcontrol. At the 2h default a key whose
+      # on-disk file is passphrase-protected (the deploy credential) pops a
+      # pinentry several times a working day. Raising the ceiling to ~400 days
+      # makes the cache last as long as the agent does, so the passphrase is
+      # entered once per boot. The key itself stays encrypted at rest in
+      # ~/.gnupg/private-keys-v1.d -- this caches the passphrase, it does not
+      # strip it.
+      settings.max-cache-ttl-ssh = 34560000;
     };
 
     # gpg.conf hardening. Note: several of these duplicate hardened defaults

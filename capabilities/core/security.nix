@@ -87,8 +87,21 @@ in
       group = lib.mkForce "sudo-rs-callers";
       permissions = lib.mkForce "u+rx,g+x";
     };
-    # Require local run0 users to be in wheel.
-    security.pam.services.run0.requireWheel = true;
+    # run0 authorizes systemd unit management through Polkit. Deny wheel
+    # subjects terminally so no later authorization rule can grant access.
+    security.polkit = {
+      enable = true;
+      extraConfig = lib.mkBefore ''
+        polkit.addRule(function(action, subject) {
+          if (
+            action.id == "org.freedesktop.systemd1.manage-units" &&
+            subject.isInGroup("wheel")
+          ) {
+            return polkit.Result.NO;
+          }
+        });
+      '';
+    };
     # Lock accounts on failure and enforce 3s delay on login failures
     security.pam.services.login.failDelay.enable = true;
     security.pam.services.login.failDelay.delay = 3000000;

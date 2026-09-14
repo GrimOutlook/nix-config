@@ -26,7 +26,7 @@ let
           command = ''
             target="${hostname}"
             run_deploy() {
-              nh os switch . -H "$target" --keep-going --show-activation-logs --elevation-strategy=passwordless "$@"
+              nh os switch . -H "$target" --keep-going --show-activation-logs --elevation-strategy=run0 "$@"
             }
             if [ "$(uname -n)" = "$target" ]; then
               echo "=> Deploying to local host: $target"

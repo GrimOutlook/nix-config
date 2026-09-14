@@ -584,6 +584,10 @@ in
             message = "Hardening Assertion: sudo-rs must be enabled while sudo remains disabled.";
           }
           {
+            assertion = !(lib.elem "wheel" ownerGroups);
+            message = "Hardening Assertion: The host owner must not be a member of wheel.";
+          }
+          {
             assertion = lib.all (
               rule:
                 !(ownerMatchesSudoRsRule rule)

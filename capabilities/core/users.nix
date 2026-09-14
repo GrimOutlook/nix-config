@@ -28,7 +28,6 @@ in
           homeMode = "0750";
 
           group = "${username}";
-          extraGroups = [ "wheel" ];
 
           initialHashedPassword = "$y$j9T$B1twhXiwjRRijxI5.sKdD.$ezIbul2rpq59cT/zHUDgeVygGVXcq01LDiyb4GFc79/";
         };

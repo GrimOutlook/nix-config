@@ -56,7 +56,7 @@ in
     # Wallpaper/palette syncing from the shell is a Noctalia v5 feature and we
     # run v4 from nixpkgs, so the greeter's own defaults apply here rather than
     # anything inherited from the session.
-    programs.noctalia-greeter = {
+    services.displayManager.noctalia-greeter = {
       enable = true;
       settings = cfg.settings;
     };

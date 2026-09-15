@@ -7,6 +7,7 @@
 }:
 let
   cfg = config.host.dev.ai.opencode;
+  reviewerEnabled = cfg.permissionReviewer.enable;
   render = (import ./_render.nix { inherit lib; }) config.host.dev.ai.shared;
   system = pkgs.stdenv.hostPlatform.system;
   opentuiTarget =
@@ -163,6 +164,21 @@ in
   options.host.dev.ai.opencode = {
     enable = lib.mkEnableOption "Enable OpenCode CLI configuration";
 
+    permissionReviewer.enable =
+      lib.mkEnableOption ''
+        the policy-aware permission reviewer plugin, which sends every action
+        the policy classifies as `ask` to a model for review instead of
+        prompting immediately.
+
+        Turning this off drops the plugin, its TUI overlay and its from-source
+        build out of the closure. The `ask` verdicts in `permission.bash` stay
+        exactly as they are and fall through to OpenCode's own interactive
+        prompt
+      ''
+      // {
+        default = true;
+      };
+
     settings = lib.mkOption {
       type = lib.types.submodule {
         freeformType = (pkgs.formats.json { }).type;
@@ -177,14 +193,16 @@ in
       "$schema" = "https://opencode.ai/config.json";
       disabled_providers = [ "opencode" ];
       share = "disabled";
-      plugin = [ permissionReviewerPlugin ];
+      plugin = lib.mkIf reviewerEnabled [ permissionReviewerPlugin ];
       permission = {
-        # The reviewer only ever sees actions the policy classifies as `ask`;
-        # with no ask rule it is installed but inert. `bash` is the surface it
-        # is built for -- the deterministic emergency brake runs before any
-        # model call, and everything else goes to the reviewer. The shared
-        # allowlist short-circuits the reviewer for routine commands; the `*`
-        # catch-all in `render.opencode.bash` keeps every other command on it.
+        # With the reviewer on it only ever sees actions the policy classifies
+        # as `ask`; with no ask rule it would be installed but inert. `bash` is
+        # the surface it is built for -- the deterministic emergency brake runs
+        # before any model call, and everything else goes to the reviewer. The
+        # shared allowlist short-circuits the reviewer for routine commands; the
+        # `*` catch-all in `render.opencode.bash` keeps every other command on
+        # it. With the reviewer off these verdicts are unchanged; they just
+        # become ordinary interactive prompts.
         bash = render.opencode.bash;
         external_directory = render.opencode.directories [
           "/tmp/opencode"
@@ -220,7 +238,7 @@ in
       home = {
         # OpenCode's status dialog derives the display name from the plugin
         # path, so expose the store-built plugin through a stable basename.
-        file.".config/opencode/plugins/opencode-permission-reviewer" = {
+        file.".config/opencode/plugins/opencode-permission-reviewer" = lib.mkIf reviewerEnabled {
           source = permissionReviewer;
         };
         file.".config/opencode/opencode.json" = {
@@ -230,10 +248,14 @@ in
         # The overlay is registered separately from the server plugin, with an
         # identical options block (see permissionReviewerPlugin).
         file.".config/opencode/tui.json" = {
-          text = builtins.toJSON {
-            "$schema" = "https://opencode.ai/tui.json";
-            plugin = [ permissionReviewerPlugin ];
-          };
+          text = builtins.toJSON (
+            {
+              "$schema" = "https://opencode.ai/tui.json";
+            }
+            // lib.optionalAttrs reviewerEnabled {
+              plugin = [ permissionReviewerPlugin ];
+            }
+          );
           force = true;
         };
         file.".config/opencode/plugins/tmux-notify.ts" = {

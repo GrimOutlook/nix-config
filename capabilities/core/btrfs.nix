@@ -70,6 +70,18 @@ in
     # only thing frequency costs is the notification. For a filesystem that
     # can detect damage but not repair it, finding out sooner is the whole
     # benefit available.
+    # TODO: four of the six btrfs hosts scrub without reporting. berlin,
+    # dubai, macao and paris are not recipients of `gotify-default`, so the
+    # notifier below finds no token, logs a skip and exits -- leaving them
+    # with the half of this that does not matter, given a single-device btrfs
+    # root cannot repair what a scrub finds.
+    #
+    # Fixing it means adding those four host keys to `secrets/secrets.nix`,
+    # adding the hostnames to `host.gotify.recipients`, and `ragenix -r`.
+    # Note berlin's key recorded there is stale (the file has IApGjkXL..., the
+    # live host and known_hosts both have IMd/BqTy...), which also means
+    # deploy-key.age cannot be decrypted there today -- correct it in the same
+    # pass rather than rekeying to a key that does not exist.
     services.btrfs.autoScrub = {
       enable = true;
       interval = lib.mkDefault "weekly";

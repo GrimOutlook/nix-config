@@ -6,9 +6,11 @@
 }:
 let
   cfg = config.host.screenshot;
-  # Relative to the owner's home directory.
+  # Relative to the home directory of whoever runs the script -- this config is
+  # applied to every home-manager user, so the path is resolved at runtime from
+  # $HOME rather than baked in for the owner.
   screenshotDir = "Pictures/Screenshots";
-  savePath = "/home/${config.host.owner.username}/${screenshotDir}";
+  savePath = "$HOME/${screenshotDir}";
 
   # Flameshot used to provide both of these. It cannot work on a scaled
   # display: its grim adapter blits grim's native-pixel capture 1:1 into a Qt

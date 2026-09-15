@@ -12,13 +12,15 @@ in
   options.host.dev.git.enable = lib.mkEnableOption "Enable Git configuration";
 
   config.host.home-manager = {
-    config = lib.mkIf cfg.enable {
+    # The author identity is the owner's, not every user's -- a commit made by
+    # another account on the host must not be attributed to them.
+    ownerConfig = lib.mkIf cfg.enable {
       programs.git.settings.user = {
         inherit (config.host.owner) email name;
       };
     };
 
-    sharedConfig = lib.mkIf cfg.enable {
+    config = lib.mkIf cfg.enable {
       home = {
         packages = with pkgs; [
           git-filter-repo # Quickly rewrite git repository history

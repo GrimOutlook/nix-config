@@ -20,13 +20,26 @@ in
     config = mkOption {
       type = types.deferredModule;
       default = { };
-      description = "home-manager configurations that are passed to the `home-manager.users.\${owner}` field";
+      description = ''
+        home-manager configurations passed to the `home-manager.sharedModules`
+        field, i.e. applied to *every* home-manager user, not just the owner.
+
+        This is the default place for configuration: a second user on a host
+        should get the same shell, editor, tooling and keybinds as the owner.
+        Anything that is genuinely tied to the owner as a person (an identity,
+        a personal secret) belongs in `ownerConfig` instead.
+
+        Modules here must not hardcode the owner's home directory. Take the
+        module's function form (`{ config, ... }: ...`) and use home-manager's
+        own `config.home.homeDirectory` / `config.xdg.*` so each user resolves
+        to their own paths.
+      '';
     };
 
-    sharedConfig = mkOption {
+    ownerConfig = mkOption {
       type = types.deferredModule;
       default = { };
-      description = "home-manager configurations that are passed to the `home-manager.sharedModules` field";
+      description = "home-manager configurations that are passed to the `home-manager.users.\${owner}` field only";
     };
   };
 
@@ -38,11 +51,11 @@ in
       backupFileExtension = "hm-bkp";
       useGlobalPkgs = true;
       useUserPackages = true;
-      sharedModules = [ cfg.sharedConfig ];
+      sharedModules = [ cfg.config ];
       users.${username} = {
         home.homeDirectory = "/home/${username}";
 
-        imports = [ cfg.config ];
+        imports = [ cfg.ownerConfig ];
       };
     };
 }

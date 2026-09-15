@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -34,6 +35,76 @@ in
         `age.secrets.gotify-default.file` rather than a silent override, so
         the clash cannot pass unnoticed; resolving it means renaming a side.
       '';
+    };
+
+    tokenFile = lib.mkOption {
+      type = lib.types.str;
+      default = "/run/agenix/gotify-default";
+      description = ''
+        Where the decrypted token lands. Consumers that cannot use
+        `sender` below -- ZED, which does its own HTTP, and anything that
+        must not take a package dependency -- read this path directly.
+      '';
+    };
+
+    url = lib.mkOption {
+      type = lib.types.str;
+      default = "https://notify.grimaldifamily.org";
+      description = ''
+        Gotify origin, with no path. Unlike newyork's own senders, which
+        post to loopback because Gotify runs there, everything using this
+        goes over the network to the public name.
+      '';
+    };
+
+    sender = lib.mkOption {
+      type = lib.types.package;
+      readOnly = true;
+      defaultText = lib.literalMD "a `gotify-notify` script";
+      description = ''
+        `gotify-notify <priority> <title> <message>`.
+
+        Exists so alert paths do not each carry their own copy of the same
+        curl invocation. There were three such copies before this option --
+        auditd's, mdadm's, and very nearly btrfs-scrub's -- and they had
+        already drifted on retry behaviour.
+
+        Never fails its caller. A missing or empty token is logged and
+        skipped, because every consumer is an alert path attached to some
+        other unit, and a notifier that fails is a monitored unit that
+        reports failure for the wrong reason.
+      '';
+      default = pkgs.writeShellApplication {
+        name = "gotify-notify";
+        runtimeInputs = [ pkgs.curl ];
+        text = ''
+          if [ "$#" -ne 3 ]; then
+            echo "usage: gotify-notify <priority> <title> <message>" >&2
+            exit 2
+          fi
+
+          token_file=${lib.escapeShellArg cfg.tokenFile}
+          if [ ! -r "$token_file" ]; then
+            echo "gotify-notify: no token at $token_file, skipping: $2" >&2
+            exit 0
+          fi
+
+          token="$(cat "$token_file")"
+          if [ -z "$token" ]; then
+            echo "gotify-notify: token at $token_file is empty, skipping: $2" >&2
+            exit 0
+          fi
+
+          curl --silent --show-error --fail --output /dev/null \
+            --max-time 10 --retry 3 --retry-delay 2 --retry-connrefused \
+            --header "X-Gotify-Key: $token" \
+            --form-string "title=$2" \
+            --form-string "message=$3" \
+            --form-string "priority=$1" \
+            ${lib.escapeShellArg "${cfg.url}/message"} || \
+            echo "gotify-notify: delivery failed, event not reported: $2" >&2
+        '';
+      };
     };
 
     enable = lib.mkEnableOption "the shared Gotify application token" // {

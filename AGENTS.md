@@ -105,6 +105,14 @@ upstream modules (`nixos-wsl`, `microvm`) as flake inputs.
 - Options live under the `host.*` namespace almost everywhere — grep
   `host\.` in a capability file to find its option name before assuming a
   capability is unconditionally on.
+- **`host.home-manager.config` is `sharedModules`, not the owner.** It is
+  applied to *every* home-manager user on the host, so a module put there must
+  not hardcode `/home/grim` or read `config.home-manager.users.<owner>.*` (the
+  latter also risks an infinite recursion). Use the deferred module's function
+  form (`{ config, ... }: ...`) and home-manager's own
+  `config.home.homeDirectory` / `config.xdg.*`. Only things tied to the owner
+  *as a person* go in `host.home-manager.ownerConfig` — currently the git and
+  jujutsu author identity and the deploy key's ssh entry.
 - Some flake inputs (`agenix`, `deploy-rs`, `disko`, `microvm`,
   `nixos-wsl`, `stylix`, ...) are consumed only by specific capabilities /
   host-types, not globally — check where an input is actually referenced

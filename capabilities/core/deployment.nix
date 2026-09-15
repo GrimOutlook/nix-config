@@ -32,7 +32,9 @@ in
       mode = "0400";
     };
 
-    host.home-manager.config.programs.ssh.settings."Match user deploy" = {
+    # Owner-only: the decrypted key is mode 0400 owned by the owner, so this
+    # entry would be useless (and misleading) in any other user's ssh config.
+    host.home-manager.ownerConfig.programs.ssh.settings."Match user deploy" = {
       IdentityFile = "/run/agenix/nix-deploy-key";
       AddKeysToAgent = "yes";
     };

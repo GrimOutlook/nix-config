@@ -55,6 +55,7 @@ in
       # NOTE: This ensures these groups are created.
       groups.${username} = { };
       groups.${deployUser} = { };
+      groups.users.members = lib.unique ([ username ] ++ lib.attrNames config.home-manager.users);
       groups."sudo-rs-callers" = {
         members = [
           username

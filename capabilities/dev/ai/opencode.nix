@@ -266,11 +266,9 @@ in
               const reviewerStatusPrefix = "opencode-permission-reviewer.status.";
               // Keep this marker in sync with the reviewer's public metadata contract.
               const reviewerSessionMetadataKey = "opencode-permission-reviewer";
-              const reviewerDenialGraceMs = 5_000;
               let userInterrupted = false;
               const subagentSessions = new Set<string>();
               const reviewerSessions = new Set<string>();
-              const reviewerDeniedSessions = new Map<string, number>();
               const targetPane = process.env.TMUX_PANE;
 
               const isReviewerSession = (info: {
@@ -295,10 +293,7 @@ in
                   const status = JSON.parse(
                     Buffer.from(encoded, "base64url").toString("utf8"),
                   ) as { version?: unknown; phase?: unknown; permission?: unknown; sessionID?: unknown };
-                  const phase =
-                    status.phase === "approved" || status.phase === "denied" || status.phase === "manual"
-                      ? status.phase
-                      : undefined;
+                  const phase = status.phase === "manual" ? status.phase : undefined;
                   if (status.version !== 1 || phase === undefined || typeof status.sessionID !== "string") return;
                   return {
                     phase,
@@ -375,7 +370,6 @@ in
                   if (type === "session.deleted" && properties.info?.id) {
                     subagentSessions.delete(properties.info.id);
                     reviewerSessions.delete(properties.info.id);
-                    reviewerDeniedSessions.delete(properties.info.id);
                     return;
                   }
 
@@ -387,25 +381,7 @@ in
                   const reviewerStatus =
                     type === "tui.command.execute" ? decodeReviewerStatus(properties.command) : undefined;
 
-                  if (reviewerStatus?.phase === "denied") {
-                    reviewerDeniedSessions.set(reviewerStatus.sessionID, Date.now());
-                  }
-
-                  // A new run means a denied permission did not end the task;
-                  // only suppress the immediate idle from a stopped run.
-                  if (
-                    type === "session.status" &&
-                    properties.sessionID &&
-                    properties.status?.type === "busy"
-                  ) {
-                    reviewerDeniedSessions.delete(properties.sessionID);
-                    return;
-                  }
-
                   if (type === "session.idle" && properties.sessionID) {
-                    const reviewerDeniedAt = reviewerDeniedSessions.get(properties.sessionID);
-                    reviewerDeniedSessions.delete(properties.sessionID);
-
                     if (reviewerSessions.delete(properties.sessionID)) return;
                     if (subagentSessions.has(properties.sessionID)) return;
 
@@ -413,25 +389,16 @@ in
                       userInterrupted = false;
                       return;
                     }
-
-                    if (
-                      reviewerDeniedAt !== undefined &&
-                      Date.now() - reviewerDeniedAt <= reviewerDenialGraceMs
-                    ) {
-                      return;
-                    }
                   }
 
                   const message =
                     type === "session.idle"
                       ? "OpenCode: completed"
-                      : reviewerStatus?.phase === "denied"
-                        ? "OpenCode: permission denied (" + (reviewerStatus.permission ?? "approval") + ")"
-                        : reviewerStatus?.phase === "manual"
-                          ? "OpenCode: permission needed (" + (reviewerStatus.permission ?? "approval") + ")"
-                          : type === "question.asked"
-                            ? "OpenCode: input needed (" + (properties.questions?.[0]?.header ?? "question") + ")"
-                            : undefined;
+                      : reviewerStatus?.phase === "manual"
+                        ? "OpenCode: permission needed (" + (reviewerStatus.permission ?? "approval") + ")"
+                        : type === "question.asked"
+                          ? "OpenCode: input needed (" + (properties.questions?.[0]?.header ?? "question") + ")"
+                          : undefined;
 
                   if (!message) return;
 

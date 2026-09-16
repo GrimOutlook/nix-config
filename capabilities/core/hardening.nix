@@ -42,6 +42,11 @@ in
     enable = mkEnableOption "Enable hardening configurations";
 
     kernel.enable = mkEnableOption "Enable the hardened kernel (custom-built from source, no shared binary cache -- opt-in separately from the rest of hardening)";
+
+    # Off by default: the execve rule alone floods the journal (tens of
+    # thousands of records an hour per host), all of which Vector then ships
+    # to VictoriaLogs.
+    audit.enable = mkEnableOption "the Linux audit subsystem, auditd, and the audit ruleset";
   };
   config = mkIf cfg.enable (
     lib.mkMerge [
@@ -198,6 +203,110 @@ in
           );
         }
       ))
+
+      (mkIf cfg.audit.enable {
+        boot.kernelParams = [
+          "audit=1"
+          "audit_backlog_limit=8192"
+        ];
+
+        # Enable audit daemon and configure settings (alerts dispatched via Gotify per washington/newyork architecture)
+        security.auditd = {
+          enable = lib.mkDefault (!(config.wsl.enable or false));
+          settings = {
+            space_left = "10%";
+            space_left_action = "ignore";
+            admin_space_left = "5%";
+            admin_space_left_action =
+              "exec "
+              + (pkgs.writeShellScript "auditd-gotify-alert" ''
+                set -euo pipefail
+
+                title="Auditd Storage Alert ($(hostname))"
+                message="Auditd Warning: Low disk space threshold reached on host $(hostname)"
+                priority="8"
+
+                # Reads Gotify API key strictly from agenix secret file
+                token_file="${config.age.secrets."gotify-default".path or "/run/agenix/gotify-default"}"
+                if [ ! -r "$token_file" ]; then
+                  echo "auditd-gotify-alert: Gotify key secret file not readable at $token_file, skipping alert" >&2
+                  exit 0
+                fi
+
+                token="$(cat "$token_file")"
+                if [ -z "$token" ]; then
+                  echo "auditd-gotify-alert: Gotify key secret file is empty, skipping alert" >&2
+                  exit 0
+                fi
+
+                target_url="https://notify.grimaldifamily.org/message"
+
+                ${pkgs.curl}/bin/curl --silent --show-error --fail --output /dev/null \
+                  --max-time 10 --retry 3 --retry-delay 2 --retry-connrefused \
+                  --header "X-Gotify-Key: $token" \
+                  --form-string "title=$title" \
+                  --form-string "message=$message" \
+                  --form-string "priority=$priority" \
+                  "$target_url" || true
+              '');
+            num_logs = 10;
+            max_log_file = 100;
+            max_log_file_action = "rotate";
+          };
+        };
+
+        # Configure comprehensive system auditing rules
+        security.audit = {
+          enable = lib.mkDefault (!(config.wsl.enable or false));
+          rules = [
+            # System auditing configuration modifications
+            "-w /etc/audit/ -p wa -k auditconfig"
+            "-w /var/log/audit/ -p wa -k auditlog"
+
+            # Module loading and kernel operations
+            "-a always,exit -F arch=b64 -S init_module -S finit_module -S delete_module -k modules"
+
+            # Core execution monitoring
+            "-a always,exit -F arch=b64 -S execve -k execution"
+
+            # Discretionary access control modifications (chmod, chown)
+            "-a always,exit -F arch=b64${syscallFlags ([ "fchmod" "fchmodat" ] ++ lib.optionals isx86 [ "chmod" ])} -k perm_mod"
+            "-a always,exit -F arch=b64${syscallFlags ([ "fchown" "fchownat" ] ++ lib.optionals isx86 [ "chown" "lchown" ])} -k perm_mod"
+            "-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -k perm_mod"
+
+            # Failed file access tracking (EACCES/EPERM)
+            "-a always,exit -F arch=b64${syscallFlags ([ "openat" "truncate" "ftruncate" ] ++ lib.optionals isx86 [ "open" "creat" ])} -F exit=-EACCES -k access"
+            "-a always,exit -F arch=b64${syscallFlags ([ "openat" "truncate" "ftruncate" ] ++ lib.optionals isx86 [ "open" "creat" ])} -F exit=-EPERM -k access"
+
+            # Identity and group management tracking
+            "-w /etc/group -p wa -k identity"
+            "-w /etc/passwd -p wa -k identity"
+            "-w /etc/shadow -p wa -k identity"
+
+            # Login and session changes
+            "-w /var/log/lastlog -p wa -k logins"
+            "-w /var/run/utmp -p wa -k session"
+            "-w /var/log/wtmp -p wa -k session"
+            "-w /var/log/btmp -p wa -k session"
+
+            # Network configuration modifications
+            "-a always,exit -F arch=b64 -S sethostname -S setdomainname -k network"
+            "-w /etc/issue -p wa -k network"
+            "-w /etc/hosts -p wa -k network"
+
+            # Mount/unmount actions
+            "-a always,exit -F arch=b64 -S mount -S umount2 -k mount"
+          ];
+        };
+      })
+
+      # Off at the kernel level, not just unconfigured: systemd and AppArmor
+      # still emit audit records whenever the subsystem is live, and journald
+      # would collect them.
+      (mkIf (!cfg.audit.enable) {
+        boot.kernelParams = [ "audit=0" ];
+      })
+
       {
         # This option locks kernel modules after the system is initialized.
         # For example it prevents malicious USB devices from exploiting vulnerable
@@ -307,10 +416,8 @@ in
           # Disable debugfs
           "debugfs=off"
 
-          # Kernel audit and FIPS validation
+          # FIPS validation
           "fips=1"
-          "audit=1"
-          "audit_backlog_limit=8192"
 
           # Disable legacy vsyscalls
           "vsyscall=none"
@@ -459,95 +566,6 @@ in
           "fs.file-max" = lib.mkDefault 100000;
           "net.core.somaxconn" = lib.mkDefault 1024;
           "net.ipv4.tcp_window_scaling" = lib.mkDefault 1;
-        };
-
-        # Enable audit daemon and configure settings (alerts dispatched via Gotify per washington/newyork architecture)
-        security.auditd = {
-          enable = lib.mkDefault (!(config.wsl.enable or false));
-          settings = {
-            space_left = "10%";
-            space_left_action = "ignore";
-            admin_space_left = "5%";
-            admin_space_left_action =
-              "exec "
-              + (pkgs.writeShellScript "auditd-gotify-alert" ''
-                set -euo pipefail
-
-                title="Auditd Storage Alert ($(hostname))"
-                message="Auditd Warning: Low disk space threshold reached on host $(hostname)"
-                priority="8"
-
-                # Reads Gotify API key strictly from agenix secret file
-                token_file="${config.age.secrets."gotify-default".path or "/run/agenix/gotify-default"}"
-                if [ ! -r "$token_file" ]; then
-                  echo "auditd-gotify-alert: Gotify key secret file not readable at $token_file, skipping alert" >&2
-                  exit 0
-                fi
-
-                token="$(cat "$token_file")"
-                if [ -z "$token" ]; then
-                  echo "auditd-gotify-alert: Gotify key secret file is empty, skipping alert" >&2
-                  exit 0
-                fi
-
-                target_url="https://notify.grimaldifamily.org/message"
-
-                ${pkgs.curl}/bin/curl --silent --show-error --fail --output /dev/null \
-                  --max-time 10 --retry 3 --retry-delay 2 --retry-connrefused \
-                  --header "X-Gotify-Key: $token" \
-                  --form-string "title=$title" \
-                  --form-string "message=$message" \
-                  --form-string "priority=$priority" \
-                  "$target_url" || true
-              '');
-            num_logs = 10;
-            max_log_file = 100;
-            max_log_file_action = "rotate";
-          };
-        };
-
-        # Configure comprehensive system auditing rules
-        security.audit = {
-          enable = lib.mkDefault (!(config.wsl.enable or false));
-          rules = [
-            # System auditing configuration modifications
-            "-w /etc/audit/ -p wa -k auditconfig"
-            "-w /var/log/audit/ -p wa -k auditlog"
-
-            # Module loading and kernel operations
-            "-a always,exit -F arch=b64 -S init_module -S finit_module -S delete_module -k modules"
-
-            # Core execution monitoring
-            "-a always,exit -F arch=b64 -S execve -k execution"
-
-            # Discretionary access control modifications (chmod, chown)
-            "-a always,exit -F arch=b64${syscallFlags ([ "fchmod" "fchmodat" ] ++ lib.optionals isx86 [ "chmod" ])} -k perm_mod"
-            "-a always,exit -F arch=b64${syscallFlags ([ "fchown" "fchownat" ] ++ lib.optionals isx86 [ "chown" "lchown" ])} -k perm_mod"
-            "-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -k perm_mod"
-
-            # Failed file access tracking (EACCES/EPERM)
-            "-a always,exit -F arch=b64${syscallFlags ([ "openat" "truncate" "ftruncate" ] ++ lib.optionals isx86 [ "open" "creat" ])} -F exit=-EACCES -k access"
-            "-a always,exit -F arch=b64${syscallFlags ([ "openat" "truncate" "ftruncate" ] ++ lib.optionals isx86 [ "open" "creat" ])} -F exit=-EPERM -k access"
-
-            # Identity and group management tracking
-            "-w /etc/group -p wa -k identity"
-            "-w /etc/passwd -p wa -k identity"
-            "-w /etc/shadow -p wa -k identity"
-
-            # Login and session changes
-            "-w /var/log/lastlog -p wa -k logins"
-            "-w /var/run/utmp -p wa -k session"
-            "-w /var/log/wtmp -p wa -k session"
-            "-w /var/log/btmp -p wa -k session"
-
-            # Network configuration modifications
-            "-a always,exit -F arch=b64 -S sethostname -S setdomainname -k network"
-            "-w /etc/issue -p wa -k network"
-            "-w /etc/hosts -p wa -k network"
-
-            # Mount/unmount actions
-            "-a always,exit -F arch=b64 -S mount -S umount2 -k mount"
-          ];
         };
 
         # Suppress memory dumps entirely to block secret leaks

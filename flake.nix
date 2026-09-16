@@ -59,15 +59,15 @@
     llm-agents.url = "github:numtide/llm-agents.nix";
 
     # Policy-aware permission reviewer plugin for OpenCode. Pinned to the
-    # integration branch of GrimOutlook/opencode-permission-reviewer (PR #38),
-    # which merges every open fix PR (#19-#37) -- npm still carries 1.3.1
-    # without them.
+    # metadata contract branch of GrimOutlook/opencode-permission-reviewer
+    # (PR #39), based on the integration branch in PR #38. npm still carries
+    # 1.3.1 without these fixes.
     # TODO: Repoint this input at a published release (and drop the build in
     # capabilities/dev/ai/opencode.nix in favour of the npm package name) once
     # the fixes land upstream and are released.
     opencode-permission-reviewer = {
       flake = false;
-      url = "git+https://github.com/GrimOutlook/opencode-permission-reviewer.git?ref=integration/all-prs&rev=31cb5e45805662371c73245661e500ec04e91334";
+      url = "git+https://github.com/GrimOutlook/opencode-permission-reviewer.git?ref=feat/session-metadata-contract&rev=0a8e149ba03ab53fa842cc0314569efc6d9d7a83";
     };
 
     # Temporary native OpenTUI fix for tmux capability-reply routing. Pin the

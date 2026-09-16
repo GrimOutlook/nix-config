@@ -264,11 +264,27 @@ in
 
             export const TmuxNotify: Plugin = async ({ $ }) => {
               const reviewerStatusPrefix = "opencode-permission-reviewer.status.";
+              // Keep this marker in sync with the reviewer's public metadata contract.
+              const reviewerSessionMetadataKey = "opencode-permission-reviewer";
               const reviewerDenialGraceMs = 5_000;
               let userInterrupted = false;
               const subagentSessions = new Set<string>();
+              const reviewerSessions = new Set<string>();
               const reviewerDeniedSessions = new Map<string, number>();
               const targetPane = process.env.TMUX_PANE;
+
+              const isReviewerSession = (info: {
+                metadata?: Record<string, unknown>;
+              }) => {
+                const marker = info.metadata?.[reviewerSessionMetadataKey];
+                if (typeof marker !== "object" || marker === null || Array.isArray(marker)) return false;
+                const metadata = marker as { version?: unknown; kind?: unknown; requestID?: unknown };
+                return (
+                  metadata.version === 1 &&
+                  metadata.kind === "permission-reviewer" &&
+                  typeof metadata.requestID === "string"
+                );
+              };
 
               const decodeReviewerStatus = (command?: string) => {
                 if (!command?.startsWith(reviewerStatusPrefix)) return;
@@ -339,17 +355,26 @@ in
                     permission?: string;
                     questions?: Array<{ header?: string }>;
                     sessionID?: string;
-                    info?: { id?: string; parentID?: string };
+                    info?: {
+                      id?: string;
+                      parentID?: string;
+                      metadata?: Record<string, unknown>;
+                    };
                     status?: { type?: string };
                   };
 
-                  if (type === "session.created" && properties.info?.id && properties.info.parentID) {
-                    subagentSessions.add(properties.info.id);
+                  if (type === "session.created" && properties.info?.id) {
+                    if (isReviewerSession(properties.info)) {
+                      reviewerSessions.add(properties.info.id);
+                    } else if (properties.info.parentID) {
+                      subagentSessions.add(properties.info.id);
+                    }
                     return;
                   }
 
                   if (type === "session.deleted" && properties.info?.id) {
                     subagentSessions.delete(properties.info.id);
+                    reviewerSessions.delete(properties.info.id);
                     reviewerDeniedSessions.delete(properties.info.id);
                     return;
                   }
@@ -381,6 +406,7 @@ in
                     const reviewerDeniedAt = reviewerDeniedSessions.get(properties.sessionID);
                     reviewerDeniedSessions.delete(properties.sessionID);
 
+                    if (reviewerSessions.delete(properties.sessionID)) return;
                     if (subagentSessions.has(properties.sessionID)) return;
 
                     if (userInterrupted) {

@@ -264,19 +264,29 @@ in
 
             export const TmuxNotify: Plugin = async ({ $ }) => {
               const reviewerStatusPrefix = "opencode-permission-reviewer.status.";
+              const reviewerDenialGraceMs = 5_000;
               let userInterrupted = false;
               const subagentSessions = new Set<string>();
+              const reviewerDeniedSessions = new Map<string, number>();
               const targetPane = process.env.TMUX_PANE;
 
-              const decodeReviewerManualStatus = (command?: string) => {
+              const decodeReviewerStatus = (command?: string) => {
                 if (!command?.startsWith(reviewerStatusPrefix)) return;
 
                 try {
+                  const encoded = command.slice(reviewerStatusPrefix.length);
+                  if (!encoded || encoded.length > 16_000) return;
                   const status = JSON.parse(
-                    Buffer.from(command.slice(reviewerStatusPrefix.length), "base64url").toString("utf8"),
-                  ) as { phase?: unknown; permission?: unknown };
-                  if (status.phase !== "manual") return;
+                    Buffer.from(encoded, "base64url").toString("utf8"),
+                  ) as { version?: unknown; phase?: unknown; permission?: unknown; sessionID?: unknown };
+                  const phase =
+                    status.phase === "approved" || status.phase === "denied" || status.phase === "manual"
+                      ? status.phase
+                      : undefined;
+                  if (status.version !== 1 || phase === undefined || typeof status.sessionID !== "string") return;
                   return {
+                    phase,
+                    sessionID: status.sessionID,
                     permission: typeof status.permission === "string" ? status.permission : undefined,
                   };
                 } catch {
@@ -330,6 +340,7 @@ in
                     questions?: Array<{ header?: string }>;
                     sessionID?: string;
                     info?: { id?: string; parentID?: string };
+                    status?: { type?: string };
                   };
 
                   if (type === "session.created" && properties.info?.id && properties.info.parentID) {
@@ -339,10 +350,7 @@ in
 
                   if (type === "session.deleted" && properties.info?.id) {
                     subagentSessions.delete(properties.info.id);
-                    return;
-                  }
-
-                  if (type === "session.idle" && properties.sessionID && subagentSessions.has(properties.sessionID)) {
+                    reviewerDeniedSessions.delete(properties.info.id);
                     return;
                   }
 
@@ -351,22 +359,53 @@ in
                     return;
                   }
 
-                  const reviewerManualStatus =
-                    type === "tui.command.execute" ? decodeReviewerManualStatus(properties.command) : undefined;
+                  const reviewerStatus =
+                    type === "tui.command.execute" ? decodeReviewerStatus(properties.command) : undefined;
 
-                  if (type === "session.idle" && userInterrupted) {
-                    userInterrupted = false;
+                  if (reviewerStatus?.phase === "denied") {
+                    reviewerDeniedSessions.set(reviewerStatus.sessionID, Date.now());
+                  }
+
+                  // A new run means a denied permission did not end the task;
+                  // only suppress the immediate idle from a stopped run.
+                  if (
+                    type === "session.status" &&
+                    properties.sessionID &&
+                    properties.status?.type === "busy"
+                  ) {
+                    reviewerDeniedSessions.delete(properties.sessionID);
                     return;
+                  }
+
+                  if (type === "session.idle" && properties.sessionID) {
+                    const reviewerDeniedAt = reviewerDeniedSessions.get(properties.sessionID);
+                    reviewerDeniedSessions.delete(properties.sessionID);
+
+                    if (subagentSessions.has(properties.sessionID)) return;
+
+                    if (userInterrupted) {
+                      userInterrupted = false;
+                      return;
+                    }
+
+                    if (
+                      reviewerDeniedAt !== undefined &&
+                      Date.now() - reviewerDeniedAt <= reviewerDenialGraceMs
+                    ) {
+                      return;
+                    }
                   }
 
                   const message =
                     type === "session.idle"
                       ? "OpenCode: completed"
-                      : reviewerManualStatus
-                        ? "OpenCode: permission needed (" + (reviewerManualStatus.permission ?? "approval") + ")"
-                        : type === "question.asked"
-                          ? "OpenCode: input needed (" + (properties.questions?.[0]?.header ?? "question") + ")"
-                          : undefined;
+                      : reviewerStatus?.phase === "denied"
+                        ? "OpenCode: permission denied (" + (reviewerStatus.permission ?? "approval") + ")"
+                        : reviewerStatus?.phase === "manual"
+                          ? "OpenCode: permission needed (" + (reviewerStatus.permission ?? "approval") + ")"
+                          : type === "question.asked"
+                            ? "OpenCode: input needed (" + (properties.questions?.[0]?.header ?? "question") + ")"
+                            : undefined;
 
                   if (!message) return;
 

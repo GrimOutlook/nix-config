@@ -92,6 +92,9 @@ in
       cdtmp = "cd $(mktemp -d)";
       cp = "xcp --verbose";
       mkdir = "mkdir --parents";
+      # Start user switches as login shells so HOME and XDG variables match
+      # the target account rather than the account invoking su.
+      su = "su -";
 
       # NOTE: Don't make an `rm` alias. Moving to a new system that doesn't
       # have trashy would result in unintended unrecoverable deletes.

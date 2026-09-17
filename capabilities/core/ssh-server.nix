@@ -41,7 +41,12 @@ in
         enable = true;
         package = realtimeOpenssh;
         authorizedKeysInHomedir = false;
-        allowSFTP = false;
+        # SFTP stays on: every account allowed in via AllowUsers has a full
+        # shell, so disabling it doesn't stop file transfer (`scp -O`, `ssh
+        # cat`, tar or rsync over ssh still work). Turning it off only broke
+        # modern scp, sshfs and restic's sftp backend. Restrict what an
+        # account can run (e.g. ForceCommand) if transfer needs limiting.
+        allowSFTP = true;
 
         settings = {
           PermitRootLogin = "no";

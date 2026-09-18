@@ -8,6 +8,7 @@ let
   modules = [
     {
       _module.args.nixpkgsRealtime = inputs.nixpkgs-realtime;
+      _module.args.nixpkgsUnstable = inputs.nixpkgs-unstable;
     }
     (inputs.import-tree ../capabilities)
     (inputs.import-tree ../host-types)

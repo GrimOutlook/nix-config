@@ -1,11 +1,13 @@
 {
   config,
   lib,
+  nixpkgsUnstable,
   pkgs,
   ...
 }:
 let
   cfg = config.host.default-programs.core;
+  zellij = nixpkgsUnstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.zellij;
 in
 {
   options.host.default-programs.core.enable = lib.mkEnableOption "Enable default core program set";

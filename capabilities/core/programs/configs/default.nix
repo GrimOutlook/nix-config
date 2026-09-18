@@ -29,7 +29,7 @@ in
         "skim"
         "ssh"
         "tide"
-        "tmux"
+        "zellij"
         "zoxide"
       ]);
     };

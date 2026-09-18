@@ -54,19 +54,19 @@ in
       tmk = "tmux kill-session -t";
     };
 
-    programs.fish.interactiveShellInit = ''
-      # Verify that:
-      # 1. TMUX command exists
-      # 2. We are in an interactive shell
-      # 3. We aren't in a screen session
-      # 4. We aren't in a TMUX session already
-      if type -q tmux
-        and status is-interactive
-        and not string match -qr 'screen|tmux' -- "$TERM"
-        and not set -q TMUX
-        tmux new-session
-      end
-    '';
+    # programs.fish.interactiveShellInit = ''
+    #   # Verify that:
+    #   # 1. TMUX command exists
+    #   # 2. We are in an interactive shell
+    #   # 3. We aren't in a screen session
+    #   # 4. We aren't in a TMUX session already
+    #   if type -q tmux
+    #     and status is-interactive
+    #     and not string match -qr 'screen|tmux' -- "$TERM"
+    #     and not set -q TMUX
+    #     tmux new-session
+    #   end
+    # '';
     programs.ssh.extraConfig = ''
       SendEnv TMUX
     '';

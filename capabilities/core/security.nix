@@ -43,6 +43,19 @@ in
       wheelNeedsPassword = true;
       extraRules = lib.mkForce [
         {
+          groups = [ "wheel" ];
+          runAs = "root";
+          commands = [
+            {
+              command = "ALL";
+              options = [
+                "PASSWD"
+                "NOSETENV"
+              ];
+            }
+          ];
+        }
+        {
           users = [ "deploy" ];
           runAs = "root";
           commands = [
@@ -74,19 +87,10 @@ in
       ];
     };
 
+    # Keep sudo-rs's standard world-executable wrapper permissions. The
+    # sudoers rules above provide authorization; wheel users and deploy both
+    # need to be able to reach the wrapper.
     environment.systemPackages = [ deployRsBridge ];
-
-    # Restrict the privileged wrappers themselves to owner and deploy. The
-    # package in the Nix store remains world-readable/executable, but it is not
-    # setuid and cannot elevate without these wrappers.
-    security.wrappers.sudo = {
-      group = lib.mkForce "sudo-rs-callers";
-      permissions = lib.mkForce "u+rx,g+x";
-    };
-    security.wrappers.sudoedit = {
-      group = lib.mkForce "sudo-rs-callers";
-      permissions = lib.mkForce "u+rx,g+x";
-    };
     # run0 authorizes systemd unit management through Polkit. Deny wheel
     # subjects terminally so no later authorization rule can grant access.
     security.polkit = {

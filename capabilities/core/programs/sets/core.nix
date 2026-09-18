@@ -75,6 +75,9 @@ in
       parted
       # Has stuff like `fdisk`
       util-linux
+      # Terminal workspace with panes and tabs
+      # https://zellij.dev/
+      zellij
       screen
       socat
       tcpdump

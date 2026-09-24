@@ -46,4 +46,10 @@ in
       td = "rg TODO";
     };
   };
+
+  config.services.locate = lib.mkIf cfg.enable {
+    enable = true;
+    package = pkgs.plocate;
+    interval = "hourly";
+  };
 }

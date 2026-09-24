@@ -58,8 +58,10 @@ in
     networking.wireless.enable = lib.mkForce false;
     systemd.services.wpa_supplicant.enable = lib.mkForce false;
 
-    # WSL does not expose the USB device tree that usbguard requires.
-    services.usbguard.enable = false;
+    # WSL does not expose the USB device tree that usbguard requires. USBGuard
+    # is opt-in anyway, but force the toggle off so a host-level opt-in cannot
+    # enable it here.
+    host.security.usbguard.enable = lib.mkForce false;
 
     # WSL's managed kernel does not expose all of the hardening sysctl knobs.
     # Applying them makes systemd-sysctl fail during activation.

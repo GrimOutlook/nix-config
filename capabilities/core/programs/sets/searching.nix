@@ -41,6 +41,7 @@ in
       ripgrep-all
     ];
     shellAliases = {
+      locate = "plocate";
       todo = "rg TODO";
       td = "rg TODO";
     };

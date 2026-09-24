@@ -53,6 +53,14 @@ in
         DisableTelemetry = true;
         DisableFirefoxAccounts = false;
 
+        # Autofill and form history: Bitwarden (see ExtensionSettings below) is
+        # the password manager, so Firefox's own login store only duplicates it
+        # -- and nothing else should be silently refilling addresses, cards or
+        # past form entries. `Preferences` below locks the individual
+        # formautofill/signon prefs that these two policies do not cover.
+        DisableFormHistory = true;
+        OfferToSaveLogins = false;
+
         # UI and Behavior customization
         DontCheckDefaultBrowser = true;
         DisableSetDesktopBackground = true;
@@ -138,6 +146,12 @@ in
           # ClearURLs (see ExtensionSettings above) handles the long tail.
           "privacy.query_stripping.enabled" = true;
           "privacy.query_stripping.enabled.pbmode" = true;
+          # Address/credit-card autofill, its field-detection heuristics, and
+          # automatic login filling -- all off (see DisableFormHistory above).
+          "extensions.formautofill.addresses.enabled" = false;
+          "extensions.formautofill.creditCards.enabled" = false;
+          "extensions.formautofill.heuristics.enabled" = false;
+          "signon.autofillForms" = false;
         };
 
         PopupBlocking = {

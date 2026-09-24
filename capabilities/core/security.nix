@@ -33,6 +33,7 @@ in
 {
   options.host.security = {
     enable = lib.mkEnableOption "Enable default security configurations";
+    usbguard.enable = lib.mkEnableOption "Enable USBGuard physical port defense";
   };
   config = lib.mkIf cfg.enable {
     # sudo-rs provides password-protected owner elevation and a separate
@@ -120,9 +121,18 @@ in
       }
     ];
 
-    # Physical port defense via USBGuard (block unauthorized peripherals, allow internal input devices)
-    services.usbguard = {
-      enable = lib.mkDefault true;
+    # Physical port defense via USBGuard (block unauthorized peripherals, allow
+    # internal input devices). Opt-in per host via
+    # `host.security.usbguard.enable`: a blocking policy is only usable on a
+    # host whose peripherals someone has allow-listed, because every rejected
+    # device silently disappears -- it enumerates nowhere, and a rejected hub
+    # takes everything behind it with it. The `equals` below is set equality
+    # over the device's whole interface list, so it authorizes only
+    # single-interface HID; real keyboards and mice expose several and need
+    # explicit per-host rules (`services.usbguard.rules` is `types.lines`, so
+    # a host's rules append to these).
+    services.usbguard = lib.mkIf cfg.usbguard.enable {
+      enable = true;
       implicitPolicyTarget = "block";
       rules = ''
         allow with-interface equals { 03:*:* }

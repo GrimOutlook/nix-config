@@ -10,6 +10,7 @@ let
   settingsFormat = pkgs.formats.json { };
   primaryModel = "chatgpt-subscription/gpt-6-sol";
   astraModel = "chatgpt-subscription/gpt-6-astra";
+  # Mistral exposes only minimal, low, medium, and high for this model.
   glmModel = "mistral/zai-glm-5-3";
   lunaModel = "chatgpt-subscription/gpt-6-luna";
   lunaFastModel = "chatgpt-subscription/gpt-6-luna-fast";
@@ -29,22 +30,22 @@ let
   deepModels = [
     (candidate primaryModel "medium")
     (candidate lunaModel "high")
-    (candidate glmModel "max")
+    (candidate glmModel "high")
   ];
   highModels = [
     (candidate astraModel "xhigh")
     (candidate primaryModel "xhigh")
-    (candidate glmModel "max")
+    (candidate glmModel "high")
     (candidate lunaModel "high")
   ];
   ultrabrainModels = [
     (candidate astraModel "max")
     (candidate primaryModel "max")
-    (candidate glmModel "max")
+    (candidate glmModel "high")
     (candidate lunaModel "high")
   ];
   consultantModels = [
-    (candidate glmModel "max")
+    (candidate glmModel "high")
     (candidate primaryModel "high")
     (candidate lunaModel "high")
   ];
@@ -53,7 +54,7 @@ let
     (candidate lunaModel "medium")
   ];
   creativeModels = [
-    (candidate glmModel "max")
+    (candidate glmModel "high")
     (candidate primaryModel "high")
     (candidate lunaModel "medium")
   ];
@@ -76,7 +77,7 @@ in
         modelThinkingLevels = {
           "${primaryModel}" = "medium";
           "${astraModel}" = "xhigh";
-          "${glmModel}" = "max";
+          "${glmModel}" = "high";
           "${lunaModel}" = "medium";
           "${lunaFastModel}" = "low";
         };
@@ -103,7 +104,7 @@ in
           modelFallback = true;
           fallbackChains = {
             "${primaryModel}" = [
-              "${glmModel}:max"
+              "${glmModel}:high"
               "${lunaModel}:high"
             ];
           };

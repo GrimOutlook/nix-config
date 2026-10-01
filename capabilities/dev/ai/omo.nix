@@ -8,7 +8,7 @@
 let
   cfg = config.host.dev.ai.omo;
   settingsFormat = pkgs.formats.json { };
-  primaryModel = "chatgpt-subscription/gpt-6-sol";
+  primaryModel = "chatgpt-subscription/gpt-6.1-sol";
   astraModel = "chatgpt-subscription/gpt-6-astra";
   # Mistral exposes only minimal, low, medium, and high for this model.
   glmModel = "mistral/zai-glm-5-3";
@@ -72,7 +72,7 @@ in
       type = settingsFormat.type;
       default = {
         defaultProvider = "chatgpt-subscription";
-        defaultModel = "gpt-6-sol";
+        defaultModel = "gpt-6.1-sol";
         defaultThinkingLevel = "medium";
         modelThinkingLevels = {
           "${primaryModel}" = "medium";
@@ -96,7 +96,7 @@ in
           lunaFastModel
         ];
         recommendedModels = [
-          "gpt-6-sol"
+          "gpt-6.1-sol"
           "zai-glm-5-3"
           "gpt-6-luna"
         ];

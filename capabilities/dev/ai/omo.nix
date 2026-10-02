@@ -20,12 +20,12 @@ let
   fastModels = [
     (candidate lunaFastModel "low")
     (candidate glmModel "low")
-    (candidate primaryModel "medium")
+    (candidate primaryModel "low")
   ];
   balancedModels = [
-    (candidate lunaModel "medium")
-    (candidate glmModel "medium")
-    (candidate primaryModel "medium")
+    (candidate lunaModel "low")
+    (candidate glmModel "low")
+    (candidate primaryModel "low")
   ];
   deepModels = [
     (candidate primaryModel "medium")
@@ -33,14 +33,14 @@ let
     (candidate glmModel "high")
   ];
   highModels = [
-    (candidate astraModel "xhigh")
-    (candidate primaryModel "xhigh")
+    (candidate astraModel "high")
+    (candidate primaryModel "high")
     (candidate glmModel "high")
     (candidate lunaModel "high")
   ];
   ultrabrainModels = [
-    (candidate astraModel "max")
-    (candidate primaryModel "max")
+    (candidate astraModel "high")
+    (candidate primaryModel "high")
     (candidate glmModel "high")
     (candidate lunaModel "high")
   ];
@@ -73,12 +73,12 @@ in
       default = {
         defaultProvider = "chatgpt-subscription";
         defaultModel = "gpt-6.1-sol";
-        defaultThinkingLevel = "medium";
+        defaultThinkingLevel = "low";
         modelThinkingLevels = {
-          "${primaryModel}" = "medium";
-          "${astraModel}" = "xhigh";
-          "${glmModel}" = "high";
-          "${lunaModel}" = "medium";
+          "${primaryModel}" = "low";
+          "${astraModel}" = "high";
+          "${glmModel}" = "low";
+          "${lunaModel}" = "low";
           "${lunaFastModel}" = "low";
         };
         enabledModels = [
@@ -104,8 +104,8 @@ in
           modelFallback = true;
           fallbackChains = {
             "${primaryModel}" = [
-              "${glmModel}:high"
-              "${lunaModel}:high"
+              "${glmModel}:low"
+              "${lunaModel}:low"
             ];
           };
         };

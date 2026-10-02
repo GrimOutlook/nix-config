@@ -113,6 +113,25 @@ in
       description = "OmO user-wide model defaults, overridden by project .omo/settings.json";
     };
 
+    mcpConfig = lib.mkOption {
+      type = settingsFormat.type;
+      default = {
+        mcpServers.ha-mcp = {
+          command = "${pkgs.uv}/bin/uvx";
+          args = [ "ha-mcp" ];
+          env = {
+            HOMEASSISTANT_URL = "\${HOMEASSISTANT_URL}";
+            HOMEASSISTANT_TOKEN = "\${HOMEASSISTANT_TOKEN}";
+          };
+        };
+      };
+      description = ''
+        OmO user-wide MCP servers. Export HOMEASSISTANT_URL and
+        HOMEASSISTANT_TOKEN before starting OmO to connect ha-mcp.
+        Keep credentials in the runtime environment, not this option.
+      '';
+    };
+
     omoConfig = lib.mkOption {
       type = settingsFormat.type;
       default = {
@@ -186,6 +205,10 @@ in
       };
       home.file.".omo/agent/settings.json" = {
         source = settingsFormat.generate "omo-settings.json" cfg.settings;
+        force = true;
+      };
+      home.file.".omo/agent/mcp.json" = {
+        source = settingsFormat.generate "omo-mcp.json" cfg.mcpConfig;
         force = true;
       };
     };

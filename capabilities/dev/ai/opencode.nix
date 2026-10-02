@@ -148,6 +148,21 @@ in
       "$schema" = "https://opencode.ai/config.json";
       disabled_providers = [ "opencode" ];
       share = "disabled";
+      # GLM-5.3 is served through Mistral's OpenAI-compatible API. Its streamed
+      # tool-call deltas are spec-compliant -- `id` and `name` arrive on the
+      # first delta and continuation deltas are matched by `index` with a null
+      # id -- but opencode's default @ai-sdk/mistral parser rejects those id-less
+      # continuations with AI_TypeValidationError (delta.tool_calls.0.id:
+      # expected string, received undefined). @ai-sdk/openai-compatible matches
+      # tool-call fragments by index and tolerates the null id, so override just
+      # the SDK package for the mistral provider. The provider id stays
+      # `mistral`, so the existing API key and model selection are unaffected.
+      provider = {
+        mistral = {
+          npm = "@ai-sdk/openai-compatible";
+          options.baseURL = "https://api.mistral.ai/v1";
+        };
+      };
       plugin = lib.mkIf reviewerEnabled [ permissionReviewerPlugin ];
       permission = {
         # With the reviewer on it only ever sees actions the policy classifies

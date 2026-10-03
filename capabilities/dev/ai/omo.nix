@@ -77,6 +77,9 @@ in
           "gpt-6-luna-fast"
           "gpt-6.1-sol"
         ];
+        packages = [
+          "git:github.com/aslaii/omo-usage@8cbd98d2452c77e533152e22e05655ca7fbdc7b7"
+        ];
         retry = {
           modelFallback = true;
           fallbackChains = {

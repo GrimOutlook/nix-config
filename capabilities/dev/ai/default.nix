@@ -10,6 +10,7 @@ in
   imports = [
     ./agy/default.nix
     ./claude/default.nix
+    ./omo.nix
     ./opencode.nix
     ./shared.nix
   ];
@@ -29,6 +30,7 @@ in
       lib.mkMerge (enableAll [
         "agy"
         "claude"
+        "omo"
         "opencode"
       ])
     );

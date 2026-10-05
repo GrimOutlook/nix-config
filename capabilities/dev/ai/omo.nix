@@ -8,6 +8,9 @@
 let
   cfg = config.host.dev.ai.omo;
   settingsFormat = pkgs.formats.json { };
+  bunPkgs = import inputs.nix-config.inputs.nixpkgs-unstable {
+    system = pkgs.stdenv.hostPlatform.system;
+  };
   solModel = "chatgpt-subscription/gpt-6.1-sol";
   lunaModel = "chatgpt-subscription/gpt-6-luna";
   lunaFastModel = "chatgpt-subscription/gpt-6-luna-fast";
@@ -169,27 +172,42 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    host.home-manager.config = {
-      home.packages =
-        with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-          omo-ai
-        ];
+    host.home-manager.config =
+      { config, lib, ... }:
+      {
+        home.packages =
+          (with inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
+            omo-ai
+          ])
+          ++ [ bunPkgs.bun ];
 
-      # Project .omo/omo.jsonc and .omo/settings.json override these defaults.
-      # Senpi replaces settings.json on a saved runtime change, so restore the
-      # managed files on the next switch instead of leaving a stale local copy.
-      home.file.".omo/omo.jsonc" = {
-        source = settingsFormat.generate "omo-config.json" cfg.omoConfig;
-        force = true;
+        home.sessionVariables.OMO_RUNTIME = "bun";
+
+        home.activation.omoReflectionSessions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          agent_roots="${config.home.homeDirectory}/.omo/memory/agents"
+          if [ -d "$agent_roots" ]; then
+            for runtime_dir in "$agent_roots"/*/runtime; do
+              [ -d "$runtime_dir" ] || continue
+              run mkdir -p "$runtime_dir/reflection-sessions"
+            done
+          fi
+        '';
+
+        # Project .omo/omo.jsonc and .omo/settings.json override these defaults.
+        # Senpi replaces settings.json on a saved runtime change, so restore the
+        # managed files on the next switch instead of leaving a stale local copy.
+        home.file.".omo/omo.jsonc" = {
+          source = settingsFormat.generate "omo-config.json" cfg.omoConfig;
+          force = true;
+        };
+        home.file.".omo/agent/settings.json" = {
+          source = settingsFormat.generate "omo-settings.json" cfg.settings;
+          force = true;
+        };
+        home.file.".omo/agent/mcp.json" = {
+          source = settingsFormat.generate "omo-mcp.json" cfg.mcpConfig;
+          force = true;
+        };
       };
-      home.file.".omo/agent/settings.json" = {
-        source = settingsFormat.generate "omo-settings.json" cfg.settings;
-        force = true;
-      };
-      home.file.".omo/agent/mcp.json" = {
-        source = settingsFormat.generate "omo-mcp.json" cfg.mcpConfig;
-        force = true;
-      };
-    };
   };
 }

@@ -60,6 +60,7 @@ in
         defaultProvider = "chatgpt-subscription";
         defaultModel = "gpt-6-luna";
         defaultThinkingLevel = "max";
+        showHardwareCursor = true;
         modelThinkingLevels = {
           "${lunaModel}" = "max";
           "${lunaFastModel}" = "low";

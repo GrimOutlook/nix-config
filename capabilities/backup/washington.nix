@@ -70,7 +70,9 @@ in
         Type = "oneshot";
         ExecStart = "${pull}/bin/washington-backup-pull";
         UMask = "0077";
-        TimeoutStartSec = "12h";
+        # Initial Immich exports can span several days; systemd does not
+        # launch overlapping runs when a daily timer fires during a backup.
+        TimeoutStartSec = "7d";
       };
       preStart = "${pkgs.coreutils}/bin/install -d -m 0700 ${repository}";
     };

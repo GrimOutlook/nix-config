@@ -26,7 +26,7 @@ let
         -o BatchMode=yes -o StrictHostKeyChecking=yes \
         -o UserKnownHostsFile=${state}/known_hosts \
         -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \
-        ${lib.escapeShellArg "backup-pull@${config.host.backup.washington.address}"} > "$archive"
+        ${lib.escapeShellArg "backup@${config.host.backup.washington.address}"} > "$archive"
       if [ ! -f "$RESTIC_REPOSITORY/config" ]; then
         restic init
       fi

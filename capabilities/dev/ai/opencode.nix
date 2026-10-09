@@ -9,6 +9,13 @@ let
   cfg = config.host.dev.ai.opencode;
   reviewerEnabled = cfg.permissionReviewer.enable;
   render = (import ./_render.nix { inherit lib; }) config.host.dev.ai.shared;
+  haMcpLauncher = pkgs.writeShellScript "ha-mcp" ''
+    set -eu
+    set -a
+    . ${lib.escapeShellArg config.age.secrets.ha-mcp-env.path}
+    set +a
+    exec ${pkgs.uv}/bin/uvx ha-mcp "$@"
+  '';
   # Policy-aware permission reviewer plugin. Built from source rather than
   # pulled from npm: the published 1.3.1 predates the fixes we depend on, and
   # the pinned input is the integration branch that carries them (see the input
@@ -144,6 +151,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    age.secrets.ha-mcp-env = {
+      file = ../../../secrets/ha-mcp.env.age;
+      owner = config.host.owner.username;
+      group = config.users.users.${config.host.owner.username}.group;
+      mode = "0400";
+    };
+
     host.dev.ai.opencode.settings = {
       "$schema" = "https://opencode.ai/config.json";
       disabled_providers = [ "opencode" ];
@@ -187,10 +201,21 @@ in
         };
       };
       mcp = {
+        # Load credentials only in the MCP process, from the owner's secret.
+        ha-mcp = {
+          enabled = true;
+          type = "local";
+          command = [ "${haMcpLauncher}" ];
+        };
         nixos = {
           enabled = true;
           type = "local";
-          command = "nix run github:utensils/mcp-nixos --";
+          command = [
+            "nix"
+            "run"
+            "github:utensils/mcp-nixos"
+            "--"
+          ];
         };
       };
     };

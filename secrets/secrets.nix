@@ -1,7 +1,7 @@
 let
   # Dev-system SSH host keys. These are the only machines that receive the
   # decrypted deployment key through the host agenix module.
-  berlin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIApGjkXLSbpQIvpIFbVeywyS8Y9rk0kQqPT5wjE/QEnX";
+  berlin = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMd/BqTy1p1j+cVX+fBAj28vxLF+eKENd3i4NE1my2zT";
   paris = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIISBaMUBkrHUa1Mglwy9pT9+PT4lk+cRL7c/cUoz2Gko";
 
   # Keep the editor's identity as a recipient so the secret can be rekeyed
@@ -18,6 +18,16 @@ let
 in
 {
   "deploy-key.age" = {
+    publicKeys = [
+      berlin
+      paris
+      personal
+    ];
+    armor = true;
+  };
+
+  # Shell-compatible HOMEASSISTANT_URL and HOMEASSISTANT_TOKEN assignments.
+  "ha-mcp.env.age" = {
     publicKeys = [
       berlin
       paris

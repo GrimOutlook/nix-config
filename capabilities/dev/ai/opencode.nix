@@ -9,6 +9,12 @@ let
   cfg = config.host.dev.ai.opencode;
   reviewerEnabled = cfg.permissionReviewer.enable;
   render = (import ./_render.nix { inherit lib; }) config.host.dev.ai.shared;
+  githubMcpLauncher = pkgs.writeShellScript "github-mcp" ''
+    set -eu
+    GITHUB_PERSONAL_ACCESS_TOKEN="$(${pkgs.gh}/bin/gh auth token --hostname github.com)"
+    export GITHUB_PERSONAL_ACCESS_TOKEN
+    exec ${pkgs.github-mcp-server}/bin/github-mcp-server stdio "$@"
+  '';
   haMcpLauncher = pkgs.writeShellScript "ha-mcp" ''
     set -eu
     set -a
@@ -201,6 +207,11 @@ in
         };
       };
       mcp = {
+        github = {
+          enabled = true;
+          type = "local";
+          command = [ "${githubMcpLauncher}" ];
+        };
         # Load credentials only in the MCP process, from the owner's secret.
         ha-mcp = {
           enabled = true;

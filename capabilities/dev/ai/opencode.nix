@@ -207,6 +207,11 @@ in
         };
       };
       mcp = {
+        context7 = {
+          enabled = true;
+          type = "remote";
+          url = "https://mcp.context7.com/mcp";
+        };
         github = {
           enabled = true;
           type = "local";
@@ -226,6 +231,15 @@ in
             "run"
             "github:utensils/mcp-nixos"
             "--"
+          ];
+        };
+        playwright = {
+          enabled = true;
+          type = "local";
+          command = [
+            "${pkgs.playwright-mcp}/bin/playwright-mcp"
+            "--headless"
+            "--isolated"
           ];
         };
       };

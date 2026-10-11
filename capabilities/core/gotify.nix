@@ -15,6 +15,8 @@ in
         "washington"
         "amsterdam"
         "dunkirk"
+        "oslo"
+        "svalbard"
       ];
       description = ''
         Hosts whose SSH host key is a recipient of `secrets/gotify-default.age`.

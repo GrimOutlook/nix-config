@@ -38,6 +38,7 @@ in
         "nix"
         "security"
         "ssh-server"
+        "tmp"
         "users"
         "xdg"
       ])

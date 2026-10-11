@@ -15,6 +15,8 @@ let
   washington = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGk84To1yMMiTM6wtmZcryhFfE6Wp2zT4NtoQAz2HDxl";
   amsterdam = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFDzmjRKUcc91nXGxE+BDqXLyn8BRmr31YXVDHO15GCj";
   dunkirk = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC6OsOZygckuVb+YEBOVyKHj+egE9fg8wFVBaTsZd2vk";
+  oslo = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBGla4OOitU1rW6Ryj50Th3lhZfRN1NuF5KhF9M9Fftn";
+  svalbard = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJXT1W/d2w2KkyiqVrueiW+RCDEA8VDr4IHGHdW6cZQ5";
 in
 {
   "deploy-key.age" = {
@@ -70,6 +72,8 @@ in
       washington
       amsterdam
       dunkirk
+      oslo
+      svalbard
       personal
     ];
     armor = true;

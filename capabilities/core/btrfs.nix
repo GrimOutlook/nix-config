@@ -13,7 +13,9 @@ let
   notifyScript = pkgs.writeShellScript "btrfs-scrub-notify" ''
     set -uo pipefail
 
-    mountpoint="$(${pkgs.systemd}/bin/systemd-escape --unescape --path "$1")"
+    # Separate success/failure instances avoid duplicate trigger-source
+    # dependencies, which suppress MONITOR_* variables in systemd 260.
+    mountpoint="$(${pkgs.systemd}/bin/systemd-escape --unescape --path "''${1#*-}")"
     host="$(${pkgs.nettools}/bin/hostname)"
 
     # Set by systemd for units started through OnSuccess=/OnFailure=.
@@ -113,8 +115,8 @@ in
         "btrfs-scrub-${esc fs}" = {
           # Type=simple there, so ExecStartPost fires when the scrub *starts*.
           # These two are the only hooks that run when it finishes.
-          onSuccess = [ "btrfs-scrub-notify@${esc fs}.service" ];
-          onFailure = [ "btrfs-scrub-notify@${esc fs}.service" ];
+          onSuccess = [ "btrfs-scrub-notify@success-${esc fs}.service" ];
+          onFailure = [ "btrfs-scrub-notify@failure-${esc fs}.service" ];
         };
       }) config.services.btrfs.autoScrub.fileSystems
     );

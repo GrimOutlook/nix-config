@@ -12,7 +12,9 @@ let
   notify = pkgs.writeShellApplication {
     name = "washington-backup-notify";
     text = ''
-      job="$1"
+      # Success and failure use separate instances so systemd can propagate
+      # MONITOR_* without seeing the same trigger source twice.
+      job="''${1#*-}"
       result="''${MONITOR_SERVICE_RESULT:-unknown}"
       exit_code="''${MONITOR_EXIT_CODE:-unknown}"
       exit_status="''${MONITOR_EXIT_STATUS:-unknown}"
@@ -94,8 +96,8 @@ in
       stopIfChanged = false;
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
-      onSuccess = [ "washington-backup-notify@backup.service" ];
-      onFailure = [ "washington-backup-notify@backup.service" ];
+      onSuccess = [ "washington-backup-notify@success-backup.service" ];
+      onFailure = [ "washington-backup-notify@failure-backup.service" ];
       unitConfig.RequiresMountsFor = [ "/vault" ];
       serviceConfig = {
         Type = "oneshot";
@@ -117,8 +119,8 @@ in
     };
     systemd.services.washington-backup-maintenance = {
       description = "Prune and check Washington Restic repository";
-      onSuccess = [ "washington-backup-notify@backup-maintenance.service" ];
-      onFailure = [ "washington-backup-notify@backup-maintenance.service" ];
+      onSuccess = [ "washington-backup-notify@success-backup-maintenance.service" ];
+      onFailure = [ "washington-backup-notify@failure-backup-maintenance.service" ];
       unitConfig.RequiresMountsFor = [ "/vault" ];
       path = [
         pkgs.restic

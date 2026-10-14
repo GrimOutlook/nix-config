@@ -166,7 +166,7 @@ in
 
     host.dev.ai.opencode.settings = {
       "$schema" = "https://opencode.ai/config.json";
-      disabled_providers = [ "opencode" ];
+      disabled_providers = [ "gitlab" ];
       share = "disabled";
       # GLM-5.3 is served through Mistral's OpenAI-compatible API. Its streamed
       # tool-call deltas are spec-compliant -- `id` and `name` arrive on the

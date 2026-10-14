@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
   ...
@@ -67,22 +66,29 @@ in
 {
   options.host.backup.washington.address = lib.mkOption {
     type = lib.types.str;
-    default = "washington.${inputs.homelab.domains.local}";
     description = "Washington SSH endpoint reachable from this backup host (LAN or VPN).";
   };
   options.host.backup.washington.calendar = lib.mkOption {
     type = lib.types.str;
     description = "Required calendar schedule for pulling Washington backups; set on each backup host.";
   };
+  options.host.backup.washington.sshKeyFile = lib.mkOption {
+    type = lib.types.path;
+    description = "Encrypted SSH key for the backup source, supplied by the private site.";
+  };
+  options.host.backup.washington.resticPasswordFile = lib.mkOption {
+    type = lib.types.path;
+    description = "Encrypted Restic repository password, supplied by the private site.";
+  };
   config = lib.mkIf config.host.backup.enable {
     age.secrets.washington-backup-ssh-key = {
-      file = ./secrets/washington-ssh-key.age;
+      file = config.host.backup.washington.sshKeyFile;
       owner = "root";
       group = "root";
       mode = "0400";
     };
     age.secrets.washington-restic-password = {
-      file = ./secrets/washington-restic-password.age;
+      file = config.host.backup.washington.resticPasswordFile;
       owner = "root";
       group = "root";
       mode = "0400";

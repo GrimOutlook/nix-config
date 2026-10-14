@@ -3,7 +3,12 @@
 Quick orientation for agents working in `nix-config`. This repo holds shared
 NixOS/home-manager modules consumed by every host in `nix-hosts` (and
 `nix-homelab`) as a flake input (`nix-config`). It does not define any actual
-machine — hosts pull it in and enable pieces of it via options.
+production machine by itself — the private `nix-homelab` site assembles those.
+On `eval/public-private-split`, `hosts/` exports reviewed host profiles,
+`services/` contains parameterized service implementations, and `homelab/`
+contains reusable inventory helpers and monitoring modules. The only system
+defined by the public root is the synthetic `nixosConfigurations.example`.
+See `PUBLIC_PRIVATE_SPLIT.md` for the evaluation workflow and privacy boundary.
 
 ## Structure — "dendritic" pattern
 
@@ -47,10 +52,8 @@ reading individual files.
 - `devshell.nix` — devshell commands available via `nix develop`: `update`
   (flake update + commit + push), `switch` (rebuild/deploy current host via
   `nh os switch`), `unlink-results`.
-- `deploy-rs.nix` — wires `deploy-rs` for remote deploys. **Currently broken**
-  — see the `FIXME` comment in that file: `flake.deploy.nodes` depends on
-  `config.host.hostname`/`config.networking.hostName`, neither of which is
-  set at this level, so `deployChecks` is commented out.
+- `deploy-rs.nix` — makes the deployment tool available in the devshell.
+  Real fleet nodes/checks are assembled privately using `lib.mkFleetDeploy`.
 
 ## Capabilities
 
@@ -129,3 +132,8 @@ upstream modules (`nixos-wsl`, `microvm`) as flake inputs.
   after it's pushed **and** each host runs `just update-homelab-flakes
   nix-config` (updates the host's `flake.lock` + redeploys) — a local commit +
   superproject pointer bump alone changes nothing on a host.
+- On the evaluation branch, use the wrapper's `just eval-host HOST` or
+  `just eval-fleet` to use unpublished public changes via a local input
+  override. These recipes never activate or push. Personal defaults, keys and
+  ciphertext paths are supplied by `nix-homelab/site.nix`; do not reintroduce
+  them into the public capability modules.

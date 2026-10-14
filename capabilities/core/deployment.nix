@@ -8,8 +8,12 @@ let
   owner = config.host.owner.username;
 in
 {
-  options.host.deployment.client.enable = lib.mkEnableOption "Enable fleet deployment client support" // {
-    default = true;
+  options.host.deployment.client = {
+    enable = lib.mkEnableOption "Enable fleet deployment client support";
+    secretFile = lib.mkOption {
+      type = lib.types.path;
+      description = "Encrypted deployment key supplied by the private site.";
+    };
   };
 
   # Keep the option available everywhere, but only install the fleet key on
@@ -26,7 +30,7 @@ in
     # owned by the interactive user and is added to ssh-agent on first use for
     # deployment connections.
     age.secrets.nix-deploy-key = {
-      file = ../../secrets/deploy-key.age;
+      file = cfg.secretFile;
       owner = owner;
       group = owner;
       mode = "0400";

@@ -239,7 +239,7 @@ in
                   exit 0
                 fi
 
-                target_url="https://notify.grimaldifamily.org/message"
+                target_url=${lib.escapeShellArg "${config.host.gotify.url}/message"}
 
                 ${pkgs.curl}/bin/curl --silent --show-error --fail --output /dev/null \
                   --max-time 10 --retry 3 --retry-delay 2 --retry-connrefused \

@@ -132,6 +132,14 @@ in
   options.host.dev.ai.opencode = {
     enable = lib.mkEnableOption "Enable OpenCode CLI configuration";
 
+    haMcp = {
+      enable = lib.mkEnableOption "the site-specific Home Assistant MCP integration";
+      secretFile = lib.mkOption {
+        type = lib.types.path;
+        description = "Encrypted Home Assistant MCP environment supplied by the private site.";
+      };
+    };
+
     permissionReviewer.enable =
       lib.mkEnableOption ''
         the policy-aware permission reviewer plugin, which sends every action
@@ -157,8 +165,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    age.secrets.ha-mcp-env = {
-      file = ../../../secrets/ha-mcp.env.age;
+    age.secrets.ha-mcp-env = lib.mkIf cfg.haMcp.enable {
+      file = cfg.haMcp.secretFile;
       owner = config.host.owner.username;
       group = config.users.users.${config.host.owner.username}.group;
       mode = "0400";
@@ -218,7 +226,7 @@ in
           command = [ "${githubMcpLauncher}" ];
         };
         # Load credentials only in the MCP process, from the owner's secret.
-        ha-mcp = {
+        ha-mcp = lib.mkIf cfg.haMcp.enable {
           enabled = true;
           type = "local";
           command = [ "${haMcpLauncher}" ];

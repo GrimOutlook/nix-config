@@ -31,7 +31,7 @@ in
 
     notifyUrl = lib.mkOption {
       type = lib.types.str;
-      default = "https://notify.grimaldifamily.org";
+      default = config.host.gotify.url;
       description = ''
         Gotify base URL. ZED appends `/message?token=...` itself, so this is
         the bare origin with no path.

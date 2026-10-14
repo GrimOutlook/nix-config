@@ -2,13 +2,14 @@
 
 Enable `host.backup.enable` for a dedicated Intel x86-64 backup host. This
 capability replaces `nix-backup-host`: it bundles the server/network-diag
-settings, SMART tools, administrative SSH keys, homelab home-manager settings,
+settings, SMART tools, homelab home-manager settings,
 hardware support, and the existing EFI/Btrfs disk layout (`/`, `/home`, `/nix`,
 `/vault`). Set `host.backup.diskDevice` to the host's stable disk identifier.
 
 The capability also provides the remote-initiated Washington pull service and
-timer. Set the required `host.backup.washington.calendar` and optionally
-`host.backup.washington.address` (default Washington's homelab FQDN). Repository,
+timer. Set the required `host.backup.washington.calendar`,
+`host.backup.washington.address`, `host.backup.washington.sshKeyFile`, and
+`host.backup.washington.resticPasswordFile` from the private site. Repository,
 host-key state and unit names are preserved: `/vault/backups/washington`,
 `/var/lib/washington-backup`, and `washington-backup.service`. See Washington's
 `BACKUP_PLAN.md` for key enrollment, host-key pinning and restore instructions.
@@ -33,19 +34,18 @@ destination host and systemd exit result: priority **2** for a normal successful
 exit and **8** for failure, timeout, or interruption. A successful backup message
 means the rsync transfers and the Restic snapshot both completed. Updating the
 unit reloads these hooks without restarting an in-flight mirror transfer.
-Oslo/Svalbard are recipients of the shared `secrets/gotify-default.age` token,
+The private site selects recipients and supplies the shared Gotify ciphertext,
 decrypted root-only by the core Gotify capability. Notification delivery failures
 are logged by the sender without changing the backup's result.
 
-The SSH private key is stored in `secrets/washington-ssh-key.age` and decrypted
+The SSH private key is supplied through `host.backup.washington.sshKeyFile` and decrypted
 by agenix to `/run/agenix/washington-backup-ssh-key`, root-owned mode 0400.
-Oslo and Svalbard share this dedicated export-only identity; Washington
-authorizes the matching `secrets/washington-ssh-key.pub` public key. Recipient
-rules in `secrets/_secrets.nix` include both backup hosts' SSH host keys and the
-administrative recovery identities. Rekey from that directory using
-`ragenix --rules _secrets.nix -r` when recipients change.
+The backup clients share a dedicated export-only identity; the source host
+authorizes its matching public key. Authorized keys, ciphertext and recipient
+rules are kept in the private site rather than this capability. For this fleet,
+the backup credentials and rules are under `nix-homelab/secrets/backup/`.
 
-The shared Restic password is stored in `secrets/washington-restic-password.age`
+The shared Restic password is supplied through `host.backup.washington.resticPasswordFile`
 with the same recipients and decrypted to `/run/agenix/washington-restic-password`,
 root-owned mode 0400. Both credentials are provided by agenix; no credential
 initialization service is needed. `/var/lib/washington-backup` only holds the
@@ -59,5 +59,8 @@ host.backup = {
   enable = true;
   diskDevice = "/dev/disk/by-id/your-backup-disk";
   washington.calendar = "02:00";
+  washington.address = "backup-source.example.invalid";
+  washington.sshKeyFile = ./secrets/backup-source-key.age;
+  washington.resticPasswordFile = ./secrets/backup-repository-password.age;
 };
 ```

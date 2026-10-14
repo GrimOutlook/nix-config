@@ -23,7 +23,14 @@ let
 
 in
 {
-  options.host.ssh-server.enable = lib.mkEnableOption "Enable SSH server configurations";
+  options.host.ssh-server = {
+    enable = lib.mkEnableOption "Enable SSH server configurations";
+    ownerAuthorizedKeys = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Owner SSH public keys supplied by the private site.";
+    };
+  };
   config = lib.mkIf cfg.enable {
     # The ssh client, pinned to the same build as the daemon below.
     programs.ssh.package = realtimeOpenssh;
@@ -100,24 +107,6 @@ in
       };
     };
 
-    users.users =
-      let
-        # WARN: Only development host keys should go in here. A key being in
-        # here means it can access every host that enables these ssh-server
-        # settings
-        keys = [
-          # Taipei
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBshpqm8SogcHSuol7cFNLi9R+WJR8XoWXpM6gmxLWb1 grim@taipei"
-          # Belfast
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKhvuDzeDBK94c5jtkKLtunFNBbiIXDfwb06PrrjDMQb grim@belfast"
-          # Paris
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA+VOouatDdN2oqpwfDtzJqDvrx9YJwbvs3of1aZ8Q24 grim@paris"
-          # Berlin
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIApGjkXLSbpQIvpIFbVeywyS8Y9rk0kQqPT5wjE/QEnX grim@berlin"
-        ];
-      in
-      {
-        ${owner}.openssh.authorizedKeys.keys = keys;
-      };
+    users.users.${owner}.openssh.authorizedKeys.keys = cfg.ownerAuthorizedKeys;
   };
 }

@@ -8,10 +8,21 @@ let
   cfg = config.host.users;
   inherit (config.host.owner) username;
   deployUser = "deploy";
-  deployPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID1VhVJcjb4gFXp71G6DI48D+5QHn5LhZPQzY+Si45l5 deploy@fleet";
 in
 {
-  options.host.users.enable = lib.mkEnableOption "Enable users configurations";
+  options.host.users = {
+    enable = lib.mkEnableOption "Enable users configurations";
+    ownerPasswordFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Runtime file containing the owner's password hash; supplied by the private site.";
+    };
+    deployAuthorizedKeys = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ ];
+      description = "Public deployment keys; each is installed with the restrict flag.";
+    };
+  };
   config = lib.mkIf cfg.enable {
     users = {
       mutableUsers = false;
@@ -36,7 +47,7 @@ in
 
           group = "${username}";
 
-          initialHashedPassword = "$y$j9T$B1twhXiwjRRijxI5.sKdD.$ezIbul2rpq59cT/zHUDgeVygGVXcq01LDiyb4GFc79/";
+          hashedPasswordFile = cfg.ownerPasswordFile;
         };
 
         # This account is intentionally not a member of wheel. Its SSH key is
@@ -48,7 +59,7 @@ in
           group = deployUser;
           shell = pkgs.bash;
           hashedPassword = null;
-          openssh.authorizedKeys.keys = [ "restrict ${deployPublicKey}" ];
+          openssh.authorizedKeys.keys = map (key: "restrict ${key}") cfg.deployAuthorizedKeys;
         };
       };
 

@@ -25,9 +25,16 @@ require a new repository named `nix-site`.
 The public root has no private input. `nixosConfigurations.example` is a
 synthetic system using documentation addresses and a locked login account:
 
-Owner identity, notification URLs and monitoring hostnames have no placeholder
-defaults in the reusable modules. The private site must supply these values;
-the synthetic example declares its own example values explicitly.
+Owner identity and monitoring hostnames have no placeholder defaults in the
+reusable modules. Consumers supply these values where the corresponding features
+are used; the synthetic example declares its own example identity explicitly.
+
+Gotify is optional: hosts without `host.gotify.enable` need no notification URL
+or token. Auditing, filesystem scrubbing and backups remain enabled independently;
+their Gotify alert scripts and completion hooks are installed only when Gotify
+is enabled. To opt in, set `host.gotify.enable = true`, `host.gotify.url` and
+`host.gotify.secretFile` (an agenix-encrypted token). `host.gotify.tokenFile`
+selects the runtime token path for the shared sender and ZFS integration.
 
 ```sh
 nix eval --raw path:.#nixosConfigurations.example.config.system.build.toplevel.drvPath

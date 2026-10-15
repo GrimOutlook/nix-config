@@ -30,7 +30,6 @@ nix-config.lib.mkHost {
           name = "Example Owner";
           email = "owner@example.invalid";
         };
-        gotify.url = "https://notify.example.invalid";
         default-programs.enable = false;
         custom-scripts.enable = false;
         nix-index-database.enable = false;

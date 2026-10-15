@@ -102,8 +102,12 @@ in
       stopIfChanged = false;
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];
-      onSuccess = [ "washington-backup-notify@success-backup.service" ];
-      onFailure = [ "washington-backup-notify@failure-backup.service" ];
+      onSuccess = lib.mkIf config.host.gotify.enable [
+        "washington-backup-notify@success-backup.service"
+      ];
+      onFailure = lib.mkIf config.host.gotify.enable [
+        "washington-backup-notify@failure-backup.service"
+      ];
       unitConfig.RequiresMountsFor = [ "/vault" ];
       serviceConfig = {
         Type = "oneshot";
@@ -125,8 +129,12 @@ in
     };
     systemd.services.washington-backup-maintenance = {
       description = "Prune and check Washington Restic repository";
-      onSuccess = [ "washington-backup-notify@success-backup-maintenance.service" ];
-      onFailure = [ "washington-backup-notify@failure-backup-maintenance.service" ];
+      onSuccess = lib.mkIf config.host.gotify.enable [
+        "washington-backup-notify@success-backup-maintenance.service"
+      ];
+      onFailure = lib.mkIf config.host.gotify.enable [
+        "washington-backup-notify@failure-backup-maintenance.service"
+      ];
       unitConfig.RequiresMountsFor = [ "/vault" ];
       path = [
         pkgs.restic
@@ -158,7 +166,7 @@ in
         RandomizedDelaySec = "1h";
       };
     };
-    systemd.services."washington-backup-notify@" = {
+    systemd.services."washington-backup-notify@" = lib.mkIf config.host.gotify.enable {
       description = "Send Gotify result for Washington %i on ${config.networking.hostName}";
       after = [ "network-online.target" ];
       wants = [ "network-online.target" ];

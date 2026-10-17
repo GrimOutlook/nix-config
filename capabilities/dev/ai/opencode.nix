@@ -121,9 +121,9 @@ let
   permissionReviewerPlugin = [
     "./plugins/opencode-permission-reviewer"
     {
-      model = "openai/gpt-5.6-luna";
-      variant = "max";
-      timeoutMs = 120000;
+      model = "openai/gpt-6-luna";
+      variant = "low";
+      timeoutMs = 60000;
     }
   ];
 

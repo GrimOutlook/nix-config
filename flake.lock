@@ -190,11 +190,11 @@
         "rust-analyzer-src": "rust-analyzer-src"
       },
       "locked": {
-        "lastModified": 1792062577,
-        "narHash": "sha256-HrXmKzV5mOZsug7SUrSX+ud1fXurTjw0R+G0qDzL15Q=",
+        "lastModified": 1792148656,
+        "narHash": "sha256-bZlZdPkXbPdTz9gUJRyDanGuvXpxvE7hhJC+M1nOEn0=",
         "owner": "nix-community",
         "repo": "fenix",
-        "rev": "fd5ea49da0ae244caac8872e32f3af90df79e065",
+        "rev": "cd2704cee3dc20ceb397562930e310af5f86aede",
         "type": "github"
       },
       "original": {
@@ -462,11 +462,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1792123574,
-        "narHash": "sha256-Nfg3uuj6SrYd95vB2acYHLvQfjs9L2WZwMgkaKsQyOs=",
+        "lastModified": 1792208234,
+        "narHash": "sha256-saSZGid3+foF4+VZzlDSJdhVO/y1+JdlRHRVnelA93s=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "64f24d6169b8e5996e0c3a3ae696bdf11806b34e",
+        "rev": "28e4f11a163a174d62cc99c220e1c17fb1a2f51e",
         "type": "github"
       },
       "original": {
@@ -587,12 +587,12 @@
     },
     "nixpkgs-realtime": {
       "locked": {
-        "lastModified": 1791883866,
-        "narHash": "sha256-yvkDdToRZ4IgPc9tSBzzCYJvTLf8n5eE3rgUkpCuD5A=",
-        "rev": "a033e66ab94a6bedf2c3d58d93a36319d3cbbbaf",
-        "revCount": 1016120,
+        "lastModified": 1792030654,
+        "narHash": "sha256-OaQwAtPMTjQiY2sT/2/62UbSPhzP/0aDnWzMm/NCiUw=",
+        "rev": "26f4107e47e3ad0ffd0db220469ba83b6f6d96e8",
+        "revCount": 1016276,
         "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.2605.1016120%2Brev-a033e66ab94a6bedf2c3d58d93a36319d3cbbbaf/01a13b82-05be-75e2-9be3-b06765d5f4de/source.tar.gz"
+        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.2605.1016276%2Brev-26f4107e47e3ad0ffd0db220469ba83b6f6d96e8/01a1433c-549b-7ac2-81f6-cad5d560ff29/source.tar.gz"
       },
       "original": {
         "type": "tarball",
@@ -704,11 +704,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1791996288,
-        "narHash": "sha256-T7mKc+DgrSTEtNXXE2jfVHoUNRogl/A0HhfjbKSIDMM=",
+        "lastModified": 1792156566,
+        "narHash": "sha256-BvLl3wDayJUawtgQWBDIX4/IENsNf6rUCPXs2YzeJOU=",
         "owner": "noctalia-dev",
         "repo": "noctalia-greeter",
-        "rev": "c0d328447e3093107a6002cd947c7b5f4a289eed",
+        "rev": "8d24358b12cd5ab481b987878028542d576d3453",
         "type": "github"
       },
       "original": {
@@ -795,11 +795,11 @@
     "rust-analyzer-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1791835614,
-        "narHash": "sha256-CMXY9x3W43sVW8G7IhXAi3vNqkbWwbsxtKldef8Jar0=",
+        "lastModified": 1792086358,
+        "narHash": "sha256-OAXtlM95Nr/RKpqOgq4rhkxtQKt8yxgqbVRxZ2o/UHE=",
         "owner": "rust-lang",
         "repo": "rust-analyzer",
-        "rev": "dd5ed69d4b5b26fe7f91013b1d02608cd37ae199",
+        "rev": "71fbb7faf489656947a03566b32556d93c312c36",
         "type": "github"
       },
       "original": {

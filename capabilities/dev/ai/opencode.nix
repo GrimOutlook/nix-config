@@ -166,6 +166,17 @@ in
 
     host.dev.ai.opencode.settings = {
       "$schema" = "https://opencode.ai/config.json";
+      model = "openai/gpt-6.1-sol";
+      agent = {
+        build = {
+          model = "openai/gpt-6.1-sol";
+          variant = "low";
+        };
+        plan = {
+          model = "openai/gpt-6.1-sol";
+          variant = "low";
+        };
+      };
       disabled_providers = [ "gitlab" ];
       share = "disabled";
       # GLM-5.3 is served through Mistral's OpenAI-compatible API. Its streamed

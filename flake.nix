@@ -58,16 +58,17 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    # Policy-aware permission reviewer plugin for OpenCode. Pinned to the
-    # review-history branch of GrimOutlook/opencode-permission-reviewer, which
+    # Policy-aware permission reviewer plugin for OpenCode. Tracks the
+    # main branch of GrimOutlook/opencode-permission-reviewer, which
     # includes the session metadata contract and integration fixes plus the
-    # persistent sidebar/history UI. npm still carries 1.3.1 without these fixes.
+    # persistent sidebar/history UI and manual-review analysis display.
+    # npm still carries 1.3.1 without these fixes.
     # TODO: Repoint this input at a published release (and drop the build in
     # capabilities/dev/ai/opencode.nix in favour of the npm package name) once
     # the fixes land upstream and are released.
     opencode-permission-reviewer = {
       flake = false;
-      url = "git+https://github.com/GrimOutlook/opencode-permission-reviewer.git?ref=review-history&rev=58869d2c5b87bb3880d04758897d562e37174552";
+      url = "git+https://github.com/GrimOutlook/opencode-permission-reviewer.git?ref=main";
     };
 
     microvm = {

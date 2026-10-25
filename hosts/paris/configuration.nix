@@ -30,6 +30,9 @@
   services.udev.packages = with pkgs; [
     qmk-udev-rules
   ];
+  # USBGuard is opt-in per host and is currently OFF on paris: a VIA Labs VL820
+  # USB-C hub was being rejected, which hid every device behind it. The rules
+  # below are inert until `host.security.usbguard.enable = true` is set here.
   # Cisco USB console cable, for switch/router console access
   services.usbguard.rules = ''
     # Intel AX201 onboard Bluetooth adapter

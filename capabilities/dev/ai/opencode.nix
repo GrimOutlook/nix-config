@@ -121,9 +121,9 @@ let
   permissionReviewerPlugin = [
     "./plugins/opencode-permission-reviewer"
     {
-      model = "openai/gpt-5.6-luna";
-      variant = "max";
-      timeoutMs = 120000;
+      model = "openai/gpt-6.1-sol";
+      variant = "low";
+      timeoutMs = 60000;
     }
   ];
 
@@ -174,7 +174,18 @@ in
 
     host.dev.ai.opencode.settings = {
       "$schema" = "https://opencode.ai/config.json";
-      disabled_providers = [ "opencode" ];
+      model = "openai/gpt-6.1-sol";
+      agent = {
+        build = {
+          model = "openai/gpt-6.1-sol";
+          variant = "low";
+        };
+        plan = {
+          model = "openai/gpt-6.1-sol";
+          variant = "low";
+        };
+      };
+      disabled_providers = [ "gitlab" ];
       share = "disabled";
       # GLM-5.3 is served through Mistral's OpenAI-compatible API. Its streamed
       # tool-call deltas are spec-compliant -- `id` and `name` arrive on the

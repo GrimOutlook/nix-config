@@ -102,6 +102,28 @@ current public working tree.
 
 ## Publication and activation review
 
+### Final refresh and cutover
+
+The local split refresh incorporates config main through `8341cff`, including
+the current OpenCode model/reviewer settings and dependency pins. Repeat the
+checks below after later changes; the earlier successful results above describe
+the original branch, not the refreshed working tree.
+
+1. Evaluate the fleet and `dubai-installer` with the local config override.
+2. Run public flake checks on both architectures and build the boundary check.
+3. Build selected host systems and review the final public diff for credentials
+   and personal information.
+4. Publish/merge config first. In homelab, change `inputs.nix-config.url` to
+   `github:GrimOutlook/nix-config`, then run `just update nix-config`. Verify
+   the lock references the merged split and evaluate without a local override.
+5. Publish/merge homelab, then update the wrapper submodule pointers. Evaluation
+   uses adjacent config; deployment uses the private published lockfile.
+6. Rotate the owner password, verify recipients and actual host decryption,
+   then activate one host at a time and check access/services.
+
+The branch URL remains intentional until step 4: main does not yet export the
+required split interfaces.
+
 The original host repositories and their histories remain available for
 comparison. No private Git history was imported into this public branch.
 Existing public history still contains the previous identity, access-key

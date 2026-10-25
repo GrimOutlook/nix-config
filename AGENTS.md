@@ -128,10 +128,10 @@ upstream modules (`nixos-wsl`, `microvm`) as flake inputs.
   private LAN/VPN addresses; fleet
   activation uses deploy-rs plus limited NOPASSWD sudo-rs. Bootstrap a host over
   its existing root/admin path before applying this configuration.
-- This repo is consumed as a flake input, so any change here reaches hosts only
-  after it's pushed **and** each host runs `just update-homelab-flakes
-  nix-config` (updates the host's `flake.lock` + redeploys) — a local commit +
-  superproject pointer bump alone changes nothing on a host.
+- This repo is consumed as a published flake input. After publication, update
+  the private fleet's pin with `just --justfile homelab/JUSTFILE update nix-config`
+  from the wrapper and review/deploy the resulting fleet. A superproject pointer
+  bump alone changes nothing in the published dependency graph.
 - On the evaluation branch, use the wrapper's `just eval-host HOST` or
   `just eval-fleet` to use unpublished public changes via a local input
   override. These recipes never activate or push. Personal defaults, keys and

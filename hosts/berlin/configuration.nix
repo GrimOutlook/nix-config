@@ -26,6 +26,9 @@
     kdePackages.kdenlive
   ];
 
+  # USBGuard is opt-in per host and is currently OFF on berlin, so the
+  # allow-list below is inert until `host.security.usbguard.enable = true` is
+  # set here.
   # USBGuard allow-list for the peripherals attached to berlin. The default
   # policy in config/capabilities/core/security.nix only allows devices whose
   # interface set is exactly { 03:*:* }, which excludes multi-interface HID

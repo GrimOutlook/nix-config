@@ -19,7 +19,7 @@ in
 
     notifyTokenFile = lib.mkOption {
       type = lib.types.str;
-      default = "/run/agenix/gotify-default";
+      default = config.host.gotify.tokenFile;
       description = ''
         Path to a file holding the Gotify application token ZED posts with.
         Read at notification time rather than at build time, so the token
@@ -31,7 +31,7 @@ in
 
     notifyUrl = lib.mkOption {
       type = lib.types.str;
-      default = "https://notify.grimaldifamily.org";
+      default = config.host.gotify.url;
       description = ''
         Gotify base URL. ZED appends `/message?token=...` itself, so this is
         the bare origin with no path.
@@ -60,7 +60,7 @@ in
     # which rules out ZED's email path -- but zed-functions.sh has had native
     # Gotify support since 2.1, so no wrapper script is needed.
     services.zfs.zed.settings = {
-      ZED_GOTIFY_URL = cfg.notifyUrl;
+      ZED_GOTIFY_URL = lib.mkIf config.host.gotify.enable cfg.notifyUrl;
 
       # zed.rc is sourced as shell by every zedlet (see the `. zed.rc` at the
       # top of e.g. statechange-notify.sh), so this substitution runs at
@@ -71,7 +71,7 @@ in
       # The `|| true` keeps a missing secret from turning into a stderr spew on
       # every event -- an empty token makes zed_notify_gotify return 2 and the
       # event is still logged.
-      ZED_GOTIFY_APPTOKEN = ''$(cat ${cfg.notifyTokenFile} 2>/dev/null || true)'';
+      ZED_GOTIFY_APPTOKEN = lib.mkIf config.host.gotify.enable "$(cat ${lib.escapeShellArg cfg.notifyTokenFile} 2>/dev/null || true)";
 
       # Notify on successful scrubs too, not just failures. A monthly "scrub
       # finished, 0 errors" is the only evidence that this whole path still

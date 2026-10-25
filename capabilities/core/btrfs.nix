@@ -59,66 +59,44 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # Unlike a ZFS mirror, a single-device btrfs root cannot repair what a
-    # scrub finds -- there is no second copy of the data to rebuild from
-    # (metadata is DUP by default, data is not). So this is purely a detector:
-    # its whole value is the report, which makes the notification below not an
-    # optional extra but the reason for running it at all.
-    #
-    # Weekly, against upstream's monthly default and against the monthly
-    # cadence host.zfs settles on. Those pools are large arrays where a pass
-    # takes hours and competes with the host's real work; these are SSD roots
-    # that finish in minutes, so there is nothing to schedule around and the
-    # only thing frequency costs is the notification. For a filesystem that
-    # can detect damage but not repair it, finding out sooner is the whole
-    # benefit available.
-    # TODO: four of the six btrfs hosts scrub without reporting. berlin,
-    # dubai, macao and paris are not recipients of `gotify-default`, so the
-    # notifier below finds no token, logs a skip and exits -- leaving them
-    # with the half of this that does not matter, given a single-device btrfs
-    # root cannot repair what a scrub finds.
-    #
-    # Fixing it means adding those four host keys to `secrets/secrets.nix`,
-    # adding the hostnames to `host.gotify.recipients`, and `ragenix -r`.
-    # Note berlin's key recorded there is stale (the file has IApGjkXL..., the
-    # live host and known_hosts both have IMd/BqTy...), which also means
-    # deploy-key.age cannot be decrypted there today -- correct it in the same
-    # pass rather than rekeying to a key that does not exist.
+    # Scrubbing remains useful independently of the optional Gotify delivery.
     services.btrfs.autoScrub = {
       enable = true;
       interval = lib.mkDefault "weekly";
     };
 
-    systemd.services = lib.mkMerge (
-      # One template instantiated per filesystem rather than a single shared
-      # unit: systemd coalesces concurrent triggers of the same unit, and the
-      # MONITOR_* variables the script reads then describe whichever trigger
-      # won the race.
-      [
-        {
-          "btrfs-scrub-notify@" = {
-            description = "report the result of btrfs scrub on %I";
-            serviceConfig = {
-              Type = "oneshot";
-              ExecStart = "${notifyScript} %i";
+    systemd.services = lib.mkIf config.host.gotify.enable (
+      lib.mkMerge (
+        # One template instantiated per filesystem rather than a single shared
+        # unit: systemd coalesces concurrent triggers of the same unit, and the
+        # MONITOR_* variables the script reads then describe whichever trigger
+        # won the race.
+        [
+          {
+            "btrfs-scrub-notify@" = {
+              description = "report the result of btrfs scrub on %I";
+              serviceConfig = {
+                Type = "oneshot";
+                ExecStart = "${notifyScript} %i";
+              };
             };
+          }
+        ]
+        # Read back upstream's own list rather than recomputing it from
+        # config.fileSystems: it dedupes filesystems mounted more than once and
+        # subvolumes sharing a device, so a naive pass would attach notifiers to
+        # scrub units that do not exist.
+        ++ map (fs: {
+          # Same unit name upstream derives in
+          # nixos/modules/tasks/filesystems/btrfs.nix.
+          "btrfs-scrub-${esc fs}" = {
+            # Type=simple there, so ExecStartPost fires when the scrub *starts*.
+            # These two are the only hooks that run when it finishes.
+            onSuccess = [ "btrfs-scrub-notify@success-${esc fs}.service" ];
+            onFailure = [ "btrfs-scrub-notify@failure-${esc fs}.service" ];
           };
-        }
-      ]
-      # Read back upstream's own list rather than recomputing it from
-      # config.fileSystems: it dedupes filesystems mounted more than once and
-      # subvolumes sharing a device, so a naive pass would attach notifiers to
-      # scrub units that do not exist.
-      ++ map (fs: {
-        # Same unit name upstream derives in
-        # nixos/modules/tasks/filesystems/btrfs.nix.
-        "btrfs-scrub-${esc fs}" = {
-          # Type=simple there, so ExecStartPost fires when the scrub *starts*.
-          # These two are the only hooks that run when it finishes.
-          onSuccess = [ "btrfs-scrub-notify@success-${esc fs}.service" ];
-          onFailure = [ "btrfs-scrub-notify@failure-${esc fs}.service" ];
-        };
-      }) config.services.btrfs.autoScrub.fileSystems
+        }) config.services.btrfs.autoScrub.fileSystems
+      )
     );
   };
 }

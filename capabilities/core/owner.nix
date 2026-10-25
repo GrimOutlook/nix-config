@@ -1,17 +1,16 @@
 { lib, ... }:
 let
-  mkDefaultStrOpt =
-    default: description:
+  mkStrOpt =
+    description:
     (lib.mkOption {
       type = lib.types.str;
-      inherit default;
       inherit description;
     });
 in
 {
   options.host.owner = {
-    email = mkDefaultStrOpt "dev@grimoutlook.dev" "Email of the main user";
-    name = mkDefaultStrOpt "Dominic Grimaldi" "Name of the main user";
-    username = mkDefaultStrOpt "grim" "Username for the main user";
+    email = mkStrOpt "Email of the main user, supplied by the site";
+    name = mkStrOpt "Name of the main user, supplied by the site";
+    username = mkStrOpt "Username for the main user, supplied by the site";
   };
 }

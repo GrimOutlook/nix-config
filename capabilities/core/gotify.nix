@@ -11,13 +11,7 @@ in
   options.host.gotify = {
     recipients = lib.mkOption {
       type = lib.types.listOf lib.types.str;
-      default = [
-        "washington"
-        "amsterdam"
-        "dunkirk"
-        "oslo"
-        "svalbard"
-      ];
+      default = [ ];
       description = ''
         Hosts whose SSH host key is a recipient of `secrets/gotify-default.age`.
 
@@ -51,12 +45,16 @@ in
 
     url = lib.mkOption {
       type = lib.types.str;
-      default = "https://notify.grimaldifamily.org";
       description = ''
         Gotify origin, with no path. Unlike newyork's own senders, which
         post to loopback because Gotify runs there, everything using this
         goes over the network to the public name.
       '';
+    };
+
+    secretFile = lib.mkOption {
+      type = lib.types.path;
+      description = "Encrypted Gotify token supplied by the private site.";
     };
 
     sender = lib.mkOption {
@@ -116,6 +114,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = cfg.url != "";
+        message = "host.gotify.url must be set to a non-empty Gotify origin when host.gotify.enable is true.";
+      }
+    ];
+
     # The Gotify application token that unattended, root-run alert paths post
     # with. Deliberately one shared token rather than one per consumer: these
     # are all "something is wrong with this machine" events that would be
@@ -132,7 +137,8 @@ in
     # Left at the agenix defaults of root-owned 0400 because every one of
     # those runs as root; nothing here should be readable by a service user.
     age.secrets.gotify-default = {
-      file = ../../secrets/gotify-default.age;
+      file = cfg.secretFile;
+      path = cfg.tokenFile;
       owner = "root";
       group = "root";
       mode = "0400";

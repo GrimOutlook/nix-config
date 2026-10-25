@@ -17,21 +17,20 @@ in
   options.host.firefox = {
     enable = lib.mkEnableOption "Enable Firefox";
 
-    # On by default: the only hosts that reach this module are the ones
-    # enabling `host.graphical` (berlin, paris), and both are recipients of
-    # the secret. A NEW graphical host must be added to
-    # `secrets/firefox-bitwarden-managed-storage.age`'s `publicKeys` before
-    # its first switch -- agenix cannot decrypt for a non-recipient and fails
-    # at activation time, which the build will not catch. Set this to false on
-    # such a host if you would rather not hold the secret there.
+    # Opt-in: the private site supplies the ciphertext and must ensure that
+    # the host is an encryption recipient before enabling this integration.
     bitwardenManagedEnvironment =
       lib.mkEnableOption ''
         seeding the Bitwarden extension with the self-hosted Vaultwarden
         server URL, from an agenix secret
       ''
       // {
-        default = true;
+        default = false;
       };
+    bitwardenSecretFile = lib.mkOption {
+      type = lib.types.path;
+      description = "Encrypted Bitwarden managed-storage manifest supplied by the private site.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -201,7 +200,7 @@ in
 
     age.secrets = lib.mkIf cfg.bitwardenManagedEnvironment {
       firefox-bitwarden-managed-storage = {
-        file = ../../secrets/firefox-bitwarden-managed-storage.age;
+        file = cfg.bitwardenSecretFile;
         path = "${managedStorageDir}/${bitwardenExtensionId}.json";
         owner = ownerUser;
         group = ownerGroup;

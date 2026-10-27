@@ -27,6 +27,7 @@ in
         "cd"
         "chmod"
         "chown"
+        "command"
         "cp"
         "curl"
         "devenv"

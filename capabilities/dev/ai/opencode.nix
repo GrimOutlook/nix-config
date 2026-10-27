@@ -121,6 +121,7 @@ let
   permissionReviewerPlugin = [
     "./plugins/opencode-permission-reviewer"
     {
+      mode = cfg.permissionReviewer.mode;
       model = "openai/gpt-6.1-sol";
       variant = "low";
       timeoutMs = 60000;
@@ -154,6 +155,19 @@ in
       // {
         default = true;
       };
+
+    permissionReviewer.mode = lib.mkOption {
+      type = lib.types.enum [
+        "automatic"
+        "human-review"
+      ];
+      default = "automatic";
+      description = ''
+        Automatic review allows or denies every reviewed request, returning the
+        denial reason to the agent so it can correct itself. Human-review mode
+        leaves questionable requests pending for a human to decide.
+      '';
+    };
 
     settings = lib.mkOption {
       type = lib.types.submodule {

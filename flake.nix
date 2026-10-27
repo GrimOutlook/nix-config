@@ -61,7 +61,8 @@
     # Policy-aware permission reviewer plugin for OpenCode. Tracks the
     # main branch of GrimOutlook/opencode-permission-reviewer, which
     # includes the session metadata contract and integration fixes plus the
-    # persistent sidebar/history UI and manual-review analysis display.
+    # persistent sidebar/history UI, manual-review analysis display, and explicit
+    # automatic/human-review modes with denial feedback to the agent.
     # npm still carries 1.3.1 without these fixes.
     # TODO: Repoint this input at a published release (and drop the build in
     # capabilities/dev/ai/opencode.nix in favour of the npm package name) once

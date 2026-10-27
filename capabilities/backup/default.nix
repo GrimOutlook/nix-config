@@ -27,9 +27,5 @@
       home-manager.config.imports = [ inputs.homelab.homeManagerModules.default ];
     };
     environment.systemPackages = [ pkgs.smartmontools ];
-    users.users.${config.host.owner.username}.openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL5fqFc7C+0j1v3D7Xmcdh6DZyJBJg94XaVXE4WkWYWA grim@amsterdam"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICegwYzelQ7h4WDbUW9G9VvKhnmEzDfKt8PZzVGI3Ta+ grim@washington"
-    ];
   };
 }

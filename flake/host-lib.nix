@@ -102,5 +102,7 @@ in
 {
   flake.lib = {
     inherit mkDeployShell mkHost;
+    mkHomelab = { domains, hosts, ... }: import ../homelab/lib.nix { inherit domains hosts; };
+    mkFleetDeploy = import ../lib/fleet-deploy.nix;
   };
 }

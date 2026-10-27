@@ -9,6 +9,5 @@ pnpm-workspace.yaml
 .direnv/
 
 .claude/
-.omo/
 
 !.gitignore

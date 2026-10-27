@@ -9,6 +9,19 @@ let
   cfg = config.host.dev.ai.opencode;
   reviewerEnabled = cfg.permissionReviewer.enable;
   render = (import ./_render.nix { inherit lib; }) config.host.dev.ai.shared;
+  githubMcpLauncher = pkgs.writeShellScript "github-mcp" ''
+    set -eu
+    GITHUB_PERSONAL_ACCESS_TOKEN="$(${pkgs.gh}/bin/gh auth token --hostname github.com)"
+    export GITHUB_PERSONAL_ACCESS_TOKEN
+    exec ${pkgs.github-mcp-server}/bin/github-mcp-server stdio "$@"
+  '';
+  haMcpLauncher = pkgs.writeShellScript "ha-mcp" ''
+    set -eu
+    set -a
+    . ${lib.escapeShellArg config.age.secrets.ha-mcp-env.path}
+    set +a
+    exec ${pkgs.uv}/bin/uvx ha-mcp "$@"
+  '';
   # Policy-aware permission reviewer plugin. Built from source rather than
   # pulled from npm: the published 1.3.1 predates the fixes we depend on, and
   # the pinned input is the integration branch that carries them (see the input
@@ -108,9 +121,10 @@ let
   permissionReviewerPlugin = [
     "./plugins/opencode-permission-reviewer"
     {
-      model = "openai/gpt-5.6-luna";
-      variant = "max";
-      timeoutMs = 120000;
+      mode = cfg.permissionReviewer.mode;
+      model = "openai/gpt-6.1-sol";
+      variant = "low";
+      timeoutMs = 60000;
     }
   ];
 
@@ -118,6 +132,14 @@ in
 {
   options.host.dev.ai.opencode = {
     enable = lib.mkEnableOption "Enable OpenCode CLI configuration";
+
+    haMcp = {
+      enable = lib.mkEnableOption "the site-specific Home Assistant MCP integration";
+      secretFile = lib.mkOption {
+        type = lib.types.path;
+        description = "Encrypted Home Assistant MCP environment supplied by the private site.";
+      };
+    };
 
     permissionReviewer.enable =
       lib.mkEnableOption ''
@@ -134,6 +156,19 @@ in
         default = true;
       };
 
+    permissionReviewer.mode = lib.mkOption {
+      type = lib.types.enum [
+        "automatic"
+        "human-review"
+      ];
+      default = "automatic";
+      description = ''
+        Automatic review allows or denies every reviewed request, returning the
+        denial reason to the agent so it can correct itself. Human-review mode
+        leaves questionable requests pending for a human to decide.
+      '';
+    };
+
     settings = lib.mkOption {
       type = lib.types.submodule {
         freeformType = (pkgs.formats.json { }).type;
@@ -144,9 +179,27 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    age.secrets.ha-mcp-env = lib.mkIf cfg.haMcp.enable {
+      file = cfg.haMcp.secretFile;
+      owner = config.host.owner.username;
+      group = config.users.users.${config.host.owner.username}.group;
+      mode = "0400";
+    };
+
     host.dev.ai.opencode.settings = {
       "$schema" = "https://opencode.ai/config.json";
-      disabled_providers = [ "opencode" ];
+      model = "openai/gpt-6.1-sol";
+      agent = {
+        build = {
+          model = "openai/gpt-6.1-sol";
+          variant = "low";
+        };
+        plan = {
+          model = "openai/gpt-6.1-sol";
+          variant = "low";
+        };
+      };
+      disabled_providers = [ "gitlab" ];
       share = "disabled";
       # GLM-5.3 is served through Mistral's OpenAI-compatible API. Its streamed
       # tool-call deltas are spec-compliant -- `id` and `name` arrive on the
@@ -187,10 +240,40 @@ in
         };
       };
       mcp = {
+        context7 = {
+          enabled = true;
+          type = "remote";
+          url = "https://mcp.context7.com/mcp";
+        };
+        github = {
+          enabled = true;
+          type = "local";
+          command = [ "${githubMcpLauncher}" ];
+        };
+        # Load credentials only in the MCP process, from the owner's secret.
+        ha-mcp = lib.mkIf cfg.haMcp.enable {
+          enabled = true;
+          type = "local";
+          command = [ "${haMcpLauncher}" ];
+        };
         nixos = {
           enabled = true;
           type = "local";
-          command = "nix run github:utensils/mcp-nixos --";
+          command = [
+            "nix"
+            "run"
+            "github:utensils/mcp-nixos"
+            "--"
+          ];
+        };
+        playwright = {
+          enabled = true;
+          type = "local";
+          command = [
+            "${pkgs.playwright-mcp}/bin/playwright-mcp"
+            "--headless"
+            "--isolated"
+          ];
         };
       };
     };

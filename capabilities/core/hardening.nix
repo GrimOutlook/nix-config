@@ -217,38 +217,14 @@ in
             space_left = "10%";
             space_left_action = "ignore";
             admin_space_left = "5%";
-            admin_space_left_action =
+            admin_space_left_action = lib.mkIf config.host.gotify.enable (
               "exec "
               + (pkgs.writeShellScript "auditd-gotify-alert" ''
-                set -euo pipefail
-
-                title="Auditd Storage Alert ($(hostname))"
-                message="Auditd Warning: Low disk space threshold reached on host $(hostname)"
-                priority="8"
-
-                # Reads Gotify API key strictly from agenix secret file
-                token_file="${config.age.secrets."gotify-default".path or "/run/agenix/gotify-default"}"
-                if [ ! -r "$token_file" ]; then
-                  echo "auditd-gotify-alert: Gotify key secret file not readable at $token_file, skipping alert" >&2
-                  exit 0
-                fi
-
-                token="$(cat "$token_file")"
-                if [ -z "$token" ]; then
-                  echo "auditd-gotify-alert: Gotify key secret file is empty, skipping alert" >&2
-                  exit 0
-                fi
-
-                target_url="https://notify.grimaldifamily.org/message"
-
-                ${pkgs.curl}/bin/curl --silent --show-error --fail --output /dev/null \
-                  --max-time 10 --retry 3 --retry-delay 2 --retry-connrefused \
-                  --header "X-Gotify-Key: $token" \
-                  --form-string "title=$title" \
-                  --form-string "message=$message" \
-                  --form-string "priority=$priority" \
-                  "$target_url" || true
-              '');
+                exec ${config.host.gotify.sender}/bin/gotify-notify 8 \
+                  "Auditd Storage Alert ($(hostname))" \
+                  "Auditd Warning: Low disk space threshold reached on host $(hostname)"
+              '')
+            );
             num_logs = 10;
             max_log_file = 100;
             max_log_file_action = "rotate";
@@ -474,7 +450,7 @@ in
           # Maximize ASLR entropy. The valid range is architecture- (and even
           # VA-bits-config-) dependent -- 32 is right for x86_64 but exceeds
           # aarch64's max, which fails with EINVAL and takes the whole
-          # systemd-sysctl unit down with it. Leave aarch64 (e.g. dubai) on
+          # systemd-sysctl unit down with it. Leave aarch64 on
           # the kernel's own per-arch default instead of guessing a value.
           "vm.mmap_rnd_bits" = lib.mkIf pkgs.stdenv.hostPlatform.isx86 (lib.mkDefault 32);
           "vm.mmap_rnd_compat_bits" = lib.mkIf pkgs.stdenv.hostPlatform.isx86 (lib.mkDefault 16);

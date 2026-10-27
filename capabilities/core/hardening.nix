@@ -450,7 +450,7 @@ in
           # Maximize ASLR entropy. The valid range is architecture- (and even
           # VA-bits-config-) dependent -- 32 is right for x86_64 but exceeds
           # aarch64's max, which fails with EINVAL and takes the whole
-          # systemd-sysctl unit down with it. Leave aarch64 (e.g. dubai) on
+          # systemd-sysctl unit down with it. Leave aarch64 on
           # the kernel's own per-arch default instead of guessing a value.
           "vm.mmap_rnd_bits" = lib.mkIf pkgs.stdenv.hostPlatform.isx86 (lib.mkDefault 32);
           "vm.mmap_rnd_compat_bits" = lib.mkIf pkgs.stdenv.hostPlatform.isx86 (lib.mkDefault 16);

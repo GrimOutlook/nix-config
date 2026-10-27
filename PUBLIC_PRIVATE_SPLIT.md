@@ -45,9 +45,10 @@ hardware, actual inventory, secrets, and remaining site-specific service modules
 
 ## Private composition
 
-`nix-homelab/fleet.nix` assembles all ten hosts using one dependency graph.
-It retains each host's output function so the Pi's vendor constructor and
-installer, and Washington's package check, survive the consolidation.
+`nix-homelab/fleet.nix` assembles nine managed hosts using one dependency graph.
+It retains each host's output function and Washington's package check.
+Dubai is maintained externally; its public profile, private system, and Pi
+installer are no longer part of the fleet.
 
 Actual identity and common access keys are in `inventory.nix`. `site.nix`
 supplies them to the public options and points secret integrations at private
@@ -88,12 +89,12 @@ Immich 3.2.2, rather than permitting the insecure 2.x package.
 
 Upstream refreshes are fast-forwarded on the evaluation branches and adapted
 into the split: moved modules remain public, while new site values and encrypted
-credentials remain private. Disabled upstream modules (CryptPad on Washington
-and Dubai's kiosk display) remain available but are not enabled by host profiles.
+credentials remain private. Disabled upstream modules such as CryptPad on
+Washington remain available but are not enabled by host profiles.
 Deployment and secret decryption are not exercised by evaluation.
 
-After the upstream refresh, all ten real host system derivations and the Pi
-installer evaluate successfully. The public flake checks pass on both supported
+Before Dubai was removed, the upstream refresh's ten host system derivations
+and Pi installer evaluated successfully. The public flake checks pass on both supported
 architectures, and the built privacy-boundary check passes. Immich 3.2.2, backup
 schedules, Home Assistant scenes and the enabled private HA MCP integration were
 checked explicitly. All 37 existing service ports are preserved; MailFlow adds
@@ -109,7 +110,7 @@ the current OpenCode model/reviewer settings and dependency pins. Repeat the
 checks below after later changes; the earlier successful results above describe
 the original branch, not the refreshed working tree.
 
-1. Evaluate the fleet and `dubai-installer` with the local config override.
+1. Evaluate the nine managed hosts with the local config override.
 2. Run public flake checks on both architectures and build the boundary check.
 3. Build selected host systems and review the final public diff for credentials
    and personal information.

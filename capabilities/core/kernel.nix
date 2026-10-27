@@ -14,7 +14,7 @@ in
     # Enable CPU microcode security updates for Intel and AMD processors,
     # along with redistributable hardware firmware. Intel/AMD microcode
     # packages are unavailable outside x86, so gate them by platform --
-    # otherwise evaluation fails outright on aarch64 hosts (e.g. dubai).
+    # otherwise evaluation fails outright on aarch64 hosts.
     hardware.cpu.intel.updateMicrocode = lib.mkIf pkgs.stdenv.hostPlatform.isx86 (
       lib.mkDefault true
     );

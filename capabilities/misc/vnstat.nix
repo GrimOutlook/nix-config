@@ -14,7 +14,7 @@ let
   # vnstatd only reports on interfaces already in its on-disk database, and
   # `--add` has to name one explicitly -- there's no "just watch whatever has
   # a default route" mode. Detecting it at service start instead of hardcoding
-  # a name avoids repeating dubai's wifi module's exact prior incident: a
+  # a name avoids repeating a prior incident in a wifi module: a
   # kernel bump renamed its NIC (wlan0 -> wld0) and stranded a hardcoded name
   # with no traffic. `--add` on an interface already tracked is a harmless
   # no-op (ignored via `|| true`), so this is safe to run on every start.

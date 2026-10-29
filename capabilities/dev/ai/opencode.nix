@@ -9,6 +9,23 @@ let
   cfg = config.host.dev.ai.opencode;
   reviewerEnabled = cfg.permissionReviewer.enable;
   render = (import ./_render.nix { inherit lib; }) config.host.dev.ai.shared;
+  gsdPathSkills =
+    pkgs.runCommand "gsd-path-opencode-skills"
+      {
+        nativeBuildInputs = [
+          pkgs.python3
+          pkgs.procps
+        ];
+      }
+      ''
+        export HOME="$TMPDIR/home"
+        export XDG_CONFIG_HOME="$HOME/.config"
+        cp -R ${inputs.nix-config.inputs.gsd-path} source
+        chmod -R u+w source
+        python3 source/scripts/install.py --opencode
+        mkdir -p "$out"
+        cp -R "$XDG_CONFIG_HOME/opencode/skills/." "$out/"
+      '';
   githubMcpLauncher = pkgs.writeShellScript "github-mcp" ''
     set -eu
     GITHUB_PERSONAL_ACCESS_TOKEN="$(${pkgs.gh}/bin/gh auth token --hostname github.com)"
@@ -201,6 +218,7 @@ in
       };
       disabled_providers = [ "gitlab" ];
       share = "disabled";
+      skills.paths = [ "${gsdPathSkills}" ];
       # GLM-5.3 is served through Mistral's OpenAI-compatible API. Its streamed
       # tool-call deltas are spec-compliant -- `id` and `name` arrive on the
       # first delta and continuation deltas are matched by `index` with a null
@@ -283,12 +301,20 @@ in
       complete -c opencode-commit -w opencode
     '';
 
-    host.home-manager.config = {
+    host.home-manager.config = { config, ... }: {
       programs.fish.interactiveShellInit = ''
         complete -c opencode -f -a "(opencode --get-yargs-completions (commandline -opc) (commandline -ct) | string match -v '\$0')"
         complete -c opencode-commit -w opencode
       '';
       home = {
+        file.".config/opencode/permission-reviewer.jsonc" = lib.mkIf reviewerEnabled {
+          text = builtins.toJSON {
+            scriptReadRoots = [
+              "${config.home.homeDirectory}/.gsd-path/runtimes"
+              "${gsdPathSkills}"
+            ];
+          };
+        };
         # OpenCode's status dialog derives the display name from the plugin
         # path, so expose the store-built plugin through a stable basename.
         file.".config/opencode/plugins/opencode-permission-reviewer" = lib.mkIf reviewerEnabled {

@@ -367,6 +367,22 @@
         "type": "github"
       }
     },
+    "gsd-path": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793087117,
+        "narHash": "sha256-IE8p5w9t63lCIFCXEWaXaOdh49peD45jcxjkFM1taX8=",
+        "owner": "open-gsd",
+        "repo": "gsd-path",
+        "rev": "a8fd65c3a160468c20600ee8c243e64428a1b633",
+        "type": "github"
+      },
+      "original": {
+        "owner": "open-gsd",
+        "repo": "gsd-path",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -745,11 +761,11 @@
     "opencode-permission-reviewer": {
       "flake": false,
       "locked": {
-        "lastModified": 1793114586,
-        "narHash": "sha256-kwLF4WXtm/41HMTvAPBqtTo98ZMtVj3NbKzpn8tqpfM=",
+        "lastModified": 1793299260,
+        "narHash": "sha256-Adm8q2xyu12OQ0qzra1NRCKG2ZO6JlOfMw43Gm+HuCk=",
         "ref": "main",
-        "rev": "eab893280f4c4f63305b508c84d73d2757c79e7a",
-        "revCount": 140,
+        "rev": "b16ce92e06286240107a616661861c9b292c305c",
+        "revCount": 141,
         "type": "git",
         "url": "https://github.com/GrimOutlook/opencode-permission-reviewer.git"
       },
@@ -767,6 +783,7 @@
         "disko": "disko",
         "fenix": "fenix",
         "flake-parts": "flake-parts",
+        "gsd-path": "gsd-path",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
         "karen-yank-nvim": "karen-yank-nvim",

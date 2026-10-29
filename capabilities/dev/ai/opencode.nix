@@ -142,6 +142,7 @@ let
       model = "openai/gpt-6.1-sol";
       variant = "low";
       timeoutMs = 60000;
+      maxEnrichmentChars = 400000;
     }
   ];
 

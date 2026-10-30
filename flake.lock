@@ -367,22 +367,6 @@
         "type": "github"
       }
     },
-    "gsd-path": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1793324913,
-        "narHash": "sha256-MG1SVADHIftzqhK1Kpx4W15ACD3lzs7rxow2NX+F3Nc=",
-        "owner": "open-gsd",
-        "repo": "gsd-path",
-        "rev": "73f258d8632fc2003e4aa7bd741bef8ef319c8d5",
-        "type": "github"
-      },
-      "original": {
-        "owner": "open-gsd",
-        "repo": "gsd-path",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -783,7 +767,6 @@
         "disko": "disko",
         "fenix": "fenix",
         "flake-parts": "flake-parts",
-        "gsd-path": "gsd-path",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
         "karen-yank-nvim": "karen-yank-nvim",

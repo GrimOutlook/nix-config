@@ -58,11 +58,6 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    gsd-path = {
-      url = "github:open-gsd/gsd-path";
-      flake = false;
-    };
-
     # Policy-aware permission reviewer plugin for OpenCode. Tracks the
     # main branch of GrimOutlook/opencode-permission-reviewer, which
     # includes the session metadata contract and integration fixes plus the

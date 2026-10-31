@@ -21,7 +21,6 @@
 
   environment.systemPackages = with pkgs; [
     chromium
-    obsidian
     efibootmgr
     kdePackages.kdenlive
   ];

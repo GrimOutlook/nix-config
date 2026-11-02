@@ -7,9 +7,25 @@
 }:
 let
   cfg = config.host.dev.ai.pi;
+  permissionReviewer = import ./_permission-reviewer.nix { inherit inputs pkgs; };
 in
 {
-  options.host.dev.ai.pi.enable = lib.mkEnableOption "Enable Pi CLI configuration";
+  options.host.dev.ai.pi = {
+    enable = lib.mkEnableOption "Enable Pi CLI configuration";
+    permissionReviewer = {
+      enable = lib.mkEnableOption "the Pi tool-call permission reviewer" // {
+        default = true;
+      };
+      escalationMode = lib.mkOption {
+        type = lib.types.enum [
+          "manual"
+          "deny"
+        ];
+        default = "manual";
+        description = "Ask for human approval of questionable calls, or deny them with reasoning.";
+      };
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     host.home-manager.config.home = {
@@ -17,10 +33,26 @@ in
         inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi
       ];
       sessionVariables.NODE_USE_SYSTEM_CA = "1";
-      file.".pi/agent/settings.json".text = builtins.toJSON {
-        defaultProvider = "openai";
-        defaultModel = "gpt-6.1-sol";
-        defaultThinkingLevel = "low";
+      file = {
+        ".pi/agent/settings.json".text = builtins.toJSON {
+          defaultProvider = "openai";
+          defaultModel = "gpt-6.1-sol";
+          defaultThinkingLevel = "low";
+        };
+        # An explicit extension directory loads only the Pi entry, not the
+        # OpenCode plugin/TUI entries shipped in the same package.
+        ".pi/agent/extensions/permission-reviewer/index.js" = lib.mkIf cfg.permissionReviewer.enable {
+          source = "${permissionReviewer}/dist/pi.js";
+        };
+        ".pi/agent/permission-reviewer.json" = lib.mkIf cfg.permissionReviewer.enable {
+          text = builtins.toJSON {
+            # Omit model to use Pi's selected model and authentication.
+            variant = "low";
+            timeoutMs = 60000;
+            audit = true;
+            escalationMode = cfg.permissionReviewer.escalationMode;
+          };
+        };
       };
     };
   };

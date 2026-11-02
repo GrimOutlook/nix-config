@@ -20,7 +20,7 @@ let
   # annotation are split across grim/slurp/satty, which handle scaling.
 
   # slurp exits non-zero when the selection is cancelled; don't capture then.
-  selectRegion = ''region=$(slurp -d) || exit 0'';
+  selectRegion = "region=$(slurp -d) || exit 0";
 
   # Select a region, then annotate it before saving/copying.
   screenshot-annotate = pkgs.writeShellApplication {
@@ -75,16 +75,49 @@ in
       home.file."${screenshotDir}/.keep".text = "";
 
       # satty is a transient annotation window; keep it out of the tiling layout.
-      wayland.windowManager.hyprland.settings.windowrule = lib.mkAfter [
-        ''float 1, match:class ^com\.gabm\.satty$''
-      ];
+      wayland.windowManager.hyprland.settings.windowrule = lib.mkIf config.host.hyprland.enable (
+        lib.mkAfter [
+          ''float 1, match:class ^com\.gabm\.satty$''
+        ]
+      );
 
-      wayland.windowManager.hyprland.settings.bind = lib.mkAfter [
-        # Takes a manual screenshot that shows options after selection.
-        "$mainMod, PRINT, exec, ${lib.getExe screenshot-annotate}"
-        # Manual screenshot that saves to clipboard and closes on selection.
-        ", PRINT, exec, ${lib.getExe screenshot-clipboard}"
-      ];
+      wayland.windowManager.hyprland.settings.bind = lib.mkIf config.host.hyprland.enable (
+        lib.mkAfter [
+          # Takes a manual screenshot that shows options after selection.
+          "$mainMod, PRINT, exec, ${lib.getExe screenshot-annotate}"
+          # Manual screenshot that saves to clipboard and closes on selection.
+          ", PRINT, exec, ${lib.getExe screenshot-clipboard}"
+        ]
+      );
     };
+
+    # Niri does not implement grim's screencopy protocol. Capture with its
+    # native UI, then optionally annotate the captured clipboard image.
+    host.niri.extraConfig = lib.mkIf config.host.niri.enable ''
+      screenshot-path "~/Pictures/Screenshots/%Y-%m-%d_%H-%M-%S.png"
+      window-rule {
+          match app-id="^com\\.gabm\\.satty$"
+          open-floating true
+      }
+    '';
+    host.niri.extraBinds = lib.mkIf config.host.niri.enable ''
+      Print { screenshot; }
+      Mod+Print { spawn "${
+        lib.getExe (
+          pkgs.writeShellApplication {
+            name = "niri-annotate-clipboard";
+            runtimeInputs = [
+              pkgs.wl-clipboard
+              pkgs.satty
+            ];
+            text = ''
+              wl-paste --type image/png | satty --filename - \
+                --output-filename "${savePath}/%Y-%m-%d_%H-%M-%S.png" \
+                --copy-command wl-copy --early-exit
+            '';
+          }
+        )
+      }"; }
+    '';
   };
 }

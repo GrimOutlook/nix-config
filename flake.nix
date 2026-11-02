@@ -58,6 +58,8 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    look.url = "github:kunkka19xx/look";
+
     # Policy-aware permission reviewer plugin for OpenCode. Tracks the
     # main branch of GrimOutlook/opencode-permission-reviewer, which
     # includes the session metadata contract and integration fixes plus the

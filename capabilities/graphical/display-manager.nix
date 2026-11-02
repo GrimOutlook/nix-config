@@ -19,12 +19,15 @@ in
 
     settings = lib.mkOption {
       inherit (settingsFormat) type;
-      # Hyprland exposes both direct and UWSM-managed sessions. Prefer the
+      # Prefer Niri on the graphical test branch. Hyprland exposes both direct
+      # and UWSM-managed sessions; when enabled instead, prefer its
       # direct session for every host using the Hyprland capability while
       # preserving any host-specific greeter settings.
       apply =
         settings:
-        if config.host.hyprland.enable then
+        if config.host.niri.enable then
+          lib.recursiveUpdate { session.default = "niri"; } settings
+        else if config.host.hyprland.enable then
           lib.recursiveUpdate { session.default = "Hyprland"; } settings
         else
           settings;

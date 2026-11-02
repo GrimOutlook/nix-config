@@ -12,6 +12,18 @@ let
   # its default wallpaper directory, and its wallpaper picker shows an empty
   # list rather than an error when the directory is missing.
   wallpaperDir = "Pictures/Wallpapers";
+
+  # Name of the colour scheme generated from the stylix palette. Noctalia
+  # discovers user schemes by scanning `$XDG_CONFIG_HOME/noctalia/colorschemes`
+  # with `find -L ... -mindepth 2`, so the file has to sit one directory deep
+  # and is named after that directory; the symlink home-manager leaves there is
+  # followed thanks to `-L`.
+  stylixSchemeName = "Stylix";
+
+  # Whether stylix is wired up for this host at all. Guards every read of the
+  # stylix palette below -- `config.lib.stylix.*` only exists once
+  # `capabilities/graphical/stylix.nix` has imported the home-manager module.
+  stylixCapabilityEnabled = config.host.stylix.enable;
 in
 {
   options.host.noctalia = {
@@ -58,7 +70,89 @@ in
       # exists on this one, not on the NixOS lib above.
       { config, lib, ... }:
       let
-        seedFile = settingsFormat.generate "noctalia-settings.json" cfg.settings;
+        # Short-circuits before touching `config.stylix` on hosts that never
+        # imported the module.
+        useStylix = stylixCapabilityEnabled && config.stylix.enable;
+
+        # Stylix carries a single palette, so the scheme file gets a single
+        # variant. Noctalia falls back to whichever variant is present when the
+        # one matching its dark-mode toggle is missing, so flipping dark mode in
+        # the shell keeps these colours rather than failing to load.
+        variant = if config.stylix.polarity == "light" then "light" else "dark";
+
+        # The base16 -> Noctalia mapping is stylix's own, lifted from its
+        # `noctalia-shell` target. That target is inert here: it only writes into
+        # `programs.noctalia-shell`, an upstream home-manager module this module
+        # deliberately doesn't use (see the settings.json comment below).
+        stylixScheme = with config.lib.stylix.colors.withHashtag; {
+          ${variant} = {
+            mPrimary = base0D;
+            mOnPrimary = base00;
+            mSecondary = base0E;
+            mOnSecondary = base00;
+            mTertiary = base0C;
+            mOnTertiary = base00;
+            mError = base08;
+            mOnError = base00;
+            mSurface = base00;
+            mOnSurface = base05;
+            mSurfaceVariant = base01;
+            mOnSurfaceVariant = base04;
+            mOutline = base03;
+            mShadow = base00;
+            mHover = base0C;
+            mOnHover = base00;
+
+            # Consumed by Noctalia's terminal templates, not by the shell's own
+            # chrome. Standard base16 -> ANSI assignment.
+            terminal = {
+              normal = {
+                black = base00;
+                red = base08;
+                green = base0B;
+                yellow = base0A;
+                blue = base0D;
+                magenta = base0E;
+                cyan = base0C;
+                white = base05;
+              };
+              bright = {
+                black = base03;
+                red = base08;
+                green = base0B;
+                yellow = base0A;
+                blue = base0D;
+                magenta = base0E;
+                cyan = base0C;
+                white = base07;
+              };
+              foreground = base05;
+              background = base00;
+              selectionFg = base05;
+              selectionBg = base02;
+              cursorText = base00;
+              cursor = base05;
+            };
+          };
+        };
+
+        stylixSettings = {
+          colorSchemes = {
+            useWallpaperColors = false;
+            predefinedScheme = stylixSchemeName;
+            darkMode = variant == "dark";
+          };
+          ui = {
+            fontDefault = config.stylix.fonts.sansSerif.name;
+            fontFixed = config.stylix.fonts.monospace.name;
+          };
+        };
+
+        # `settings` wins over the stylix-derived keys, so a host that wants a
+        # different scheme or font can still say so explicitly.
+        seedSettings = if useStylix then lib.recursiveUpdate stylixSettings cfg.settings else cfg.settings;
+
+        seedFile = settingsFormat.generate "noctalia-settings.json" seedSettings;
         settingsPath = "${config.xdg.configHome}/noctalia/settings.json";
       in
       {
@@ -66,6 +160,15 @@ in
 
         # Noctalia's wallpaper picker writes the chosen wallpaper back here.
         home.file."${wallpaperDir}/.keep".text = "";
+
+        # Unlike settings.json this *is* linked from the store: Noctalia only
+        # reads scheme files, never writes them, so the palette tracks stylix on
+        # every rebuild. Only the `predefinedScheme` pointer at it is seeded.
+        xdg.configFile."noctalia/colorschemes/${stylixSchemeName}/${stylixSchemeName}.json" =
+          lib.mkIf useStylix
+            {
+              source = settingsFormat.generate "noctalia-${stylixSchemeName}-scheme.json" stylixScheme;
+            };
 
         # Seeded as a real file rather than linked from the store on purpose.
         # Noctalia rewrites settings.json on nearly every start (it stamps the
@@ -75,7 +178,11 @@ in
         # is false on its FileView -- and every setting changed through the GUI
         # would revert on restart. The cost is that edits to `settings` above
         # only reach a host that has no settings.json yet; to re-seed an
-        # existing one, delete the file and re-activate.
+        # existing one, delete the file and re-activate. The same applies to the
+        # stylix scheme pointer: the scheme file itself always follows stylix,
+        # but a host whose settings.json predates this is left pointing at
+        # whatever scheme it already had -- pick "Stylix" once in the shell's
+        # colour scheme panel, or delete settings.json to re-seed.
         home.activation.noctaliaSettings = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           if [ ! -e "${settingsPath}" ]; then
             run mkdir -p "$(dirname "${settingsPath}")"

@@ -17,6 +17,11 @@ in
         inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi
       ];
       sessionVariables.NODE_USE_SYSTEM_CA = "1";
+      file.".pi/agent/settings.json".text = builtins.toJSON {
+        defaultProvider = "openai";
+        defaultModel = "gpt-6.1-sol";
+        defaultThinkingLevel = "low";
+      };
     };
   };
 }

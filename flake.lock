@@ -745,11 +745,11 @@
     "opencode-permission-reviewer": {
       "flake": false,
       "locked": {
-        "lastModified": 1793644914,
-        "narHash": "sha256-+HKz7Y2ayT8Sc1GaUMQiwf5YYNxMifwN/qezXt7Aq3k=",
+        "lastModified": 1793645863,
+        "narHash": "sha256-rqrnLuvgfipFxIbh35/ky+aBN3nxCsZOuJhhA4qeq3g=",
         "ref": "main",
-        "rev": "2409764f767cfd1b7b83b1dc89a66e4537d7782c",
-        "revCount": 143,
+        "rev": "531de6773fa0aed3d4fddaeb55942693826d96aa",
+        "revCount": 144,
         "type": "git",
         "url": "https://github.com/GrimOutlook/opencode-permission-reviewer.git"
       },

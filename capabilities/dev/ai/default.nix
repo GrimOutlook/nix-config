@@ -1,6 +1,8 @@
 {
   config,
+  inputs,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -26,10 +28,19 @@ in
         ) modules;
     in
     lib.mkIf cfg.enable (
-      lib.mkMerge (enableAll [
-        "agy"
-        "claude"
-        "opencode"
-      ])
+      lib.mkMerge (
+        (enableAll [
+          "agy"
+          "claude"
+          "opencode"
+        ])
+        ++ [
+          {
+            host.home-manager.config.home.packages = [
+              inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi
+            ];
+          }
+        ]
+      )
     );
 }

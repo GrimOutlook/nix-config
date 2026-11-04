@@ -298,7 +298,7 @@ in
     # Pinned rather than `:stable`: podman only pulls a missing image, so the
     # floating tag never actually upgraded anything -- it stayed on whatever
     # was first pulled. Read the release notes' breaking changes when bumping.
-    image = "ghcr.io/blakeblackshear/frigate:0.18.0";
+    image = "ghcr.io/blakeblackshear/frigate:0.18.2";
     privileged = true;
     environment = {
       # The default iHD (intel-media-driver) VAAPI backend is unstable on this

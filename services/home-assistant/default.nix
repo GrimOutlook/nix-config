@@ -17,7 +17,7 @@ let
   # container below), so this tag -- not flake.lock -- is what pins and
   # upgrades it. The custom components below have minimum versions; check
   # them when bumping this.
-  homeAssistantImage = "ghcr.io/home-assistant/home-assistant:2026.9.4";
+  homeAssistantImage = "ghcr.io/home-assistant/home-assistant:2026.10.4";
   # Major versions migrate the config entry one way (4.x -> 6.0 did both the
   # 5.0 and 6.0 migrations); read the upgrade guide in
   # github.com/raman325/lock_code_manager/wiki before bumping one.

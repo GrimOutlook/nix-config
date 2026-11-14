@@ -20,13 +20,16 @@ let
       cp -R node_modules $out
       runHook postInstall
     '';
-    # Bun embeds its store path in shims. This fixed-output dependency cache
-    # must not retain store references; the outer derivation patches the shims.
+    # Keep the dependency cache identical to the frozen-lockfile install.
+    # stdenv fixups rewrite shebangs and native binaries using the current
+    # toolchain, making this fixed-output hash change after nixpkgs updates.
+    # The outer derivation patches executable shims after copying the cache.
+    dontFixup = true;
     __structuredAttrs = true;
-    unsafeDiscardReferences.out = true;
+    allowedReferences = [ ];
     outputHashMode = "recursive";
     outputHashAlgo = "sha256";
-    outputHash = "sha256-iQoFCKUwGRs2l9XlX1gsSMTbsUWOsTO2UqI46zi6Rw0=";
+    outputHash = "sha256-i9PG4EGWmHryDPaqz+8UO71ApVorVaM0i6VGn+VDatc=";
   };
 in
 pkgs.stdenv.mkDerivation {

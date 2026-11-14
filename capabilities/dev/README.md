@@ -10,6 +10,17 @@ set `host.dev.ai.pi.permissionReviewer.enable = false`; to choose a persistent
 fail-closed escalation policy, set `host.dev.ai.pi.permissionReviewer.escalationMode = "deny"`.
 The OpenCode plugin and Pi extension share a single locked source build.
 
+Pi also configures Playwright MCP to attach to a dedicated Chromium profile.
+After activation, run `pi-browser https://www.youtube.com/playlist?list=WL`,
+sign in yourself, and keep that window open while using Pi's browser tools.
+The launcher persists the profile under `${XDG_CONFIG_HOME:-$HOME/.config}/pi-browser`
+and exposes CDP only on loopback port 9222. Never expose that port to the network:
+it grants control of the logged-in browser. Run `/reload` in existing Pi sessions
+and check `/mcp` for the Playwright connection. Login data stays in your home
+profile, not in the Nix store. Home Manager owns the MCP configuration; edit this
+module rather than running `pi mcp add`. Playwright remains configured when the
+reverse-engineering toolkit is disabled.
+
 Pi also installs a reverse-engineering toolkit: Ghidra with the GhidraMCP
 extension, radare2, binutils, file, GDB, strace, ltrace, patchelf, elfutils and
 xxd. Both MCP servers are built from hash-pinned sources; no runtime `uvx`,

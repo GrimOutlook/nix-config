@@ -32,6 +32,14 @@ in
     # supports.
     boot.kernelPackages = lib.mkIf (!config.boot.zfs.enabled) (lib.mkDefault pkgs.linuxPackages_latest);
 
+    # Keep crash dumps out of application working directories (often $HOME).
+    # The sticky directory permits unprivileged processes to write their dumps
+    # without allowing users to remove each other's files.
+    boot.kernel.sysctl."kernel.core_pattern" = "/var/lib/coredumps/core.%e.%p.%t";
+    systemd.tmpfiles.rules = [
+      "d /var/lib/coredumps 1777 root root -"
+    ];
+
     # Silence NixOS 26.05 ZFS forceImportRoot warning on ZFS hosts
     boot.zfs.forceImportRoot = lib.mkIf config.boot.zfs.enabled false;
   };

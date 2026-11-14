@@ -1,8 +1,6 @@
 {
   config,
-  inputs,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -13,6 +11,7 @@ in
     ./agy/default.nix
     ./claude/default.nix
     ./opencode.nix
+    ./pi.nix
     ./shared.nix
   ];
 
@@ -33,14 +32,8 @@ in
           "agy"
           "claude"
           "opencode"
+          "pi"
         ])
-        ++ [
-          {
-            host.home-manager.config.home.packages = [
-              inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi
-            ];
-          }
-        ]
       )
     );
 }

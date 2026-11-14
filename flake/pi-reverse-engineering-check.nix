@@ -15,6 +15,9 @@ let
   servers =
     (builtins.fromJSON (builtins.unsafeDiscardStringContext enabled.file.".pi/agent/mcp.json".text))
     .mcpServers;
+  disabledServers =
+    (builtins.fromJSON (builtins.unsafeDiscardStringContext disabled.file.".pi/agent/mcp.json".text))
+    .mcpServers;
 in
 {
   perSystem = { pkgs, ... }: {
@@ -22,6 +25,7 @@ in
       assert
         builtins.attrNames servers == [
           "ghidra"
+          "playwright"
           "radare2"
         ];
       assert
@@ -29,7 +33,14 @@ in
           "--ghidra-server"
           "http://127.0.0.1:8080/"
         ];
-      assert !(disabled.file ? ".pi/agent/mcp.json");
+      assert builtins.attrNames disabledServers == [ "playwright" ];
+      assert servers.playwright == disabledServers.playwright;
+      assert servers.playwright.command == "${pkgs.playwright-mcp}/bin/playwright-mcp";
+      assert
+        servers.playwright.args == [
+          "--cdp-endpoint"
+          "http://127.0.0.1:9222"
+        ];
       pkgs.runCommand "pi-reverse-engineering-config" { } ''
         touch "$out"
       '';

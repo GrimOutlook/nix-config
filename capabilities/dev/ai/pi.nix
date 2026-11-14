@@ -37,12 +37,29 @@ in
     host.home-manager.config.home = {
       packages = [
         inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi
+        (pkgs.writeShellScriptBin "pi-browser" ''
+          profile="''${XDG_CONFIG_HOME:-$HOME/.config}/pi-browser"
+          exec ${pkgs.chromium}/bin/chromium \
+            --remote-debugging-address=127.0.0.1 \
+            --remote-debugging-port=9222 \
+            --user-data-dir="$profile" \
+            "$@"
+        '')
       ]
       ++ lib.optionals cfg.reverseEngineering.enable reverseEngineering.packages;
       sessionVariables.NODE_USE_SYSTEM_CA = "1";
       file = {
-        ".pi/agent/mcp.json" = lib.mkIf cfg.reverseEngineering.enable {
-          text = builtins.toJSON { inherit (reverseEngineering) mcpServers; };
+        ".pi/agent/mcp.json".text = builtins.toJSON {
+          mcpServers = lib.optionalAttrs cfg.reverseEngineering.enable reverseEngineering.mcpServers // {
+            playwright = {
+              command = "${pkgs.playwright-mcp}/bin/playwright-mcp";
+              args = [
+                "--cdp-endpoint"
+                "http://127.0.0.1:9222"
+              ];
+              description = "Control the logged-in Chromium browser started with pi-browser over local CDP.";
+            };
+          };
         };
         ".pi/agent/settings.json".text = builtins.toJSON {
           defaultProvider = "openai";

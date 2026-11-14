@@ -69,15 +69,17 @@ in
         }
         binds {
             ${cfg.extraBinds}
+            Mod+Shift+Slash { show-hotkey-overlay; }
             Mod+T { spawn "alacritty"; }
             Mod+E { spawn "thunar"; }
             ${lib.optionalString config.host.look.enable ''
               Mod+Space allow-inhibiting=false { ${lookToggle} }
               Alt+Space allow-inhibiting=false { ${lookToggle} }
             ''}
+            Mod+Q { toggle-overview; }
             Mod+Escape { close-window; }
-            Mod+F { toggle-window-floating; }
-            Mod+Shift+F { fullscreen-window; }
+            Mod+F { maximize-column; }
+            Mod+Shift+Space { toggle-window-floating; }
             Mod+H { focus-column-left; }
             Mod+L { focus-column-right; }
             Mod+K { focus-window-up; }
@@ -86,6 +88,12 @@ in
             Mod+Shift+L { move-column-right; }
             Mod+Shift+K { move-window-up; }
             Mod+Shift+J { move-window-down; }
+            Mod+BracketLeft { focus-workspace-up; }
+            Mod+BracketRight { focus-workspace-down; }
+            Mod+Ctrl+H { consume-or-expel-window-left; }
+            Mod+Ctrl+L { consume-or-expel-window-right; }
+            Mod+Ctrl+BracketLeft { move-column-to-workspace-up; }
+            Mod+Ctrl+BracketRight { move-column-to-workspace-down; }
             Mod+Tab { toggle-column-tabbed-display; }
             Mod+R { switch-preset-column-width; }
             Mod+Shift+Escape { power-off-monitors; }

@@ -27,7 +27,7 @@ in
           "manual"
           "deny"
         ];
-        default = "manual";
+        default = "deny";
         description = "Ask for human approval of questionable calls, or deny them with reasoning.";
       };
     };
@@ -65,6 +65,8 @@ in
           defaultProvider = "openai";
           defaultModel = "gpt-6.1-sol";
           defaultThinkingLevel = "low";
+          showHardwareCursor = true;
+          enableInstallTelemetry = false;
         };
         # An explicit extension directory loads only the Pi entry, not the
         # OpenCode plugin/TUI entries shipped in the same package.

@@ -7,11 +7,17 @@
 }:
 let
   cfg = config.host.dev.ai.pi;
+  reverseEngineering = import ./_reverse-engineering.nix { inherit pkgs lib; };
   permissionReviewer = import ./_permission-reviewer.nix { inherit inputs pkgs; };
 in
 {
   options.host.dev.ai.pi = {
     enable = lib.mkEnableOption "Enable Pi CLI configuration";
+    reverseEngineering.enable =
+      lib.mkEnableOption "the reverse-engineering toolkit and Pi MCP servers"
+      // {
+        default = true;
+      };
     permissionReviewer = {
       enable = lib.mkEnableOption "the Pi tool-call permission reviewer" // {
         default = true;
@@ -31,9 +37,13 @@ in
     host.home-manager.config.home = {
       packages = [
         inputs.nix-config.inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi
-      ];
+      ]
+      ++ lib.optionals cfg.reverseEngineering.enable reverseEngineering.packages;
       sessionVariables.NODE_USE_SYSTEM_CA = "1";
       file = {
+        ".pi/agent/mcp.json" = lib.mkIf cfg.reverseEngineering.enable {
+          text = builtins.toJSON { inherit (reverseEngineering) mcpServers; };
+        };
         ".pi/agent/settings.json".text = builtins.toJSON {
           defaultProvider = "openai";
           defaultModel = "gpt-6.1-sol";

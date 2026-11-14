@@ -9,3 +9,26 @@ or inspect the session's escalation policy. To disable the extension entirely,
 set `host.dev.ai.pi.permissionReviewer.enable = false`; to choose a persistent
 fail-closed escalation policy, set `host.dev.ai.pi.permissionReviewer.escalationMode = "deny"`.
 The OpenCode plugin and Pi extension share a single locked source build.
+
+Pi also installs a reverse-engineering toolkit: Ghidra with the GhidraMCP
+extension, radare2, binutils, file, GDB, strace, ltrace, patchelf, elfutils and
+xxd. Both MCP servers are built from hash-pinned sources; no runtime `uvx`,
+`r2pm`, or network installation is needed. Home Manager manages
+`~/.pi/agent/mcp.json` with local stdio entries for both servers. Back up/merge
+any pre-existing MCP configuration before activation (Home Manager will not
+silently overwrite an unmanaged file).
+
+For Ghidra, launch `ghidra`, open a binary in CodeBrowser, and enable
+`GhidraMCPPlugin` under File → Configure → Developer. The bridge targets
+`http://127.0.0.1:8080/`; keep the plugin bound to loopback. The bridge can
+connect to Pi before Ghidra is running, but analysis calls require the open
+CodeBrowser and enabled plugin. Radare2 runs directly over stdio with no
+listening service. After activation, run `pi mcp list` and `/reload` in existing
+Pi sessions. These tools can modify binaries/projects; analyze untrusted files
+in an isolated environment and retain the permission reviewer.
+
+To omit the toolkit and both MCP entries while keeping Pi, set
+`host.dev.ai.pi.reverseEngineering.enable = false`.
+The Ghidra Python bridge's MCP lower bound is relaxed to the site's pinned
+MCP v1 package; its non-headless upstream tests run during the Nix build.
+Headless PyGhidra operation is not configured.

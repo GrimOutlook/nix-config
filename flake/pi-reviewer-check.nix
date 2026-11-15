@@ -22,7 +22,7 @@ in
     checks.pi-permission-reviewer =
       assert enabled.host.dev.ai.pi.permissionReviewer.enable;
       assert enabledFiles ? ".pi/agent/extensions/permission-reviewer/index.js";
-      assert reviewerConfig.escalationMode == "manual";
+      assert reviewerConfig.escalationMode == "deny";
       assert reviewerConfig.audit;
       assert !(reviewerConfig ? model);
       assert !(disabledFiles ? ".pi/agent/extensions/permission-reviewer/index.js");

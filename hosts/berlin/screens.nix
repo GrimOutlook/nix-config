@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 let
   # Shared monitor configuration for berlin, in Hyprland's `monitor =` syntax:
   # name, mode, position, scale, then optional trailing keyword arguments.
@@ -40,7 +40,27 @@ let
   join = f: lib.concatMapStringsSep "; " (m: "${m.name}:${f m}") parsed;
 in
 {
-  host.home-manager.config.wayland.windowManager.hyprland.settings.monitor = monitors;
+  host.home-manager.config.wayland.windowManager.hyprland.settings.monitor =
+    lib.mkIf config.host.hyprland.enable monitors;
+
+  host.niri.extraConfig = lib.mkIf config.host.niri.enable ''
+    output "DP-3" {
+        mode "2560x1440@239.99"
+        position x=0 y=0
+        scale 1
+    }
+    output "DP-2" {
+        mode "2560x1440@239.99"
+        position x=2560 y=-1120
+        transform "270"
+        scale 1
+    }
+    output "DP-1" {
+        mode "2560x1440@239.99"
+        position x=0 y=-1440
+        scale 1
+    }
+  '';
 
   # Replaces berlin's old greetd override, which wrapped regreet in a Hyprland
   # instance purely to apply this layout. The greeter runs its own compositor,

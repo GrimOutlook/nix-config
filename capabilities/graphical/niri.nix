@@ -88,6 +88,10 @@ in
             Mod+Shift+L { move-column-right; }
             Mod+Shift+K { move-window-up; }
             Mod+Shift+J { move-window-down; }
+            Mod+Alt+H { move-window-to-monitor-left; }
+            Mod+Alt+L { move-window-to-monitor-right; }
+            Mod+Alt+K { move-window-to-monitor-up; }
+            Mod+Alt+J { move-window-to-monitor-down; }
             Mod+BracketLeft { focus-workspace-up; }
             Mod+BracketRight { focus-workspace-down; }
             Mod+Ctrl+H { consume-or-expel-window-left; }
@@ -117,7 +121,7 @@ in
               in
               ''
                 Mod+${key} { focus-workspace ${toString n}; }
-                Mod+Alt+${key} { move-window-to-workspace ${toString n}; }
+                Mod+Shift+${key} { move-window-to-workspace ${toString n}; }
               ''
             ) (lib.range 1 10)}
         }

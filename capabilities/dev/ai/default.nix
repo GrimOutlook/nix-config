@@ -11,6 +11,7 @@ in
     ./agy/default.nix
     ./claude/default.nix
     ./opencode.nix
+    ./pi.nix
     ./shared.nix
   ];
 
@@ -26,10 +27,13 @@ in
         ) modules;
     in
     lib.mkIf cfg.enable (
-      lib.mkMerge (enableAll [
-        "agy"
-        "claude"
-        "opencode"
-      ])
+      lib.mkMerge (
+        (enableAll [
+          "agy"
+          "claude"
+          "opencode"
+          "pi"
+        ])
+      )
     );
 }

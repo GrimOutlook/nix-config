@@ -29,6 +29,7 @@ in
     services.scrutiny.collector = {
       enable = true;
       settings.api.endpoint = "http://${hubHost}.${domains.local}:${toString hubPort}";
+      settings.host.id = lib.mkDefault config.networking.hostName;
     };
   };
 }

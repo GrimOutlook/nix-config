@@ -33,7 +33,18 @@ in
 
     host.home-manager.config = {
       services.polkit-gnome.enable = true;
+      home.pointerCursor = {
+        package = pkgs.bibata-cursors;
+        name = "Bibata-Modern-Ice";
+        size = 24;
+        gtk.enable = true;
+        x11.enable = true;
+      };
       xdg.configFile."niri/config.kdl".text = ''
+        cursor {
+            xcursor-theme "Bibata-Modern-Ice"
+            xcursor-size 24
+        }
         input {
             keyboard { xkb { layout "us"; }; }
             mouse { accel-profile "flat"; }
@@ -71,7 +82,7 @@ in
             ${cfg.extraBinds}
             Mod+Shift+Slash { show-hotkey-overlay; }
             Mod+T { spawn "alacritty"; }
-            Mod+E { spawn "thunar"; }
+            Mod+E { spawn "favnyr"; }
             ${lib.optionalString config.host.look.enable ''
               Mod+Space allow-inhibiting=false { ${lookToggle} }
               Alt+Space allow-inhibiting=false { ${lookToggle} }

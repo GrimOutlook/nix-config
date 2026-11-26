@@ -36,7 +36,15 @@ in
             { id = "ActiveWindow"; }
           ];
           center = [ { id = "MediaMini"; } ];
-          right = [
+          right = lib.optional config.host.sabre-battery.enable {
+            id = "CustomButton";
+            icon = "mouse";
+            showIcon = true;
+            textCommand = ''sabre-battery --json | jq -r 'if .status == "ok" then "\(.percentage)%" else "—" end' '';
+            textIntervalMs = 30000;
+            textStream = false;
+            leftClickUpdateText = true;
+          } ++ [
             { id = "Volume"; }
             {
               id = "SystemMonitor";

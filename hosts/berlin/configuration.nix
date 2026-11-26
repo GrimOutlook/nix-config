@@ -13,6 +13,7 @@
     };
     hostname = "berlin";
     network-diag.enable = true;
+    sabre-battery.enable = true;
     type.desktop.enable = true;
     virtualization.enable = true;
   };

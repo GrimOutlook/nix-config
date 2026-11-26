@@ -49,7 +49,7 @@ in
           ################
           ### PROGRAMS ###
           ################
-          "$fileManager" = "thunar";
+          "$fileManager" = "favnyr";
           # Noctalia's launcher, driven over its quickshell IPC socket. This
           # replaced rofi, whose capability was dropped with hyprpanel's.
           "$menu" = "noctalia-shell ipc call launcher toggle";

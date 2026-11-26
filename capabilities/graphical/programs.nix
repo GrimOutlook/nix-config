@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -18,7 +19,7 @@ in
 
     host.home-manager.config.home.packages = with pkgs; [
       # File Manager
-      thunar
+      inputs.nix-config.inputs.favnyr.packages.${pkgs.stdenv.hostPlatform.system}.default
 
       # IM
       discord
